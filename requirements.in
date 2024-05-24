@@ -1,0 +1,36 @@
+# Core dependencies for calculations and data processing
+numpy
+pandas
+scipy
+matplotlib
+seaborn
+
+# Visualization tools
+plotly
+altair
+
+# Documentation generation
+sphinx
+sphinx-rtd-theme
+
+# Jupyter and other tools
+jupyter
+notebook
+ipykernel
+ipywidgets
+
+# Development and testing
+pytest
+black
+flake8
+
+# Optional utilities
+requests
+beautifulsoup4
+
+# Machine learning
+scikit-learn
+
+# Additional scientific libraries
+sympy
+statsmodels

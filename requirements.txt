@@ -1,0 +1,18 @@
+# Core dependencies for calculations and data processing
+numpy
+pandas
+geopandas
+--pre osmnx  # to prepare for version 2.0.0 if not should be %pip install osmnx
+folium
+pygeos
+SRTM.py
+
+# Visualization tools
+matplotlib
+
+# Jupyter and other tools
+jupyter
+notebook
+ipykernel
+ipywidgets
+

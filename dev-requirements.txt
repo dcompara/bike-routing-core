@@ -1,0 +1,5 @@
+# dev-requirements.txt
+pip-tools==6.6.2
+pytest
+black
+flake8
