@@ -1,4 +1,10 @@
 # keys.py
+
+# to get it Go to the Google Maps Platform > Credentials page. Click Create credentials > API key. 
 google_elevation_api_key = "AIzaSyB7Phh3edSIvTIGFdJBBsnbtKgo7RXYz6E"
 
-
+# Strava cookies, cf https://wiki.openstreetmap.org/wiki/Strava
+# If not present will be added by the program
+KEY_PAIR_ID = 'APKAIDPUN4QMG7VUQPSA'
+POLICY = 'eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6Imh0dHBzOi8vaGVhdG1hcC1leHRlcm5hbC0qLnN0cmF2YS5jb20vKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTcxNzI4ODU2OH0sIkRhdGVHcmVhdGVyVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzE2MDY0NTY4fX19XX0_'
+SIGNATURE = 'TwtdCraMgwR4SxXTcpGw1Yb88e6HGgXhrET91FD86A4v2FEeCY969sApae3JEaP6G0gUuL3h1PhSUfsFL4GSuGr1KqhgEoZQmKUqCc8Wi-kO0iIKCNKz8Z9ruGexUrsqadMFGiTBL-GS5nXBQunSlwj-qi6PIThBF-bIPolZ7eHk2cMmIJP~yXy87hlGIv4eG8lK-F1y2r0rgY3AnX5Fa7b78TFOtiIX90gllERBSWa5IHjba77KR11yOza-ooWehaqa8fxNIV-MIqEG8fVyJ7boxkDoDdYDvw-6lzN59P0YSXHo-v6mPLOy1Ud2zes01vW8uquANIF5UuKcjtXQYg__'
