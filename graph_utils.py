@@ -76,8 +76,7 @@ def is_potential_start_node(G, node, threshold=0.01):
             return False
     return True
 
-# Generate all possible climbing paths from a starting node. 
-# The paths must continue climbing with a minimum grade for an edge (1% per default) to be considered a climb.
+
 def get_climbing_paths(G, start_node, min_grade=0.01):
     """
     Generate all possible climbing paths from a starting node.
