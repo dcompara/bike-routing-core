@@ -7,6 +7,14 @@ import srtm
 import networkx as nx
 import osmnx as ox
 
+import geopandas as gpd
+from shapely.geometry import LineString
+from matplotlib.colors import Normalize, to_hex
+from matplotlib.cm import get_cmap
+import folium
+
+
+
 def add_node_elevations(G, google_api_key=None):
     """
     Add node elevations to a graph using the Google Elevation API or SRTM data.
@@ -131,9 +139,6 @@ def get_climbing_paths(G, start_node, min_grade=0.01):
     return completed_paths
 
 
-
-
-
 def filter_paths(G, paths, min_length=100, min_elevation_gain=50):
     """
     Filter paths based on length and minimum elevation gain.
@@ -164,6 +169,161 @@ def filter_paths(G, paths, min_length=100, min_elevation_gain=50):
             valid_paths.append((path, path_length, elevation_gain))
     
     return valid_paths
+
+
+import geopandas as gpd
+from shapely.geometry import LineString
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize, to_hex
+from matplotlib.cm import get_cmap
+
+def convert_paths_to_gdf_with_grades(G, paths):
+    """
+    Convert a list of paths (each a list of nodes) to a GeoDataFrame, including grades.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes and edges.
+    paths (list of lists): A list of paths, where each path is a list of node IDs.
+
+    Returns:
+    gpd.GeoDataFrame: GeoDataFrame containing geometries and grades.
+    """
+    lines = []
+    grades = []
+
+    for path in paths:
+        coords = []
+        path_grades = []
+
+        for i in range(len(path) - 1):
+            u, v = path[i], path[i + 1]
+            edge_data = G.get_edge_data(u, v)
+            
+            for key, data in edge_data.items():
+                if 'geometry' in data:
+                    coords.extend(list(data['geometry'].coords))
+                    path_grades.extend([data.get('grade', 0)] * len(data['geometry'].coords))
+                else:
+                    coords.append((G.nodes[u]['x'], G.nodes[u]['y']))
+                    coords.append((G.nodes[v]['x'], G.nodes[v]['y']))
+                    path_grades.append(data.get('grade', 0))
+                    path_grades.append(data.get('grade', 0))
+        
+        line = LineString(coords)
+        lines.append(line)
+        grades.append(path_grades)
+
+    gdf = gpd.GeoDataFrame({'geometry': lines, 'grades': grades})
+    return gdf
+
+def get_color_for_grade(grade, cmap='plasma'):
+    """
+    Get a color for a given grade using a color map.
+
+    Parameters:
+    grade (float): The grade value to color.
+    cmap (str): The colormap name to use.
+
+    Returns:
+    str: The hexadecimal color code.
+    """
+    norm = Normalize(vmin=0, vmax=0.15)  # Adjust vmax based on the expected grade range
+    cmap = get_cmap(cmap)
+    color = cmap(norm(grade))
+    return to_hex(color)
+
+
+
+def convert_paths_to_gdf_with_grades(G, paths):
+    """
+    Convert a list of paths (each a list of nodes) to a GeoDataFrame, including grades.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes and edges.
+    paths (list of lists): A list of paths, where each path is a list of node IDs.
+
+    Returns:
+    gpd.GeoDataFrame: GeoDataFrame containing geometries and grades.
+    """
+    lines = []
+    grades = []
+
+    for path in paths:
+        coords = []
+        path_grades = []
+
+        for i in range(len(path) - 1):
+            u, v = path[i], path[i + 1]
+            edge_data = G.get_edge_data(u, v)
+            
+            for key, data in edge_data.items():
+                if 'geometry' in data:
+                    coords.extend(list(data['geometry'].coords))
+                    path_grades.extend([data.get('grade', 0)] * len(data['geometry'].coords))
+                else:
+                    coords.append((G.nodes[u]['x'], G.nodes[u]['y']))
+                    coords.append((G.nodes[v]['x'], G.nodes[v]['y']))
+                    path_grades.append(data.get('grade', 0))
+                    path_grades.append(data.get('grade', 0))
+        
+        line = LineString(coords)
+        lines.append(line)
+        grades.append(path_grades)
+
+    gdf = gpd.GeoDataFrame({'geometry': lines, 'grades': grades})
+    return gdf
+
+def get_color_for_grade(grade, cmap='plasma'):
+    """
+    Get a color for a given grade using a color map.
+
+    Parameters:
+    grade (float): The grade value to color.
+    cmap (str): The colormap name to use.
+
+    Returns:
+    str: The hexadecimal color code.
+    """
+    norm = Normalize(vmin=0, vmax=0.15)  # Adjust vmax based on the expected grade range
+    cmap = get_cmap(cmap)
+    color = cmap(norm(grade))
+    return to_hex(color)
+
+
+def display_paths_on_map(G, paths, cmap='plasma'):
+    """
+    Display the paths on an OpenStreetMap with color coding based on grades.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes and edges.
+    paths (list of lists): A list of paths, where each path is a list of node IDs.
+    cmap (str): The colormap name to use for grading.
+
+    Returns:
+    folium.Map: A Folium map with the paths displayed.
+    """
+    # Convert paths to GeoDataFrame
+    gdf_paths = convert_paths_to_gdf_with_grades(G, paths)
+    
+    # Create a Folium map centered on the area of interest
+    centroid = gdf_paths.geometry.unary_union.centroid
+    m = folium.Map(location=[centroid.y, centroid.x], zoom_start=14, tiles='cartodbpositron')
+
+    # Add each path to the Folium map
+    for _, row in gdf_paths.iterrows():
+        if row.geometry.geom_type == "LineString":
+            coords = [(pt[1], pt[0]) for pt in row.geometry.coords]
+            grades = row.grades
+            for i in range(len(coords) - 1):
+                segment = coords[i:i+2]
+                grade = grades[i]
+                color = get_color_for_grade(grade, cmap)
+                folium.PolyLine(
+                    locations=segment,
+                    color=color, weight=2.5
+                ).add_to(m)
+
+    return m
 
 
 # ---------------------------------------------------------------------------
