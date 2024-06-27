@@ -67,8 +67,6 @@ def get_d_plus(gdf_route):
 
 
 
-
-
 def get_loss(route, gdf_nodes_route, kms_target=30, verbose=True):
     """
     Compute the loss of a route compared to target parameters.
@@ -88,6 +86,15 @@ def get_loss(route, gdf_nodes_route, kms_target=30, verbose=True):
     float: Total loss value.
     """
     # 1 - Calculate loss based on distance deviation from the target
+    loss_max = 1000
+
+    gdf_nodes_route = gpd.GeoDataFrame(gdf_nodes_route)
+
+
+    if gdf_nodes_route.empty:
+        return loss_max  
+        
+
     route_dist = gdf_nodes_route.iloc[-1]['cum_dist']  # Loop distance (kms)
     dist_delta = abs(kms_target - route_dist)
     tolerance_target = kms_target * 0.50
@@ -174,8 +181,9 @@ def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
         return [], gpd.GeoDataFrame()
     
     # Subset of gdf_nodes for the route (list of osmid) only
-    gdf_nodes_route = gdf_nodes.loc[route]
-    
+    # gdf_nodes_route = gdf_nodes.loc[route]
+    gdf_nodes_route =  gpd.GeoDataFrame(gdf_nodes.loc[route])
+
     # Add elevation, cumulative distance, and highway type into the gdf_nodes_route
     route_elevations = []
     route_dist = [0]
@@ -220,16 +228,19 @@ def generate_loop(G, gdf_nodes, gdf_edges, start, waypoints):
     
     # 1 - First route from start to 1st waypoint
     route, gdf_nodes_route = create_one_route(G, gdf_nodes, gdf_edges, start, waypoints[0])
-    if not route:
+    if not route or gdf_nodes_route.empty:
         return -1, [], routes_list
     routes_list.append(route)
     
     # 2 - Loop over all waypoints
     for i in range(len(waypoints) - 1):
         r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[i], waypoints[i+1])
-        if not r:
+       
+        if not r or gdf_nodes_route.empty:
             return -1, [], routes_list
+        
         route = route[:-1] + r
+
         
         # Add last cumulative distance to new route
         last_cum_dist = gdf_nodes_route.iloc[-1]['cum_dist']
@@ -239,8 +250,9 @@ def generate_loop(G, gdf_nodes, gdf_edges, start, waypoints):
     
     # 3 - Last route from last waypoint to starting point
     r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[-1], start)
-    if not r:
+    if not r or gdf_nodes_route.empty:
         return -1, [], routes_list
+    
     route = route[:-1] + r
     
     # Add last cumulative distance to new route
