@@ -2,16 +2,254 @@
 # General Functions 
 # =============================================================================
 
-
+import numpy as np
+import pandas as pd
 import srtm
 import networkx as nx
 import osmnx as ox
-
 import geopandas as gpd
 from shapely.geometry import LineString
 from matplotlib.colors import Normalize, to_hex
 from matplotlib.cm import get_cmap
 import folium
+import collections
+
+
+def get_d_plus_total(G, node_list):
+    """
+    Calculate the total positive elevation gain for a given list of nodes in a graph.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes with elevation data.
+    node_list (list): List of node IDs representing the path.
+
+    Returns:
+    float: Total positive elevation gain in meters.
+    """
+    total_gain = 0
+
+    for i in range(len(node_list) - 1):
+        elevation_current = G.nodes[node_list[i]].get('elevation', 0)
+        elevation_next = G.nodes[node_list[i + 1]].get('elevation', 0)
+        gain = elevation_next - elevation_current
+
+        if gain > 0:  # Only consider elevation gain, ignore drops
+            total_gain += gain
+
+    return total_gain
+
+
+def get_d_plus(gdf_route):
+    """
+    Calculate the total positive elevation gain from a GeoDataFrame of route nodes.
+
+    Parameters:
+    gdf_route (gpd.GeoDataFrame): GeoDataFrame containing route nodes with elevation data.
+
+    Returns:
+    float: Total positive elevation gain in meters.
+    """
+    # Extract the list of elevations from the GeoDataFrame
+    elev_lst = list(gdf_route['elevation'])
+    # Initialize the total positive elevation gain
+    d_plus_out = 0
+    
+    # Iterate through the elevation list, starting from the second element
+    for i, val in enumerate(elev_lst[1:], start=1):
+        # If the current elevation is higher than the previous one, add the difference to the total positive elevation gain
+        if val > elev_lst[i - 1]:
+            d_plus_out += val - elev_lst[i - 1]
+        # Debug print statement (commented out)
+        # print(f'{i} - previous elevation: {elev_lst[i - 1]}, current elevation: {val}, d+: {d_plus_out}')
+    
+    return d_plus_out
+
+
+
+
+
+
+def get_loss(route, gdf_nodes_route, kms_target=30, verbose=True):
+    """
+    Compute the loss of a route compared to target parameters.
+
+    The loss is calculated based on three factors:
+    1. Distance deviation from the target distance.
+    2. Positive elevation gain (d+).
+    3. Route discovery (penalty for repeating streets/roads).
+
+    Parameters:
+    route (list): List of nodes in the route.
+    gdf_nodes_route (gpd.GeoDataFrame): GeoDataFrame containing route nodes with cumulative distance and elevation data.
+    kms_target (float, optional): Target distance for the route in kilometers. Default is 30.
+    verbose (bool, optional): If True, prints detailed loss information. Default is True.
+
+    Returns:
+    float: Total loss value.
+    """
+    # 1 - Calculate loss based on distance deviation from the target
+    route_dist = gdf_nodes_route.iloc[-1]['cum_dist']  # Loop distance (kms)
+    dist_delta = abs(kms_target - route_dist)
+    tolerance_target = kms_target * 0.50
+
+    if dist_delta < tolerance_target:
+        loss_dist = 0
+    else:
+        loss_dist = dist_delta
+
+    # 2 - Calculate loss based on positive elevation gain (d+)
+    d_plus = get_d_plus(gdf_nodes_route)  # d+ [positive elevation] (m)
+    # loss_dplus = (1 / d_plus) * 10000 if d_plus != 0 else float('inf')
+    loss_dplus = 100 * route_dist / d_plus
+
+    # 3 - Calculate loss based on route discovery (penalty for repeating streets/roads)
+    unique_numbers = [el for el, cnt in collections.Counter(route).items() if cnt == 1]
+    if len(unique_numbers) == 0:
+        loss_discovery = float('inf')
+    else:
+        # loss_discovery = len(route) / len(unique_numbers) * 10
+        loss_discovery = len(route) / len(unique_numbers) * 3
+
+    # Total loss
+    loss = loss_dist + loss_dplus + loss_discovery
+
+
+    if verbose:
+        print(f'\n--------- loss: {loss:.2f} ------ loss kms: {loss_dist:.2f} ({route_dist:.2f}), d+: {loss_dplus:.2f} ({d_plus}), '
+              f'twice_penalty: {loss_discovery:.2f} ------')
+
+    return loss
+
+
+
+def random_gps_waypoints(n=10, gps_y_min=-180, gps_y_max=180, gps_x_min=-90, gps_x_max=90):
+    """
+    Create n random GPS waypoints.
+
+    Parameters:
+    n (int, optional): Number of waypoints to generate. Default is 10.
+    gps_y_min (float, optional): Minimum latitude value. Default is -180.
+    gps_y_max (float, optional): Maximum latitude value. Default is 180.
+    gps_x_min (float, optional): Minimum longitude value. Default is -90.
+    gps_x_max (float, optional): Maximum longitude value. Default is 90.
+
+    Returns:
+    list of tuple: List of randomly generated GPS waypoints as (latitude, longitude).
+    """
+    return [
+        (
+            round(np.random.uniform(low=gps_y_min, high=gps_y_max), 7),
+            round(np.random.uniform(low=gps_x_min, high=gps_x_max), 7)
+        )
+        for _ in range(n)
+    ]
+
+
+
+# TO BE MODIFEDD TO GET THE IMPEDANCE
+def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
+    """
+    Compute the shortest path for a given starting and ending point.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes and edges.
+    gdf_nodes (gpd.GeoDataFrame): GeoDataFrame containing the nodes of the graph.
+    gdf_edges (gpd.GeoDataFrame): GeoDataFrame containing the edges of the graph.
+    start_point (tuple): Starting point as (latitude, longitude).
+    end_point (tuple): Ending point as (latitude, longitude).
+
+    Returns:
+    tuple: A tuple containing the route (list of node IDs) and the GeoDataFrame of the route nodes.
+    """
+    # Find the nearest nodes in the graph to the start and end points
+    orig = ox.distance.nearest_nodes(G, X=start_point[1], Y=start_point[0])
+    dest = ox.distance.nearest_nodes(G, X=end_point[1], Y=end_point[0])
+    
+    # Compute the shortest path
+    try:
+        route = nx.shortest_path(G, orig, dest, weight="impedance")
+    except nx.NetworkXNoPath:
+        route = []
+    if not route or len(route) == 1:
+        return [], gpd.GeoDataFrame()
+    
+    # Subset of gdf_nodes for the route (list of osmid) only
+    gdf_nodes_route = gdf_nodes.loc[route]
+    
+    # Add elevation, cumulative distance, and highway type into the gdf_nodes_route
+    route_elevations = []
+    route_dist = [0]
+    route_highways = ['unclassified']
+    elevation = 0
+    dist = 0
+    n = 0
+    
+    for row in gdf_nodes_route.iterrows():
+        elevation = row[1]['elevation']
+        route_elevations.append(elevation)
+        if n != 0 and n < len(route) - 1:
+            dist = gdf_edges.xs((row[0], route[n+1]), level=('u', 'v'))['length'].values[0]
+            highway = gdf_edges.xs((row[0], route[n+1]), level=('u', 'v'))['highway'].values[0]
+            route_dist.append(dist)
+            route_highways.append(highway)
+        n += 1
+    
+    gdf_nodes_route['elevation'] = route_elevations
+    gdf_nodes_route['cum_dist'] = np.cumsum(route_dist + [dist]) / 1000
+    gdf_nodes_route['highway'] = route_highways + ['unclassified']
+    
+    return route, gdf_nodes_route
+
+
+
+def generate_loop(G, gdf_nodes, gdf_edges, start, waypoints):
+    """
+    Create a loop route starting from a point and passing through a list of waypoints.
+
+    Parameters:
+    G (networkx.Graph): The graph containing nodes and edges.
+    gdf_nodes (gpd.GeoDataFrame): GeoDataFrame containing the nodes of the graph.
+    gdf_edges (gpd.GeoDataFrame): GeoDataFrame containing the edges of the graph.
+    start (tuple): Starting point as (latitude, longitude).
+    waypoints (list of tuple): List of waypoints as (latitude, longitude).
+
+    Returns:
+    tuple: A tuple containing the final route (list of node IDs), the GeoDataFrame of the route nodes, and a list of individual routes.
+    """
+    routes_list = []
+    
+    # 1 - First route from start to 1st waypoint
+    route, gdf_nodes_route = create_one_route(G, gdf_nodes, gdf_edges, start, waypoints[0])
+    if not route:
+        return -1, [], routes_list
+    routes_list.append(route)
+    
+    # 2 - Loop over all waypoints
+    for i in range(len(waypoints) - 1):
+        r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[i], waypoints[i+1])
+        if not r:
+            return -1, [], routes_list
+        route = route[:-1] + r
+        
+        # Add last cumulative distance to new route
+        last_cum_dist = gdf_nodes_route.iloc[-1]['cum_dist']
+        gdf_n_r['cum_dist'] = gdf_n_r['cum_dist'] + last_cum_dist
+        routes_list.append(r)
+        gdf_nodes_route = pd.concat([gdf_nodes_route[:-1].reset_index(drop=True), gdf_n_r[:-1].reset_index(drop=True)], axis=0)
+    
+    # 3 - Last route from last waypoint to starting point
+    r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[-1], start)
+    if not r:
+        return -1, [], routes_list
+    route = route[:-1] + r
+    
+    # Add last cumulative distance to new route
+    last_cum_dist = gdf_nodes_route.iloc[-1]['cum_dist']
+    gdf_n_r['cum_dist'] = gdf_n_r['cum_dist'] + last_cum_dist
+    routes_list.append(r)
+    gdf_nodes_route = pd.concat([gdf_nodes_route[:-1].reset_index(drop=True), gdf_n_r[:-1].reset_index(drop=True)], axis=0)
+    
+    return route, gdf_nodes_route, routes_list
 
 
 
