@@ -121,9 +121,8 @@ def get_loss(route, gdf_nodes_route, kms_target=30, verbose=True):
     loss = loss_dist + loss_dplus + loss_discovery
 
 
-    if verbose:
-        print(f'\n--------- loss: {loss:.2f} ------ loss kms: {loss_dist:.2f} ({route_dist:.2f}), d+: {loss_dplus:.2f} ({d_plus}), '
-              f'twice_penalty: {loss_discovery:.2f} ------')
+    # if verbose:
+    print(f'\n--------- loss: {loss:.2f} ------ loss kms: {loss_dist:.2f} ({route_dist:.2f}), d+: {loss_dplus:.2f} ({d_plus}), ' f'twice_penalty: {loss_discovery:.2f} ------')
 
     return loss
 
@@ -150,6 +149,62 @@ def random_gps_waypoints(n=10, gps_y_min=-180, gps_y_max=180, gps_x_min=-90, gps
         )
         for _ in range(n)
     ]
+
+import numpy as np
+import random
+
+
+# TO BE CHECKED
+def random_gps_waypoints_from_list(n, waypoints, radius_meters, gps_y_min, gps_y_max, gps_x_min, gps_x_max):
+    """
+    Choose n random GPS waypoints from a provided list, with a random point around each waypoint within a given radius in meters.
+
+    Parameters:
+    n (int): Number of waypoints to generate.
+    waypoints (list of tuple): List of GPS waypoints as (latitude, longitude).
+    radius_meters (float): Radius around each waypoint in meters.
+    gps_y_min (float): Minimum latitude value.
+    gps_y_max (float): Maximum latitude value.
+    gps_x_min (float): Minimum longitude value.
+    gps_x_max (float): Maximum longitude value.
+
+    Returns:
+    list of tuple: List of randomly generated GPS waypoints as (latitude, longitude).
+    """
+    def meters_to_degrees(meters, latitude):
+        # 1 degree of latitude is approximately 111,320 meters
+        lat_degrees = meters / 111320
+        
+        # 1 degree of longitude is approximately 111,320 * cos(latitude) meters
+        lon_degrees = meters / (111320 * np.cos(np.radians(latitude)))
+        
+        return lat_degrees, lon_degrees
+    
+    def generate_point_around(lat, lon, radius_meters):
+        lat_degrees, lon_degrees = meters_to_degrees(radius_meters, lat)
+        
+        while True:
+            # Random distance and angle
+            distance = np.random.uniform(0, 1)  # Fractional distance
+            angle = np.random.uniform(0, 2 * np.pi)
+            
+            # Offset in lat/lon degrees
+            delta_lat = distance * lat_degrees * np.cos(angle)
+            delta_lon = distance * lon_degrees * np.sin(angle)
+            
+            new_lat = lat + delta_lat
+            new_lon = lon + delta_lon
+            
+            if gps_y_min <= new_lat <= gps_y_max and gps_x_min <= new_lon <= gps_x_max:
+                return round(new_lat, 7), round(new_lon, 7)
+
+    if n > len(waypoints):
+        raise ValueError("Number of waypoints to generate cannot be greater than the number of provided waypoints.")
+
+    chosen_waypoints = random.sample(waypoints, n)
+    
+    return [generate_point_around(lat, lon, radius_meters) for lat, lon in chosen_waypoints]
+
 
 
 
@@ -370,8 +425,14 @@ def get_climbing_paths(G, start_node, min_grade=0.01):
         for neighbor in G.neighbors(last_node):
             # Get the edge data between the last node and the neighbor
             edge_data = G.get_edge_data(last_node, neighbor)
-            # Extract the grade of the edge, defaulting to 0 if not available
-            grade = edge_data[0].get('grade', 0)
+        
+            # Check if edge_data exists and has the expected structure 
+            if edge_data and 0 in edge_data:
+                # Extract the grade of the edge, defaulting to 0 if not available
+                grade = edge_data[0].get('grade', 0)
+            else:
+                grade = 0  # Default to 0 if edge_data is None or does not have the expected structure
+            
             
             # Check if the edge grade meets the minimum climbing criteria and the neighbor is not already in the path
             if grade >= min_grade and neighbor not in current_path:

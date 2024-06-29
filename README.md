@@ -21,10 +21,14 @@ The initial idea was based on the article (https://medium.com/p/16a266d468a5/edi
 /12-node-elevations-edge-grades.ipynb in (https://github.com/gboeing/osmnx-examples/tree/main/notebooks)
 
 
+	
+
+
+
 ## Project status
 
 
-Some ideas for the futur it can be nice to have an automatic slection
+Some ideas for the futur it can be nice to have an automatic selection
 
 Voiture route gravel, vtt
 
@@ -33,9 +37,14 @@ Choix zone (sélection de spots en entourants), zones pour cardinaux cliquer
 Poids dénivelé +100 a +100 et pas important
 Pourcentage max ? (Faire la liste de toutes les montées ou gravel ou)
 
+QUELQUES CHOIX A PRENDRE EN COMPTE:
+
 Distance (min max)
 Direct, vagabonde,..
 Tourisme
 Bonnes routes, peu circulation,
 Heatmap
 .
+## Some ideas
+
+Find all-pairs shortest path lengths using Floyd's algorithm.
