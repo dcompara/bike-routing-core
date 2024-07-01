@@ -15,19 +15,35 @@ Constrained Shortest Path First (CSPF)
 Lagrangian Relaxation Techniques
 
 
-More formally, in multi-objective search problem (MOSP), we are given a
+More formally, in multi-objective search problem (MOSP) or multiobjective path problem, see also Resource Constrained Shortest Path Problem (RCSPP) or 
+shortest path problem with resource constraints (SPPRC) (a well known NP-hard problem), we are given a
 directed graph with multiple costs annotating each edge, a
 specified start state, and a specified goal state. A path π is
-considered to be better than, i.e., to dominate, another path π′
-if and only if π is not worse than π′ on any cost metric and π is better than π ′ 
-on at least one cost metric, and a Pareto optimal solution is a path from the start state to the goal state
+considered to be better  than, i.e., to dominate, another path π′
+if and only if π is not worse than π′ on any cost metric and π is better than π′ 
+on at least one cost metric, and a Pareto optimal solution (also called efficient) is a path from the start state to the goal state
 that are not dominated by any path from the start state to the
 goal state. 
-We cancompute the set of all Pareto-optimal solutions (one ogo algorithm being BOA*) or only a subset of
+We can ompute the set of all Pareto-optimal solutions (one good algorithm for bi-objective search being BOA*) or only a subset of
 efficient paths that is good enough. This motivates the study of Fully
-Polynomial Time Approximation Schemes (FPTAS) for MOSP problem
-in the literature
+Polynomial Time Approximation Schemes (FPTAS) for MOSP problem.
+A good solution is to find the so called minimal complete set of efficient paths (One-to-One Multiobjective Shortest Path Problem):
+ that is to find a representative efficient path for every attribute (non-dominated cost vector). The so called NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
 
+Some article in the litterature are given in the Repository (see also the review: 
+"Review Multiobjective Path Problems and Algorithms in Telecommunication Network Design—Overview and Trends")
+
+The best one are: 2024 Exact Multi-objective Path Finding with NegativeWeights 
+and may be the others. Check what kind of Pareto set it calculates (total, minimal, approximate = espilon Pareto set, ...)
+
+Some repositories with codes exists
+cf: https://github.com/torressa/cspy (A collection of algorithms for the (resource) Constrained Shortest Path (CSP) problem)
+https://github.com/pathwyse
+https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm)
+
+
+Some are specific for bike problem like the heuristic-enabled Dijkstra algorithm developed by Hrncir et al.
+(2017) or Evolutionary algorithm. A good review is given by 2023 Solving the multi-objective bike routing problem by meta heuristic algorithm Nunes Sanstos IntlTransOpRes
 
 '''
 
@@ -152,7 +168,7 @@ def path_elevation_gain(G, path, elevation_attribute='height_gain'):
         total_elevation += edge_data.get(elevation_attribute, 0)
     return total_elevation
 
-def shortest_path_with_min_elevation(G, source, target, min_elevation_gain, weight=None, elevation_attribute='height_gain'):
+def shortest_path_with_min_elevation_brute_force(G, source, target, min_elevation_gain, weight=None, elevation_attribute='height_gain'):
     """
     Find the shortest path from source to target with at least the minimum elevation gain.
     """
