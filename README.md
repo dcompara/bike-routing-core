@@ -32,6 +32,8 @@ Some ideas for the futur it can be nice to have an automatic selection
 
 Voiture route gravel, vtt
 
+Utiliser IGN pour route et altmetre
+
 Choix zone (sélection de spots en entourants), zones pour cardinaux cliquer
 
 Poids dénivelé +100 a +100 et pas important

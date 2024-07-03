@@ -15,6 +15,8 @@ import folium
 import collections
 
 
+
+
 def get_d_plus_total(G, node_list):
     """
     Calculate the total positive elevation gain for a given list of nodes in a graph.
@@ -172,10 +174,10 @@ def random_gps_waypoints_from_list(n, waypoints, radius_meters, gps_y_min, gps_y
     list of tuple: List of randomly generated GPS waypoints as (latitude, longitude).
     """
     def meters_to_degrees(meters, latitude):
-        # 1 degree of latitude is approximately 111,320 meters
+        # 1 degree of latitude is approximately 111320 meters
         lat_degrees = meters / 111320
         
-        # 1 degree of longitude is approximately 111,320 * cos(latitude) meters
+        # 1 degree of longitude is approximately 111320 * cos(latitude) meters
         lon_degrees = meters / (111320 * np.cos(np.radians(latitude)))
         
         return lat_degrees, lon_degrees
@@ -208,7 +210,7 @@ def random_gps_waypoints_from_list(n, waypoints, radius_meters, gps_y_min, gps_y
 
 
 
-# TO BE MODIFEDD TO GET THE IMPEDANCE
+# To Do: TO BE MODIFEDD TO GET THE IMPEDANCE
 def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
     """
     Compute the shortest path for a given starting and ending point.
