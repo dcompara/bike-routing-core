@@ -214,7 +214,8 @@ def calculate_popularity_score(route_coords, tile_image, zoom, xtile, ytile):
         As explained in https://medium.com/strava-engineering/the-global-heatmap-now-6x-hotter-23fc01d301de
         the value of a pixel, between 0 and 255, come frem Histogram equalization. 
         That is: it is 255 times the  percentage of pixels with a lower heat value in the 5*5 tiles are around this one. 
-        This method yields maximal contrast by ensuring that there are an equal number of pixels of each color. A disadvantage of this approach is that the heatmap is not absolutely quantitative. 
+        This method yields maximal contrast by ensuring that there are an equal number of pixels of each color. 
+        A disadvantage of this approach is that the heatmap is not absolutely quantitative. 
         The same color only locally represents the same level of heat data.
 
     Parameters:

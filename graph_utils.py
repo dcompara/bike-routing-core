@@ -14,25 +14,78 @@ from matplotlib.cm import get_cmap
 import folium
 import collections
 
+import networkx as nx
+from typing import List
+
+
+def calculate_total_attributes(G, route_node_list, attribute = 'length', positive_only=False):
+    """
+    Calculate the total value of a specified attribute for the route.
+
+    Parameters:
+    G (networkx.MultiDiGraph): The graph containing nodes and edges.
+    route_node_list (list): List of node IDs constituting the path.
+    attribute (str): The attribute to calculate ('length', 'height_gain', etc.).
+    positive_only (bool): If True, sum only the positive values of the attribute.
+
+    Returns:
+    float: Total value of the specified attribute for the route.
+    """
+    gdf_edges = ox.routing.route_to_gdf(G, route_node_list)
+
+    # Ensure the attribute is numeric
+    gdf_edges[attribute] = pd.to_numeric(gdf_edges[attribute], errors='coerce')
+
+    if positive_only:
+        return float(gdf_edges[gdf_edges[attribute] > 0][attribute].sum())
+    else:
+        return float(gdf_edges[attribute].sum())
+
+
+def calculate_route(G, nodes, weight='length'):
+    """
+    Calculate the complete route passing through the given waypoints.
+
+    Parameters:
+    G (networkx.MultiDiGraph): The graph containing nodes and edges.
+    nodes (list): List of nodes.
+    weight (str): The attribute to calculate ('length', 'height_gain', etc.).
+
+    Returns:
+    list: List of node IDs constituting the complete route.
+    """
+
+    route = []
+    for i in range(len(nodes) - 1):
+        try:
+            segment = nx.shortest_path(G, nodes[i], nodes[i + 1], weight=weight)
+            route.extend(segment[:-1])  # Exclude the last node to avoid duplication
+        except nx.NetworkXNoPath:
+            # print(f"No path between {nodes[i]} and {nodes[i + 1]}")
+            return []
+    route.append(nodes[-1])  # Append the last waypoint to complete the route
+    return route
 
 
 
-def get_d_plus_total(G, node_list):
+
+
+def get_d_plus_total(G, route_node_list):
     """
     Calculate the total positive elevation gain for a given list of nodes in a graph.
 
     Parameters:
     G (networkx.Graph): The graph containing nodes with elevation data.
-    node_list (list): List of node IDs representing the path.
+    route_node_list (list): List of node IDs representing the path.
 
     Returns:
     float: Total positive elevation gain in meters.
     """
     total_gain = 0
 
-    for i in range(len(node_list) - 1):
-        elevation_current = G.nodes[node_list[i]].get('elevation', 0)
-        elevation_next = G.nodes[node_list[i + 1]].get('elevation', 0)
+    for i in range(len(route_node_list) - 1):
+        elevation_current = G.nodes[route_node_list[i]].get('elevation', 0)
+        elevation_next = G.nodes[route_node_list[i + 1]].get('elevation', 0)
         gain = elevation_next - elevation_current
 
         if gain > 0:  # Only consider elevation gain, ignore drops
@@ -65,6 +118,64 @@ def get_d_plus(gdf_route):
         # print(f'{i} - previous elevation: {elev_lst[i - 1]}, current elevation: {val}, d+: {d_plus_out}')
     
     return d_plus_out
+
+
+
+
+
+
+def filter_by_highway_types(G: nx.MultiDiGraph, allowed_types: List[str]) -> nx.MultiDiGraph:
+    """
+    Filters the edges of the graph G by allowed highway types.
+
+    Parameters:
+    G (nx.MultiDiGraph): The input graph.
+    allowed_types (List[str]): A list of allowed highway types.
+
+    Returns:
+    nx.MultiDiGraph: The filtered graph with only the allowed highway types.
+    """
+    edges_to_remove = []
+    for u, v, k, data in G.edges(keys=True, data=True):
+        highway_type = data.get("highway")
+        if isinstance(highway_type, list):
+            # If highway is a list, check if any type in the list is allowed
+            if not any(ht in allowed_types for ht in highway_type):
+                edges_to_remove.append((u, v, k))
+        else:
+            if highway_type not in allowed_types:
+                edges_to_remove.append((u, v, k))
+    G.remove_edges_from(edges_to_remove)
+    return G
+
+
+
+def filter_by_popularity(G: nx.MultiDiGraph, min_popularity: float) -> nx.MultiDiGraph:
+    """
+    Filters the edges of the graph G by a minimum popularity threshold.
+
+    Parameters:
+    G (nx.MultiDiGraph): The input graph.
+    min_popularity (float): The minimum popularity threshold. Edges with popularity less than or equal to this value will be removed.
+
+    Returns:
+    nx.MultiDiGraph: The filtered graph with edges having popularity greater than the given threshold.
+    """
+    edges_to_remove = []
+    for u, v, k, data in G.edges(keys=True, data=True):
+        popularity = float(data.get("popularity", 0))
+        if popularity <= min_popularity:
+            edges_to_remove.append((u, v, k))
+    G.remove_edges_from(edges_to_remove)
+    return G
+
+
+'''
+
+
+FUNCTIO FROM THE BAYESIAN OPTIMIZATION. MAY BE OBSOLTES
+
+'''
 
 
 
@@ -210,8 +321,7 @@ def random_gps_waypoints_from_list(n, waypoints, radius_meters, gps_y_min, gps_y
 
 
 
-# To Do: TO BE MODIFEDD TO GET THE IMPEDANCE
-def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
+def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point, attribute = 'length'):
     """
     Compute the shortest path for a given starting and ending point.
 
@@ -221,6 +331,7 @@ def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
     gdf_edges (gpd.GeoDataFrame): GeoDataFrame containing the edges of the graph.
     start_point (tuple): Starting point as (latitude, longitude).
     end_point (tuple): Ending point as (latitude, longitude).
+    attribute (str): The attribute to calculate ('length', 'elevation', etc.).
 
     Returns:
     tuple: A tuple containing the route (list of node IDs) and the GeoDataFrame of the route nodes.
@@ -231,7 +342,7 @@ def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
     
     # Compute the shortest path
     try:
-        route = nx.shortest_path(G, orig, dest, weight="impedance")
+        route = nx.shortest_path(G, orig, dest, weight="attribute")
     except nx.NetworkXNoPath:
         route = []
     if not route or len(route) == 1:
@@ -266,10 +377,9 @@ def create_one_route(G, gdf_nodes, gdf_edges, start_point, end_point):
     return route, gdf_nodes_route
 
 
-
-def generate_loop(G, gdf_nodes, gdf_edges, start, waypoints):
+def generate_route(G, gdf_nodes, gdf_edges, start, waypoints, end):
     """
-    Create a loop route starting from a point and passing through a list of waypoints.
+    Create a  route starting from a point, passing through a list of waypoints ad ending to the a last point
 
     Parameters:
     G (networkx.Graph): The graph containing nodes and edges.
@@ -282,43 +392,31 @@ def generate_loop(G, gdf_nodes, gdf_edges, start, waypoints):
     tuple: A tuple containing the final route (list of node IDs), the GeoDataFrame of the route nodes, and a list of individual routes.
     """
     routes_list = []
+    points = [start] + waypoints + [end]
+    full_route = []
+    combined_gdf_nodes_route = pd.DataFrame()
     
-    # 1 - First route from start to 1st waypoint
-    route, gdf_nodes_route = create_one_route(G, gdf_nodes, gdf_edges, start, waypoints[0])
-    if not route or gdf_nodes_route.empty:
-        return -1, [], routes_list
-    routes_list.append(route)
-    
-    # 2 - Loop over all waypoints
-    for i in range(len(waypoints) - 1):
-        r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[i], waypoints[i+1])
-       
-        if not r or gdf_nodes_route.empty:
+    for i in range(len(points) - 1):
+        route, gdf_nodes_route = create_one_route(G, gdf_nodes, gdf_edges, points[i], points[i+1])
+        if not route or gdf_nodes_route.empty:
             return -1, [], routes_list
         
-        route = route[:-1] + r
-
+        # Extend the full route by appending the new route segment (excluding the last node to avoid duplication)
+        full_route = full_route[:-1] + route if full_route else route
+        routes_list.append(route)
         
-        # Add last cumulative distance to new route
-        last_cum_dist = gdf_nodes_route.iloc[-1]['cum_dist']
-        gdf_n_r['cum_dist'] = gdf_n_r['cum_dist'] + last_cum_dist
-        routes_list.append(r)
-        gdf_nodes_route = pd.concat([gdf_nodes_route[:-1].reset_index(drop=True), gdf_n_r[:-1].reset_index(drop=True)], axis=0)
+        if combined_gdf_nodes_route.empty:
+            combined_gdf_nodes_route = gdf_nodes_route
+        else:
+            last_cum_dist = combined_gdf_nodes_route.iloc[-1]['cum_dist']
+            gdf_nodes_route['cum_dist'] += last_cum_dist
+            combined_gdf_nodes_route = pd.concat(
+                [combined_gdf_nodes_route[:-1].reset_index(drop=True), 
+                 gdf_nodes_route[:-1].reset_index(drop=True)], axis=0)
     
-    # 3 - Last route from last waypoint to starting point
-    r, gdf_n_r = create_one_route(G, gdf_nodes, gdf_edges, waypoints[-1], start)
-    if not r or gdf_nodes_route.empty:
-        return -1, [], routes_list
-    
-    route = route[:-1] + r
-    
-    # Add last cumulative distance to new route
-    last_cum_dist = gdf_nodes_route.iloc[-1]['cum_dist']
-    gdf_n_r['cum_dist'] = gdf_n_r['cum_dist'] + last_cum_dist
-    routes_list.append(r)
-    gdf_nodes_route = pd.concat([gdf_nodes_route[:-1].reset_index(drop=True), gdf_n_r[:-1].reset_index(drop=True)], axis=0)
-    
-    return route, gdf_nodes_route, routes_list
+    return full_route, combined_gdf_nodes_route, routes_list
+
+
 
 
 

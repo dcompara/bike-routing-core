@@ -5,10 +5,10 @@
 
 '''
 We have started form these algorithm:
-Modified Dijkstra's Algorithm, Yen's algorithm or Bellman of Johnson or 
+Modified Dijkstra's Algorithm, Yen's algorithm or Bellman of Johnson or Floyd–Warshall
 A* Search Algorithm,
 Dynamic Programming (DP) (dp[u][d] can represent the maximum elevation gain to reach node u with a distance d),
-Mixed-Integer Linear Programming (MILP) i=with CPLEX or Gurobi
+Mixed-Integer Linear Programming (MILP) with CPLEX or Gurobi
 Breadth-First Search (BFS)
 Depth-First Search (DFS)
 Constrained Shortest Path First (CSPF)  
@@ -32,10 +32,11 @@ that are not dominated by any path from the start state to the
 goal state. 
 Sometimes we can add constrains (max, min of some cost function) so The multiobjective path problem can be formulated as an optimization program with linear constraints
 
-We can compute the set of all Pareto-optimal solutions (one good algorithm for bi-objective search being BOA*) or only the so called minimal complete set of efficient paths (sometimes called One-to-One Multiobjective Shortest Path Problem):
+We can compute the set of all Pareto-optimal solutions (one good algorithm for bi-objective search being BOA*) 
+or only the so called minimal complete set of efficient paths (sometimes called One-to-One Multiobjective Shortest Path Problem):
  that is to find a representative efficient path for every attribute (non-dominated cost vector). 
  New Approach to Multi-Objective A*:   NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
-These algotithms are when the  objective function is additive (sum of the cost value per edge) but some are more general (ex cost = cost_path1/cost path_2).
+These algorithms are when the  objective function is additive (sum of the cost value per edge) but some are more general (ex cost = cost_path1/cost path_2).
 
 Finally anotehr way is to find only a subset of efficient paths that is good enough. This motivates the study of 
 * Fully Polynomial Time Approximation Schemes (FPTAS) for MOSP problem.
@@ -77,9 +78,9 @@ and a very good one is the specific for bike problem: heuristic-enabled Dijkstra
 
 
 In python: tons of codes (not laking about the general optmization:  SciPy.optimize  pyOpt, Pyomo): cspy, PyGMO (much better is https://esa.github.io/pygmo2/), pyMCMA, GPOL, pyMultiobjective, paretoset, pathwyse (in C++)... BUt the best one seems to be:
-DEAP (Distributed Evolutionary Algorithms in Python) with Multi-objective optimisation (NSGA-II, NSGA-III, SPEA2, MO-CMA-ES): https://github.com/DEAP/deap or https://pypi.org/project/deap/
-Platypus NSGA-II, NSGA-III, MOEA/D, IBEA, Epsilon-MOEA, SPEA2, GDE3, OMOPSO, SMPSO, and Epsilon-NSGA-II: https://github.com/Project-Platypus/Platypus  https://pypi.org/project/Platypus-Opt/    https://platypus.readthedocs.io/en/latest/
-pymoo: Multi-objective Optimization in Python  : GA, DE, BRKGA, NelderMead, PatternSearch, CMAES, ES, SRES, ISRES, NSGA-II, R-NSGA-II, NSGA-III, U-NSGA-III, R-NSGA-III, MOEAD, AGE-MOEA, C-TAEA, SMS-EMOA, and RVEA.  https://pymoo.org/
+* DEAP (Distributed Evolutionary Algorithms in Python) with Multi-objective optimisation (NSGA-II, NSGA-III, SPEA2, MO-CMA-ES): https://github.com/DEAP/deap or https://pypi.org/project/deap/
+* Platypus NSGA-II, NSGA-III, MOEA/D, IBEA, Epsilon-MOEA, SPEA2, GDE3, OMOPSO, SMPSO, and Epsilon-NSGA-II: https://github.com/Project-Platypus/Platypus  https://pypi.org/project/Platypus-Opt/    https://platypus.readthedocs.io/en/latest/
+* pymoo: Multi-objec* ive Optimization in Python  : GA, DE, BRKGA, NelderMead, PatternSearch, CMAES, ES, SRES, ISRES, NSGA-II, R-NSGA-II, NSGA-III, U-NSGA-III, R-NSGA-III, MOEAD, AGE-MOEA, C-TAEA, SMS-EMOA, and RVEA.  https://pymoo.org/
 + interesting to test
 https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm + NAMOA_lazy + ..) in C++
 https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be the best algorithm for the Exact Multi-objective Path Finding)
