@@ -28,7 +28,9 @@ The initial idea was based on the article (https://medium.com/p/16a266d468a5/edi
 ## Project status
 
 
-Some ideas for the futur it can be nice to have an automatic selection
+Some ideas for the futur:(see List of OSM-based services)
+
+it can be nice to have an automatic selection
 
 Voiture route gravel, vtt
 
@@ -55,7 +57,7 @@ See Strava Segment
 https://climbfinder.com/
 
 
-## LST of alredy propsed feature
+## LIST of alredy propsed feature
 
 Route Planning
 

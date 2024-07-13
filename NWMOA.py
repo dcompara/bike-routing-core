@@ -6,7 +6,7 @@ from collections import defaultdict, deque
 Exact Multi-objective Path Finding with Negative Weights
 Saman Ahmadi1, Nathan R. Sturtevant2, Daniel Harabor3, Mahdi Jalili1
 
-Seems to eb the best algorythm for Negative Weight Multi-Objective A* = NWMOA* 
+Seems to be the best algorythm for Negative Weight Multi-Objective A* = NWMOA* 
 
 
 

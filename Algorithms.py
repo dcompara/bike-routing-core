@@ -38,7 +38,7 @@ or only the so called minimal complete set of efficient paths (sometimes called 
  New Approach to Multi-Objective A*:   NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
 These algorithms are when the  objective function is additive (sum of the cost value per edge) but some are more general (ex cost = cost_path1/cost path_2).
 
-Finally anotehr way is to find only a subset of efficient paths that is good enough. This motivates the study of 
+Finally another way is to find only a subset of efficient paths that is good enough. This motivates the study of 
 * Fully Polynomial Time Approximation Schemes (FPTAS) for MOSP problem.
 * Heuristic and Metaheuristic Approaches: like simulated annealing (SA) and tabu search (TS) 
 Evolutionary Algorithms (EA):   Multi-Objective Artificial Bee Colony (MOABC) and Non-Dominant Sorting Genetic Algorithm II (NSGA-II) 
