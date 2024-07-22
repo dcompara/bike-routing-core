@@ -18,6 +18,67 @@ import networkx as nx
 from typing import List
 
 
+
+import networkx as nx
+import osmnx as ox
+import pandas as pd
+
+def calculate_total_attributes_multiplekm(G, route_node_list, attribute='length', positive_only=False):
+    """
+    Calculate the total value of a specified attribute for the route and the number of kilometers taken multiple times.
+
+    Parameters:
+    G (networkx.MultiDiGraph): The graph containing nodes and edges.
+    route_node_list (list): List of node IDs constituting the path.
+    attribute (str): The attribute to calculate ('length', 'height_gain', etc.).
+    positive_only (bool): If True, sum only the positive values of the attribute.
+
+    Returns:
+    tuple: Total value of the specified attribute for the route, and the number of kilometers taken multiple times.
+    """
+    gdf_edges = ox.routing.route_to_gdf(G, route_node_list)
+
+     # Ensure the attribute is numeric
+    gdf_edges[attribute] = pd.to_numeric(gdf_edges[attribute], errors='coerce')
+    
+    total_value = 0
+    duplicate_distance = 0
+    edge_count = {}
+
+    for u, v in zip(route_node_list[:-1], route_node_list[1:]):
+        edge_data = G.get_edge_data(u, v)
+        
+        for key in edge_data:
+            edge = edge_data[key]
+            value = edge.get(attribute, 0)
+            edge_id = (u, v, key)
+
+            if positive_only and value <= 0:
+                continue
+
+            total_value += value
+
+            if edge_id in edge_count:
+                edge_count[edge_id] += 1
+                duplicate_distance += value
+            else:
+                edge_count[edge_id] = 1
+
+    return total_value, duplicate_distance
+
+# Example usage
+# G = ox.graph_from_place('Piedmont, California, USA', network_type='bike')
+# route_node_list = [starting_node, intermediate_node, destination_node]
+# total_length, duplicate_length = calculate_total_attributes(G, route_node_list, attribute='length')
+# print(f"Total Length: {total_length} km, Duplicate Length: {duplicate_length} km")
+
+
+
+
+
+
+
+
 def calculate_total_attributes(G, route_node_list, attribute = 'length', positive_only=False):
     """
     Calculate the total value of a specified attribute for the route.

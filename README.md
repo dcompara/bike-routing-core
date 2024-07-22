@@ -56,6 +56,8 @@ import gpx
 See Strava Segment
 https://climbfinder.com/
 
+For spped may be use C++. Cf for instance https://github.com/organicmaps/organicmaps
+
 
 ## LIST of alredy propsed feature
 
