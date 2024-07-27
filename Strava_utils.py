@@ -16,6 +16,10 @@ from getpass import getpass
 from stravacookies import StravaCookieFetcher
 
 
+import numpy as np
+from PIL import Image
+
+
 def fetch_strava_cookies(email, password):
     """
     Fetch Strava cookies required for authentication.
@@ -212,7 +216,7 @@ def calculate_popularity_score(route_coords, tile_image, zoom, xtile, ytile):
 
 
         As explained in https://medium.com/strava-engineering/the-global-heatmap-now-6x-hotter-23fc01d301de
-        the value of a pixel, between 0 and 255, come frem Histogram equalization. 
+        the value of a pixel, between 0 and 255, come from Histogram equalization. 
         That is: it is 255 times the  percentage of pixels with a lower heat value in the 5*5 tiles are around this one. 
         This method yields maximal contrast by ensuring that there are an equal number of pixels of each color. 
         A disadvantage of this approach is that the heatmap is not absolutely quantitative. 
@@ -254,9 +258,24 @@ def add_edge_popularity(G: nx.MultiDiGraph, tile_image, zoom_level, xtile, ytile
     Returns:
     nx.MultiDiGraph: The graph with popularity attributes added to all edges.
     """
+ 
+
     u, v, k = zip(*G.edges(keys=True))
     uvk = tuple(zip(u, v, k))
 
+    # Calculate edges' popularity score from u to v and set the popularity attribute
+    for u, v, k in uvk:
+        path = [u, v]
+        coordinates = create_route_coords(G, path)
+        popularity_score = calculate_popularity_score(coordinates, tile_image, zoom_level, xtile, ytile)
+    
+        # Set the popularity attribute if the score is not -1 or if it was not existing before
+        if popularity_score != -1 or 'popularity' not in G[u][v][k]:
+            G[u][v][k]['popularity'] = popularity_score
+    
+
+    
+    """
     # Calculate edges' popularity score from u to v
     popularity_scores = []
     for u, v, k in uvk:
@@ -267,8 +286,9 @@ def add_edge_popularity(G: nx.MultiDiGraph, tile_image, zoom_level, xtile, ytile
 
     # Set the popularity attribute for each edge
     nx.set_edge_attributes(G, dict(zip(uvk, popularity_scores)), name="popularity")
+    """
+    print("Added popularity attributes to all relevant edges")
 
-    print("Added popularity attributes to all edges")
     return G
 
 

@@ -53,14 +53,15 @@ Finally another way is to find only a subset of efficient paths that is good eno
 * Fully Polynomial Time Approximation Schemes (FPTAS) for MOSP problem.
 * Heuristic and Metaheuristic Approaches: like simulated annealing (SA) and tabu search (TS) 
 Evolutionary Algorithms (EA):   Multi-Objective Artificial Bee Colony (MOABC) and Non-Dominant Sorting Genetic Algorithm II (NSGA-II) 
-(but  a LOT of study cf multi-strategy adaptable ant colony optimization (MsAACO) or prominent swarm optimization (PSO))
+(but  a LOT of study cf multi-strategy adaptable ant colony optimization (a multi-strategy adaptable ant colony optimization (MsAACO: https://doi.org/10.1016/j.knosys.2024.111459)
+ ,  see https://medium.com/ai4sm/personalized-cycling-path-routing-cc3c484da2a6) or prominent swarm optimization (PSO))
 SO now the NSGA-III (that is NSGA-II for multi objective, see also  Inexpensive Constraint Surrogate-assisted Non-dominated Sorting Genetic
 Algorithm (IC-SA-NSGA-II) or R-NSGA-III, or in Bayesian approach Self-Adaptive Algorithm for Multi-Objective Constraint Optimization by using Radial Basis Function Approximations (SAMO-COBRA)
 MOEA/D or MOEAD (Multiobjective Evolutionary Algorithm Based on Decomposition) + variant (such as ε-MOEA (ε-Domination Based Multi-Objective Evolutionary Algorithm)) and 
 Strength Pareto Evolutionary Algorithm SPEA2-SDE  are the state of the Art models (cf Wikipedia or 2024 Springer Review). But 
 Multi-Objective Particle Swarm Optimization (MOPSO) and Differential Evolution (DE) are alos Popular due to their simplicity.
 * AI Techniques: Methods like Deep Neural Networks (DNN) and Fuzzy Inference Systems (FIS) 
-* GRASP: The Greedy Randomized Adaptive Search Procedure 
+* GRASP: The Greedy Randomized Adaptive Search Procedure (as used in the 2017 article "Bicycle network design: model and solution algorithm")
 
 
 We have to distinguish between the following algotithm also:
@@ -82,7 +83,7 @@ Some article in the litterature are given in the Repository (see also the review
 for instance A-A*pex is fond similar to LTMOA*  but this one was overpass by NWMOA*
 
 The best articles (especiallly for reference therin) are: 
-2024 SkiVis: Visual Exploration and Route Planning in Ski Resorts (good revew for sky, hiking, biking)
+2024 SkiVis: Visual Exploration and Route Planning in Ski Resorts (good revew for sky, hiking, biking: that are often  lke "Urban Bike Route Planner")
 2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath
 2024 Exact Multi-objective Path Finding with NegativeWeights (for some new algorythms): 
 2024 Multiobjective Path Problems and Algorithms in Telecommunication Network Design—Overview and Trends

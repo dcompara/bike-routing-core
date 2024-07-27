@@ -705,6 +705,23 @@ def get_color_for_grade(grade, cmap='plasma'):
     return to_hex(color)
 
 
+def convert_gdf_to_gpx(gdf, name):
+    trace_points = "\n".join([
+        TRACE_POINT.format(
+            lat=row['y'],
+            lon=row['x'],
+            elevation=row['elevation'],
+            timestamp=datetime.now().isoformat()
+        ) for idx, row in gdf.iterrows()
+    ])
+
+    gpx_payload = TEMPLATE.format(
+        name=name,
+        timestamp=datetime.now().isoformat(),
+        trace_points=trace_points
+    )
+
+    return gpx_payload
 
 def convert_paths_to_gdf_with_grades(G, paths):
     """
