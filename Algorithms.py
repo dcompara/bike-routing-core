@@ -6,18 +6,55 @@
 '''
 We have started form these algorithm:
 Modified Dijkstra's Algorithm, Yen's algorithm or Bellman of Johnson or Floyd–Warshall
-A* Search Algorithm,
-Dynamic Programming (DP) (dp[u][d] can represent the maximum elevation gain to reach node u with a distance d),
+A* Search Algorithm (f=g+h),
+Dynamic Programming (DP): Storing minimal costs and resource consumptions in a table, updating values iteratively: (dp[u][d] can represent the maximum elevation gain to reach node u with a distance d) (cf CSP-CH article https://doi.org/10.1609/icaps.v22i1.13495  has been suplented by Label Settigns (LS) that store all pareto set with ~ u adn d)
 Mixed-Integer Linear Programming (MILP) with CPLEX or Gurobi
 Breadth-First Search (BFS)
 Depth-First Search (DFS)
 Constrained Shortest Path First (CSPF)  
 Lagrangian Relaxation Techniques
 
+Bounded-Cost Search (BCS): Discard stuff (node, edge, path, ...) that exceed the cost bound (cf 2022 Bounded-Cost Bi-Objective Heuristic Search)
+
+TRICKS USED: (scalarization, Normalization of Objectives, ...and obious concept such as (Weakly) Nondominated Solutions)
+Data structures like labels (especially Forest Hop Labeling (FHL)), priority queues, and bags + sorted lists, hash maps, or interval trees ..) Exemple Label Setting (LS: typicaly node, cost vector,pointer to the predecessor label): storing all Pareto-optimal solutions and using a priority queue to handle labels.
+Speedup Heuristics: Ellipse Pruning, epsilon dominiaince, Arc-Flags, Budget Factors, Merging Similar Nodes, dynamic penalties (Fitness Sharing, Crowding Distance,  Cell-Based Density Operator) to force explorations,
+
+  ...
+Contraction Hierarchies (CH): Node Ordering, Contraction, Shortcut Creation, Hierarchical Graph Construction
+Lazy Queue Management (do not immediately discarded a path, but store it to potentially reinsert it without recalculated it) 
+Dimensionality Reduction (focusing on a subset of the objective dimensions): cf Lexicographic Ordering (comparing the elements in a predefined order) or Path Ranking
+may be used also principal component analysis (PCA), random forest (RF), and k-nearest neighbors (kNN) used in evolution algorythm could be good
+Bidirectional Search (ex BOA*): ex Pre-processing Step: A backwards Dijkstra search from the destination to all other vertices is performed to compute heuristic values.
+Parallelization or Vectorized operation (for instance in Set Dominance Check (SDC))
+graph partitioning, Graph Neural Networks, Tree Decomposition, Index Construction (for each constraint combination) --> Forest hop labeling (FHL) ...
+slack variables change  inequality constraints in equality (2022): https://doi.org/10.1080/19427867.2020.1860355
+Goal Programming (GP): Objectives are transformed into goals, and deviations from these goals are minimized.
+Fuzzy logic :
+Pruning Methods (cf 2024 review), Reference-Point-Based (RPB),  Multi-Criteria Decision Analysis (MCDA), convex hull of individual minima (CHIM), Data Envelopment Analysis (DEA
+Autonomous Algorithm Recommendation (automatically adaptively adjust algorithm parameters and strategies)
+Using multi agent mathods (cf BB-MO-CBS-k to computes k solutions)
+Temporarily relax constraint, 
+Dynamic updates
+ripple spread (https://doi.org/10.1007/s40747-023-01260-8 good review article) ripples = waves that spread from one node to neighboring nodes
+
+
+Tests performed on http://www.diag.uniroma1.it/~challenge9/ (9th DIMACS Implementation Challenge - Shortest Paths) or ZDT Tests (doi: 10.1.1.30.5848).
+EMO2021 Huwawei Logistics Competion https://www.noahlab.com.hk/logistics-ranking/#/home/the-competition
+see also benchmark tests on (2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath)
+
+BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
+
+
+
+
+
 But if we use a single objective funciton using linearization of many objective using weights. This always result in solutions distributed a small area on the entire Pareto front (Boyd & Vandenberghe, 2004).
 This is also called scalarization with Equal, Rank Sum, Rank Exponent, centroid, inverse weight method, or analytic hierarchy process method (AHP) ...: cf 2013 ANK ORDERING CRITERIA WEIGHTING METHODS
 – A COMPARATIVE OVERVIEW) or "Multi-Criteria Decision Making (MCDM) Methods and Concepts"
 
+
+hisotry (1983 On a multicriteria shortest path problem Martin)
 
 But the problem is in fact more general cf https://en.wikipedia.org/wiki/Constrained_optimization or better
 https://en.wikipedia.org/wiki/Multi-objective_optimization
@@ -39,7 +76,7 @@ Resource-Constrained Elementary Shortest Path Problems (RCESPPs)
 Shortest Path Problems with Forbidden Paths (SPPFPs)
 
 Another name for all this is Multi-Constraint Shortest Path (MCSP). See all work by Xiaofang Zhou's team and Ziyi Liu's thesis (a very good start)
-they do nt use the name pareto set but "skyline path problem"
+they do not use the name Pareto set but "skyline path problem"
 
 This is also stronly related to the "knapsack problem" (cf fully polynomial-time approximation scheme (FPTAS) algorithm given in  "Approximating single- and multi-objective nonlinear sum and
 product knapsack problems") or to the Orienteering Problem (OP): a routing problem where the goal is to determine a subset of nodes to visit and in which order, so that the total collected score is maximized without exceeding a given time budget. 
@@ -73,7 +110,7 @@ Evolutionary Algorithms (EA):   Multi-Objective Artificial Bee Colony (MOABC) an
 (but  a LOT of study cf multi-strategy adaptable ant colony optimization (a multi-strategy adaptable ant colony optimization (MsAACO: https://doi.org/10.1016/j.knosys.2024.111459)
  ,  see https://medium.com/ai4sm/personalized-cycling-path-routing-cc3c484da2a6) or prominent swarm optimization (PSO))
 SO now the NSGA-III (that is NSGA-II for multi objective, see also  Inexpensive Constraint Surrogate-assisted Non-dominated Sorting Genetic
-Algorithm (IC-SA-NSGA-II) or R-NSGA-III, or in Bayesian approach Self-Adaptive Algorithm for Multi-Objective Constraint Optimization by using Radial Basis Function Approximations (SAMO-COBRA)
+Algorithm (IC-SA-NSGA-II) or R-NSGA-III, or in Bayesian approach Self-Adaptive Algorithm for Multi-Objective Constraint Optimization by using Radial Basis Function Approximations (SAMO-COBRA), see also (MORBO: Recent advances in Bayesian optimization)
 MOEA/D or MOEAD (Multiobjective Evolutionary Algorithm Based on Decomposition) + variant (such as ε-MOEA (ε-Domination Based Multi-Objective Evolutionary Algorithm)) and 
 Strength Pareto Evolutionary Algorithm SPEA2-SDE  are the state of the Art models (cf Wikipedia or 2024 Springer Review). But 
 Multi-Objective Particle Swarm Optimization (MOPSO) and Differential Evolution (DE) are alos Popular due to their simplicity.
@@ -102,23 +139,40 @@ Some article in the litterature are given in the Repository (see also the review
 "Review Multiobjective Path Problems and Algorithms in Telecommunication Network Design—Overview and Trends")
 and the "2022 A systematic literature review for the tourist trip design problem: Extensions, solution techniques and future research lines "
 
-for instance A-A*pex is fond similar to LTMOA*  but this one was overpass by NWMOA*   
+for instance A-A*pex is found similar to LTMOA*  but this one was overpass by NWMOA* but also by BB-MO-CBS-pex and by  LTMOA-V+DR* (2024 Efficient Set Dominance Checks in Multi-Objective)
 
 The best articles (especiallly for reference therin) are: + adding the 2023 thesis A Study of Multi-Constraint Shortest Path Queries in Road Network
-2024 SkiVis: Visual Exploration and Route Planning in Ski Resorts (good revew for sky, hiking, biking: that are often  lke "Urban Bike Route Planner" see also "https://doi.org/10.1016/j.inffus.2024.102413")
-2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath
+
+
+BEST
+2022 A review and evaluation of muli and many objective optimization Karai Dariane JEcolgy
+2023 A Study of Multi-Constraint Shortest Path_Ziyi Liu_phd_thesis
+2023 Heuristic-Search Approaches for the Multi-Objective Shortest-Path Problem Salzman Koenig IJCAI + Solving ... (for historical)
+2024 2024 Multiobjective Path Problems and Algorithms  Overview Craveirinha Pacoal Algorithms
+
+2024 most recent ones are: Proceedings of the Seventeenth International Symposium on Combinatorial Search (SoCS 2024)
+
+
+
+
+2024 Efficient Approximate Search for Multi-Objective Multi-Agent Path Finding (find k solution possibly approximate: uisng A*pex)
+2024 SkiVis: Visual Exploration and Route Planning in Ski Resorts (good revew for sky, hiking, biking: that are often  like "Urban Bike Route Planner" see also "https://doi.org/10.1016/j.inffus.2024.102413")
+2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath (good review and Benchmark test problems: CMOCSO, PPS, CCMO, and MTCMO are the best
 2024 Exact Multi-objective Path Finding with NegativeWeights (for some new algorythms): 
+2024 Speeding Up Dominance Checks in Multi-Objective Search (that can be used for accelerate x10 many algotirthms: here propose the LTMOA*+R+Bucket)
 2024 Multiobjective Path Problems and Algorithms in Telecommunication Network Design—Overview and Trends (good review and give good "generic algorithms" which can be very nice to read again)
 2024 Constrained multi-objective optimization problems .. (unfortunatly does not realy compare the performances)
-2024 A review of Pareto pruning methods for multi-objective optimization (good for the methods, but does not compare algorithm)
+2024 A review of Pareto pruning methods for multi-objective optimization (good for the methods and classification, but does not compare algorithm)
+2024 Applied Multi-objective Optimization (book a good reveiw, may be a bit focus on evolution algorithms: see the other book (2024 Machine Learning Assisted evolutionary Multi and many objective optimization)
 2023 Enhanced methods for the weight constrained shortest path problem (compare BiPulse,WC-EBBA*, WC-BA*, RC-BDA*, Pulse and CSP)
 2023 Heuristic-Search Approaches for the Multi-Objective Shortest-Path Problem: Progress and Research Opportunities  (very good review)
 2023 Solving the multi-objective bike routing problem by meta heuristic algorithm (propsed the NGA-MOBRP: new genetic approach for Multi-Objective Bike Routing Problem)
-2022 A review and evaluation of multi and many-objective optimization: Methods and algorithms 
+2022 A review and evaluation of multi and many-objective optimization: Methods and algorithms (many-objective = with four or more objectives.)
 2022 Application of state‑of‑the‑art multiobjective metaheuristic algorithms in reliability‑based design optimization: a comparative study (good reveiw but I did not download it because no best algorithm is found)
 + older 2011: Multiobjective evolutionary algorithms: A survey of the state of the art; 2015: Many-objective evolutionary algorithms: A survey  (veyr god to see who cite them ..)
-and a very good one is the specific for bike problem: heuristic-enabled Dijkstra algorithm developed by Hrncir et al. (with improved heuristic using ellipse ditance for nodes and epsilon dominance)
-and may article on cycle-tourism like "2023 Sustainable cycle-tourism for society: Integrating multi-criteria decision-making and land use approaches for route selection"
+and a very good one is the specific for bike problem: heuristic-enabled Dijkstra algorithm developed by Hrncir et al. https://github.com/agents4its/cycleplanner/tree/mcspeedups
+(with improved heuristic using ellipse ditance for nodes and epsilon dominance)
+and may article on cycle-tourism like "2023 Sustainable cycle-tourism for society: Integrating multi-criteria decision-making and land use approaches for route selection" (very good for the list criteria and parameters.)
 or "2022 Multi-objective Route Planning Problem for Cycle-tourists" (good intro for cycling but propose the Augmented P-constraint method (AUGMECON) which looks quite poor)
 and many others "2014 A Survey on Algorithmic Approaches for Solving Tourist Trip Design Problem (TTDP)" (highlight the Iterated Local Search (ILS)).
 Among the tourist road a recent nice one is "2024 Your trip, your way: An adaptive tourism recommendation system " 
@@ -135,8 +189,11 @@ or other models like LLM + "2022: Deep Learning for Trajectory Data Management a
 Some interesting ideas like in 2021 Most Diverse Near-Shortest Paths: adding adaptative multiplicative  penalties to the edges of already found paths, encouraging the discovery of new, diverse paths 
 
 Anotehr very appealing idea is to perform a huge preprocessing (for instance with an all to all solution or to create the forest hop labeling (FHL) cube) and to use Multi-Objective Dynamic Shortest Path (MODSP) algorothms that 
-updating vertices and edges dynamically, querying approximate Pareto fronts, and finding optimal paths based on decision variables and mroe important based on previous results witout aclculatin all (cf review 2022 https://doi.org/10.3390/a16030162)
-cf also 10.3233/FAIA240145  or /10.1007/978-3-031-30675-4_15
+updating vertices and edges dynamically, querying approximate Pareto fronts, and finding optimal paths based on decision variables and mroe important based on previous results witout calculatin all (cf review 2022 https://doi.org/10.3390/a16030162)
+cf also 10.3233/FAIA240145  or /10.1007/978-3-031-30675-4_15.
+Preprocessing such as CSP-CH are very useful. They are aso called Index-Based algorithms (they have an extra stage, which is called index construction). Such methods can produce faster query processing
+
+
 
 In python: tons of codes (not laking about the general optmization:  SciPy.optimize  pyOpt, Pyomo): cspy, PyGMO (much better is https://esa.github.io/pygmo2/), pyMCMA, GPOL, pyMultiobjective ( a very good one with all references), paretoset, pathwyse (in C++)... BUt the best one seems to be:
 * DEAP (Distributed Evolutionary Algorithms in Python) with Multi-objective optimisation (NSGA-II, NSGA-III, SPEA2, MO-CMA-ES): https://github.com/DEAP/deap or https://pypi.org/project/deap/
@@ -146,27 +203,37 @@ In python: tons of codes (not laking about the general optmization:  SciPy.optim
 https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm + NAMOA_lazy + ..) in C++
 https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be the best algorithm for the Exact Multi-objective Path Finding)
 
++ OSMnx based on the populat Networkx but see the faster https://www.rustworkx.org/benchmarks.html (rustworkx: A high-performance graph library for python)
 
+2017 Hrncir et al. https://github.com/agents4its/cycleplanner/tree/mcspeedups
 
 IN SUMMARY:  be careful  to choose the best lexicographic order for the cost: this has impact (cf 2023 Heuristic) 
 * NGA-MOBRP: (2023 article) is the most suitable to be employed within a real time tool for cyclists: good quality metrics in a reasonable computational time. Slightly faster than Multi-Objective
 Simulated Annealing (MOSA) approach
 * NWMOA* (2024 Exact..) an exact MOSP algorithm. Way beter than T-MDA: Targeted Multiobejctive Dijkstra algorithm, that was similar to NAMOA∗ dr-lazy to find minimal pareto set
-From (mail it seems also faster than ERCA*: (2023 A New Approach for the Resource Constrained Shortest Path Problem): Enhanced Resource Constrained A* (ERCA*): way faster than BiPulse, an existing leading algorithm for RCSPP cf https://github.com/rap-lab-org/public_erca
+From (by mail it seems also faster than ERCA*: (2023 A New Approach for the Resource Constrained Shortest Path Problem): Enhanced Resource Constrained A* (ERCA*): way faster than BiPulse, an existing leading algorithm for RCSPP cf https://github.com/rap-lab-org/public_erca
 
 * WC-EBBA*par (enhanced biased bidirectional A*: paralelism for multi core) (2024 enhanced) is a great choice for applications that need fast solution approaches;
     it is based on RC-BDA* and BiPulse and is bidirectioal,  contrary to the single directional: WC-A*  cf https://bitbucket.org/s-ahmadi/biobj/src/master/
 
- * Iterated Local Search (ILS) based algotihms such as 2023 Fast approximate bi‑objective Pareto sets .. + Chord algorithm  (to be checked but 10 second for 150 pairs) used in (2024 Proposal of Hiking Route Planning
-Optimization with Iterated Local Search and Modified Tourist Trip Design Problem))
+  * BB-MO-CBS-pex  multi agent but looks very fast  https://github.com/FangjiW/BBMOCBS-approx used Multi-Objective Multi-Agent Path Finding (MO-MAPF)
 
-* Forest Hop Labeling (FHL) is the only CSP algorithm that can achieve both accurate and efficient results andd all articel by the Xiaofang Zhou's group 
+
+
+ * Iterated Local Search (ILS) based algorithms such as 2023 Fast approximate bi‑objective Pareto sets .. + Chord algorithm  (to be checked but 10 second for 150 pairs) used in (2024 Proposal of Hiking Route Planning
+Optimization with Iterated Local Search and Modified Tourist Trip Design Problem) 
+
+* Forest Hop Labeling (FHL) is the only CSP algorithm that can achieve both accurate and efficient results and all articles by the Xiaofang Zhou's group 
 10.1109/ICDE60146.2024.00322 with the exact forest hop labeling (FHL) -cube or better approximate alpha-FHL : 2024 Approximate Skyline Index for Constrained Shortest Pathfinding with Theoretical Guarantee
+alpha is sometime called epsilon.
+All these algorithms (FHL-cube ofr exact or alpha-FHL for approximate) suprass the standard one that are Sky-Dijkstra and CSP-CH for exact shortest path computation and COLA (COnstrained LAbeling) 
+But COLA (2016 https://doi.org/10.14778/3015274.3015277) use less memory (100Mo).
+
 
 See also the above one such as multi-objective evolutionary algorithms (MOEAs) and
 *  the ε constrained method and Adaptive operator selection (AOS) are used in Multiobjective evolutionary algorithm based on decomposition (MOEA/D) (2014)
 indeed: ε-MOEA has been successful in finding well-converged and well-distributed solutions with a much smaller computational effort 
-than a number of state-of-the-art MOEAs including NSGA-II, SPEA2, and PESA (as quoted by Kalyanmoy Deb)
+than a number of state-of-the-art MOEAs including NSGA-II, SPEA2, and PESA (as quoted by Kalyanmoy Deb) see also (multi-objective evolutionary algorithm for tourism route recommendation (MOTRR): 10.1109/JAS.2023.123219)
 see for these approximation an (old review 2021: Approximation Methods for Multiobjective Optimization Problems: A Survey) stressing the difference betwwen 
 minimizing and maximizing or between Multiobjective Shortest Path, Spanning Tree (cf  Prim's/Kruskal's Algorithms), Matching, Salesmanor Knapsack Problemas.
 It mention a good algorithm by "Approximating Multiobjective Shortest Path in Practice" with teh conclusion than " approximate methods are useful on hard instances with conflicting objectives.
