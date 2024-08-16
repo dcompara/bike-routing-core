@@ -16,13 +16,14 @@ Lagrangian Relaxation Techniques
 
 Bounded-Cost Search (BCS): Discard stuff (node, edge, path, ...) that exceed the cost bound (cf 2022 Bounded-Cost Bi-Objective Heuristic Search)
 
-TRICKS USED: (scalarization, Normalization of Objectives, ...and obious concept such as (Weakly) Nondominated Solutions)
+TRICKS USED: (scalarization, Normalization of Objectives, ...and obvious concept such as (Weakly) Nondominated Solutions)
 Data structures like labels (especially Forest Hop Labeling (FHL)), priority queues, and bags + sorted lists, hash maps, or interval trees ..) Exemple Label Setting (LS: typicaly node, cost vector,pointer to the predecessor label): storing all Pareto-optimal solutions and using a priority queue to handle labels.
 Speedup Heuristics: Ellipse Pruning, epsilon dominiaince, Arc-Flags, Budget Factors, Merging Similar Nodes, dynamic penalties (Fitness Sharing, Crowding Distance,  Cell-Based Density Operator) to force explorations,
-
+closely related to decision making (APO—A posteriori aggregation of preferences; INT—Interactive; or APR—A priori aggregation of preferences)
   ...
 Contraction Hierarchies (CH): Node Ordering, Contraction, Shortcut Creation, Hierarchical Graph Construction
 Lazy Queue Management (do not immediately discarded a path, but store it to potentially reinsert it without recalculated it) 
+Binary Heap Queues, Bucket queue, hybrid, Tie-breaking .. the  data structure is key to speedup the iteration over the nodes (cf for insatnce 2024 Bounded-Suboptimal)
 Dimensionality Reduction (focusing on a subset of the objective dimensions): cf Lexicographic Ordering (comparing the elements in a predefined order) or Path Ranking
 may be used also principal component analysis (PCA), random forest (RF), and k-nearest neighbors (kNN) used in evolution algorythm could be good
 Bidirectional Search (ex BOA*): ex Pre-processing Step: A backwards Dijkstra search from the destination to all other vertices is performed to compute heuristic values.
@@ -33,15 +34,17 @@ Goal Programming (GP): Objectives are transformed into goals, and deviations fro
 Fuzzy logic :
 Pruning Methods (cf 2024 review), Reference-Point-Based (RPB),  Multi-Criteria Decision Analysis (MCDA), convex hull of individual minima (CHIM), Data Envelopment Analysis (DEA
 Autonomous Algorithm Recommendation (automatically adaptively adjust algorithm parameters and strategies)
-Using multi agent mathods (cf BB-MO-CBS-k to computes k solutions)
+Using multi agent methods (cf BB-MO-CBS-k to computes k solutions)
 Temporarily relax constraint, 
 Dynamic updates
 ripple spread (https://doi.org/10.1007/s40747-023-01260-8 good review article) ripples = waves that spread from one node to neighboring nodes
++ some used of random cf for isnatcne Rapidly-exploring Random Tree (RRT: 2023 robot review)
 
 
 Tests performed on http://www.diag.uniroma1.it/~challenge9/ (9th DIMACS Implementation Challenge - Shortest Paths) or ZDT Tests (doi: 10.1.1.30.5848).
 EMO2021 Huwawei Logistics Competion https://www.noahlab.com.hk/logistics-ranking/#/home/the-competition
 see also benchmark tests on (2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath)
+and for constrains  WCSPP instances (+ the 12 maps in the 9th DIMACS Implementation Challenge see WC-A* 
 
 BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
 
@@ -51,7 +54,7 @@ BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
 
 But if we use a single objective funciton using linearization of many objective using weights. This always result in solutions distributed a small area on the entire Pareto front (Boyd & Vandenberghe, 2004).
 This is also called scalarization with Equal, Rank Sum, Rank Exponent, centroid, inverse weight method, or analytic hierarchy process method (AHP) ...: cf 2013 ANK ORDERING CRITERIA WEIGHTING METHODS
-– A COMPARATIVE OVERVIEW) or "Multi-Criteria Decision Making (MCDM) Methods and Concepts"
+– A COMPARATIVE OVERVIEW) or "Multi-Criteria Decision Making (MCDM) Methods and Concepts" or  (2024 ultiobjective path) like the "Linear fractional path problem" (what we want distance/heigh_gain:c cf 2008 Optimal paths in bi-attribute networks)
 
 
 hisotry (1983 On a multicriteria shortest path problem Martin)
@@ -60,6 +63,8 @@ But the problem is in fact more general cf https://en.wikipedia.org/wiki/Constra
 https://en.wikipedia.org/wiki/Multi-objective_optimization
 cf book by "Multiple attribute decision making: methods and applications"
 or even the review "2023: Multi-Criteria Decision Making (MCDM) Methods and Concepts"
+
+Due tot the good algorithm 1s query for afull country (like Germany) can be obtein so it becomes possible to use it in real: "=cf 2024 multi-Objective Electric Vehicle Route and Charging Planning with ContractionHierarchies
 
 More formally we are in the or multi-objective optimization (MOO) area.
 A lot of work focus on bi-objectif, or multi (meaning 2,3)-objective optimization techniques we stay general
@@ -96,7 +101,7 @@ find a minimum-cost (shortest) path between two points such that the total weigh
 
 We can compute the set of all Pareto-optimal solutions (one good algorithm for bi-objective search being BOA*) 
 or only the so called minimal complete set of efficient paths (sometimes called One-to-One Multiobjective Shortest Path Problem):
- that is to find a representative efficient path for every attribute (non-dominated cost vector). 
+ that is to find a representative efficient path for every attribute (non-dominated cost vector). We can also only get the frontier (no two paths have equal costs: 2024 Theoretical Study on Multi-objective Heuristic Search), the "extreme" (convex hull) or obviously satisfiability/constraints.
  New Approach to Multi-Objective A*:   NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
 These algorithms are when the  objective function is additive (sum of the cost value per edge) but 
 some are more general (ex cost = cost_path1/cost path_2) cf 2024 Multiobjective (for efficient algorithm). 
@@ -139,7 +144,8 @@ Some article in the litterature are given in the Repository (see also the review
 "Review Multiobjective Path Problems and Algorithms in Telecommunication Network Design—Overview and Trends")
 and the "2022 A systematic literature review for the tourist trip design problem: Extensions, solution techniques and future research lines "
 
-for instance A-A*pex is found similar to LTMOA*  but this one was overpass by NWMOA* but also by BB-MO-CBS-pex and by  LTMOA-V+DR* (2024 Efficient Set Dominance Checks in Multi-Objective)
+for instance A-A*pex is found similar to LTMOA*  but this one was overpass by NWMOA* but 
+also by BB-MO-CBS-pex and by  LTMOA-V+DR* (2024 Efficient Set Dominance Checks in Multi-Objective) cf https://github.com/carlos-hu70/moavectorizated
 
 The best articles (especiallly for reference therin) are: + adding the 2023 thesis A Study of Multi-Constraint Shortest Path Queries in Road Network
 
@@ -148,13 +154,17 @@ BEST
 2022 A review and evaluation of muli and many objective optimization Karai Dariane JEcolgy
 2023 A Study of Multi-Constraint Shortest Path_Ziyi Liu_phd_thesis
 2023 Heuristic-Search Approaches for the Multi-Objective Shortest-Path Problem Salzman Koenig IJCAI + Solving ... (for historical)
-2024 2024 Multiobjective Path Problems and Algorithms  Overview Craveirinha Pacoal Algorithms
+2024 Multiobjective Path Problems and Algorithms  Overview Craveirinha Pacoal Algorithms
 
 2024 most recent ones are: Proceedings of the Seventeenth International Symposium on Combinatorial Search (SoCS 2024)
 
 
 
 
+OTHERS imprtant one:
+
+2024 Bounded-Suboptimal Weight-Constrained Shortest-Path Search via EfficientRepresentation of Paths Koenig (propose the  WC-A*pex  an order of magnitude over WC-A* for only 1% error)
+2024 Theoretical Study on Multi-objective Heuristic Search (good to summarize alll technics used and give a generic Multi-Objective Search A* algorithm) See also 2023 Multi-objective Search via Lazy and Effcient Dominance Checks
 2024 Efficient Approximate Search for Multi-Objective Multi-Agent Path Finding (find k solution possibly approximate: uisng A*pex)
 2024 SkiVis: Visual Exploration and Route Planning in Ski Resorts (good revew for sky, hiking, biking: that are often  like "Urban Bike Route Planner" see also "https://doi.org/10.1016/j.inffus.2024.102413")
 2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath (good review and Benchmark test problems: CMOCSO, PPS, CCMO, and MTCMO are the best
@@ -164,6 +174,8 @@ BEST
 2024 Constrained multi-objective optimization problems .. (unfortunatly does not realy compare the performances)
 2024 A review of Pareto pruning methods for multi-objective optimization (good for the methods and classification, but does not compare algorithm)
 2024 Applied Multi-objective Optimization (book a good reveiw, may be a bit focus on evolution algorithms: see the other book (2024 Machine Learning Assisted evolutionary Multi and many objective optimization)
+
+2023 Path Planning Technique for Mobile Robots: A Review: (quite extensive but not always actual: very good to summarize all types of algorithms for Single-Agent Path Planning (SAPF) and Multi-Agent Path Planning (MAPF) and for dynamical robot + : path length, safety, energy consumption, smoothness, coverage rate, time efficiency, robustness, and real-time response.)
 2023 Enhanced methods for the weight constrained shortest path problem (compare BiPulse,WC-EBBA*, WC-BA*, RC-BDA*, Pulse and CSP)
 2023 Heuristic-Search Approaches for the Multi-Objective Shortest-Path Problem: Progress and Research Opportunities  (very good review)
 2023 Solving the multi-objective bike routing problem by meta heuristic algorithm (propsed the NGA-MOBRP: new genetic approach for Multi-Objective Bike Routing Problem)
@@ -207,16 +219,23 @@ https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be th
 
 2017 Hrncir et al. https://github.com/agents4its/cycleplanner/tree/mcspeedups
 
+
+
+
 IN SUMMARY:  be careful  to choose the best lexicographic order for the cost: this has impact (cf 2023 Heuristic) 
-* NGA-MOBRP: (2023 article) is the most suitable to be employed within a real time tool for cyclists: good quality metrics in a reasonable computational time. Slightly faster than Multi-Objective
-Simulated Annealing (MOSA) approach
+* NGA-MOBRP: (2023 article) is the most suitable to be employed within a real time tool for cyclists: good quality metrics in a reasonable computational time. 
+Slightly faster than Multi-Objective Simulated Annealing (MOSA) approach
 * NWMOA* (2024 Exact..) an exact MOSP algorithm. Way beter than T-MDA: Targeted Multiobejctive Dijkstra algorithm, that was similar to NAMOA∗ dr-lazy to find minimal pareto set
-From (by mail it seems also faster than ERCA*: (2023 A New Approach for the Resource Constrained Shortest Path Problem): Enhanced Resource Constrained A* (ERCA*): way faster than BiPulse, an existing leading algorithm for RCSPP cf https://github.com/rap-lab-org/public_erca
+From (by mail it seems also faster than : Enhanced Resource Constrained A* (ERCA*)  (2023 A New Approach for the Resource Constrained Shortest Path Problem): way faster than BiPulse, an existing leading algorithm for RCSPP cf https://github.com/rap-lab-org/public_erca
 
 * WC-EBBA*par (enhanced biased bidirectional A*: paralelism for multi core) (2024 enhanced) is a great choice for applications that need fast solution approaches;
     it is based on RC-BDA* and BiPulse and is bidirectioal,  contrary to the single directional: WC-A*  cf https://bitbucket.org/s-ahmadi/biobj/src/master/
+    but  WC-A*pex  (https://github.com/HanZhang39/MultiObjectiveSearch) seems an order of magnitude fater than WC-A* that is a state-of-the-art for WCSP, only 1% error (2024 Bounded-Suboptimal Weight-Constrained Shortest-Path Search)
 
-  * BB-MO-CBS-pex  multi agent but looks very fast  https://github.com/FangjiW/BBMOCBS-approx used Multi-Objective Multi-Agent Path Finding (MO-MAPF)
+    If using preprocessing Contraction Hieray: cf "2023  Efficient Multi-Query Bi-Objective Search via Contraction Hierarchies" average speedup in query times is roughly two orders of magnitude compared to BOA
+    cf https://github.com/HanZhang39/Bi-Objective-Contraction-Hierarchy
+
+  * BB-MO-CBS-pex  multi agent but looks very fast  https://github.com/FangjiW/BBMOCBS-approx used Multi-Objective Multi-Agent Path Finding (MO-MAPF) cf https://github.com/roiteichman/Multi-Agent-Path-Finding-project
 
 
 
