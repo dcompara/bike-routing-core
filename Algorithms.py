@@ -9,26 +9,26 @@ Modified Dijkstra's Algorithm, Yen's algorithm or Bellman of Johnson or Floyd–
 A* Search Algorithm (f=g+h),
 Dynamic Programming (DP): Storing minimal costs and resource consumptions in a table, updating values iteratively: (dp[u][d] can represent the maximum elevation gain to reach node u with a distance d) (cf CSP-CH article https://doi.org/10.1609/icaps.v22i1.13495  has been suplented by Label Settigns (LS) that store all pareto set with ~ u adn d)
 Mixed-Integer Linear Programming (MILP) with CPLEX or Gurobi
-Breadth-First Search (BFS)
+Breadth-First Search (BFS) and Multiple BFS (cf 2024: GPU Algorithms for Fastest Path Problem in Temporal Graphs)
 Depth-First Search (DFS)
 Constrained Shortest Path First (CSPF)  
 Lagrangian Relaxation Techniques
 
 Bounded-Cost Search (BCS): Discard stuff (node, edge, path, ...) that exceed the cost bound (cf 2022 Bounded-Cost Bi-Objective Heuristic Search)
 
-TRICKS USED: (scalarization, Normalization of Objectives, ...and obvious concept such as (Weakly) Nondominated Solutions)
+TRICKS USED: (scalarization = Simple Additive Weighting (SAW), Normalization of Objectives, Analytic Hierarchy Process (AHP), ...and obvious concept such as (Weakly) Nondominated Solutions)
 Data structures like labels (especially Forest Hop Labeling (FHL)), priority queues, and bags + sorted lists, hash maps, or interval trees ..) Exemple Label Setting (LS: typicaly node, cost vector,pointer to the predecessor label): storing all Pareto-optimal solutions and using a priority queue to handle labels.
 Speedup Heuristics: Ellipse Pruning, epsilon dominiaince, Arc-Flags, Budget Factors, Merging Similar Nodes, dynamic penalties (Fitness Sharing, Crowding Distance,  Cell-Based Density Operator) to force explorations,
-closely related to decision making (APO—A posteriori aggregation of preferences; INT—Interactive; or APR—A priori aggregation of preferences)
+closely related to decision making (APO—A posteriori aggregation of preferences; INT—Interactive; or APR—A priori aggregation of preferences):  outranking methods like ELECTRE and PROMETHEE (cf 2020 State-of-the-art review on multi-criteria decision-making in the transport sector")
   ...
 Contraction Hierarchies (CH): Node Ordering, Contraction, Shortcut Creation, Hierarchical Graph Construction
 Lazy Queue Management (do not immediately discarded a path, but store it to potentially reinsert it without recalculated it) 
 Binary Heap Queues, Bucket queue, hybrid, Tie-breaking .. the  data structure is key to speedup the iteration over the nodes (cf for insatnce 2024 Bounded-Suboptimal)
-Dimensionality Reduction (focusing on a subset of the objective dimensions): cf Lexicographic Ordering (comparing the elements in a predefined order) or Path Ranking
+Dimensionality Reduction (focusing on a subset of the objective dimensions): cf Lexicographic Ordering (comparing the elements in a predefined order) or Path Ranking or clustering
 may be used also principal component analysis (PCA), random forest (RF), and k-nearest neighbors (kNN) used in evolution algorythm could be good
 Bidirectional Search (ex BOA*): ex Pre-processing Step: A backwards Dijkstra search from the destination to all other vertices is performed to compute heuristic values.
-Parallelization or Vectorized operation (for instance in Set Dominance Check (SDC))
-graph partitioning, Graph Neural Networks, Tree Decomposition, Index Construction (for each constraint combination) --> Forest hop labeling (FHL) ...
+Parallelization or Vectorized operation (for instance in Set Dominance Check (SDC)) +  recursive  approach (cf Parallel-Spatial-RG algorithm 2022 A Multi-Threading Algorithm for Constrained Path Optimization Problem on Road Networks )
+graph partitioning (cf hypergraph later or 2024 A Universal Scheme for Dynamic Partitioned Shortest Path Index, for review of Partitioned Shortest Path (PSP) ...), Graph Neural Networks, Tree Decomposition, Index Construction (for each constraint combination) --> Forest hop labeling (FHL) ...
 slack variables change  inequality constraints in equality (2022): https://doi.org/10.1080/19427867.2020.1860355
 Goal Programming (GP): Objectives are transformed into goals, and deviations from these goals are minimized.
 Fuzzy logic :
@@ -37,14 +37,32 @@ Autonomous Algorithm Recommendation (automatically adaptively adjust algorithm p
 Using multi agent methods (cf BB-MO-CBS-k to computes k solutions)
 Temporarily relax constraint, 
 Dynamic updates
+Probabilistic Road Maps (PRM), random sampling, Rapidly-exploring Random Trees (RRT)
 ripple spread (https://doi.org/10.1007/s40747-023-01260-8 good review article) ripples = waves that spread from one node to neighboring nodes
 + some used of random cf for isnatcne Rapidly-exploring Random Tree (RRT: 2023 robot review)
 
+may be intereitng to look toward hypergraph (cf 2023 High-quality hypergraph partitioning, 2023 More Recent Advances in (Hyper)Graph Partitioning,  
+see nice Fig 4 of https://arxiv.org/pdf/2111.06654)
+or multi-graph (multidimensional networks, a special type of multilayer network)
+especially  balanced hypergraph partitioning which involves dividing  into  k disjoint blocks while minimizing an objective function over the hyperedges. (https://kahypar.org/)
+cf "2017: Faster Transit Routing by Hyper Partitioning" or 2024 Scalable Algorithms for Bicriterion Trip-Based Transit Routing (https://arxiv.org/pdf/2111.06654)
 
-Tests performed on http://www.diag.uniroma1.it/~challenge9/ (9th DIMACS Implementation Challenge - Shortest Paths) or ZDT Tests (doi: 10.1.1.30.5848).
+Indeed they do not use priority queue like the bi objective Round-bAsed Public Transit Optimized Router (RAPTOR) and its hypergraph version
+https://github.com/transnetlab/transit-routing with faste query time.
+In "Public Transport Networks" (cf review 2016 Route Planning in Transportation Networks) they also use  route that is a sequence of stops (not edges) with number ~vertex (stops) -->
+stops, connections, trips (stop events performedby the same vehicle).  Stations  footpaths,
+and they are wel suited for our case because most algorithms calculate Pareto-optimize with at least two criteria: the arrival time and the number of used trips (train, bus, car)
+
+Gaussian Process Regression (GPR) that dynamically learns the structure of the Pareto front during the search process (cf "Dynamic Learning-Based Search for Multi-Criteria Itinerary Planning"")
+see also reinforcement learning (RL) in 2022 Efficient navigation ..
+
+
+Tests performed on http://www.diag.uniroma1.it/~challenge9/ (9th DIMACS Implementation Challenge - Shortest Paths) or  Switzerland, Netherlands, Sweden, Israel, Taichung, and Bangalore.
+Most of these are open data sets (Source: transitfeeds.com) (hypergraph)
+ or ZDT Tests (doi: 10.1.1.30.5848).
 EMO2021 Huwawei Logistics Competion https://www.noahlab.com.hk/logistics-ranking/#/home/the-competition
 see also benchmark tests on (2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath)
-and for constrains  WCSPP instances (+ the 12 maps in the 9th DIMACS Implementation Challenge see WC-A* 
+and for constrains  WCSPP instances (+ the 12 maps in the 9th DIMACS Implementation Challenge see WC-A* )
 
 BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
 
@@ -54,13 +72,17 @@ BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
 
 But if we use a single objective funciton using linearization of many objective using weights. This always result in solutions distributed a small area on the entire Pareto front (Boyd & Vandenberghe, 2004).
 This is also called scalarization with Equal, Rank Sum, Rank Exponent, centroid, inverse weight method, or analytic hierarchy process method (AHP) ...: cf 2013 ANK ORDERING CRITERIA WEIGHTING METHODS
-– A COMPARATIVE OVERVIEW) or "Multi-Criteria Decision Making (MCDM) Methods and Concepts" or  (2024 ultiobjective path) like the "Linear fractional path problem" (what we want distance/heigh_gain:c cf 2008 Optimal paths in bi-attribute networks)
+– A COMPARATIVE OVERVIEW) or "Multi-Criteria Decision Making (MCDM) Methods and Concepts"
+see reviex 2020 State-of-the-art review on multi-criteria decision-making in the transport sector
+ or  (2024 ultiobjective path) like the "Linear fractional path problem" (what we want distance/heigh_gain:c cf 2008 Optimal paths in bi-attribute networks)
 
 
 hisotry (1983 On a multicriteria shortest path problem Martin)
 
 But the problem is in fact more general cf https://en.wikipedia.org/wiki/Constrained_optimization or better
-https://en.wikipedia.org/wiki/Multi-objective_optimization
+https://en.wikipedia.org/wiki/Multi-objective_optimization or even https://en.wikipedia.org/wiki/Graph_theory
+
+
 cf book by "Multiple attribute decision making: methods and applications"
 or even the review "2023: Multi-Criteria Decision Making (MCDM) Methods and Concepts"
 
@@ -105,6 +127,8 @@ or only the so called minimal complete set of efficient paths (sometimes called 
  New Approach to Multi-Objective A*:   NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
 These algorithms are when the  objective function is additive (sum of the cost value per edge) but 
 some are more general (ex cost = cost_path1/cost path_2) cf 2024 Multiobjective (for efficient algorithm). 
+Interesitng is also the One-To-Many Practical applications find the closes five (retaurant) or lcalality not precise location ...
+one-to-one is also called "Door to door" 
 
 An important consideration is that the lists of sored path, nodes, ... needed to perfome the calcul can grow exponentially
 
@@ -125,7 +149,7 @@ or together with an imporved Iterated Local Search (ILS) in "An arc orienteering
 on a large-scale road network") or the orieted arc cycle trip planning problem (CTPP) 2014 10.1016/j.tre.2014.05.006 (wich as we want "upper and a lower bound on the total length." but is still a single (global) objectives)
 
 And obviously we no not look for "non-shortest diverse routes" or "Global Routing Optimization problem that aims to minimize traffic congestion" (so we do not deal with groups etc...)
-
+another new area is the multimodal journey planning (e.g., walking, cycling, e-scooter) cf 2023 ULTRA https://doi.org/10.1287/trsc.2022.0198
 
 We have to distinguish between the following algotithm also:
 * No-preference methods: Neutral solution found without DM (Descision Making by Human). A similar idea is folowed by lexicographic ordering to incorporate priorities of the
@@ -135,7 +159,9 @@ Also are the Pruning methods to reduce the number of Pareto optimal solutions us
 * A posteriori methods: Pareto solutions provided, DM selects preferred one.
 * Interactive methods: DM iteratively refines solutions with feedback.
 and many  others depending on the kind of Pareto set it calculates (total, minimal, approximate = espilon Pareto set, ...).
-Without talking about Route Planning Algorithms (include traffic for instance) https://wiki.openstreetmap.org/wiki/Routing or noise or Networking etc... with the popular  ORSM, Graphhopper,  BRouter, valhalla, 
+Without talking about Route Planning Algorithms (include traffic for instance) https://wiki.openstreetmap.org/wiki/Routing or noise or Networking etc... 
+with the popular  OSRM (https://github.com/Project-OSRM/osrm-backend), Graphhopper,  BRouter (for bike), valhalla, pgRouting
+cf https://en.wikipedia.org/wiki/Journey_planner
 
 
 
@@ -163,6 +189,7 @@ BEST
 
 OTHERS imprtant one:
 
+2024 A survey of route recommendations Methods, applications, and opportunities (good historical review of all this: not focused on recent algortihms)
 2024 Bounded-Suboptimal Weight-Constrained Shortest-Path Search via EfficientRepresentation of Paths Koenig (propose the  WC-A*pex  an order of magnitude over WC-A* for only 1% error)
 2024 Theoretical Study on Multi-objective Heuristic Search (good to summarize alll technics used and give a generic Multi-Objective Search A* algorithm) See also 2023 Multi-objective Search via Lazy and Effcient Dominance Checks
 2024 Efficient Approximate Search for Multi-Objective Multi-Agent Path Finding (find k solution possibly approximate: uisng A*pex)
@@ -199,8 +226,9 @@ or other models like LLM + "2022: Deep Learning for Trajectory Data Management a
 
 
 Some interesting ideas like in 2021 Most Diverse Near-Shortest Paths: adding adaptative multiplicative  penalties to the edges of already found paths, encouraging the discovery of new, diverse paths 
+see also 2023 Constrained Path Search with Submodular Function Maximization, to enhanced diversity by Submodular Function
 
-Anotehr very appealing idea is to perform a huge preprocessing (for instance with an all to all solution or to create the forest hop labeling (FHL) cube) and to use Multi-Objective Dynamic Shortest Path (MODSP) algorothms that 
+Anotehr very appealing idea is to perform a huge preprocessing (for instance with an all to all solution or to create the forest hop labeling (FHL) cube, or CH) and to use Multi-Objective Dynamic Shortest Path (MODSP) algorothms that 
 updating vertices and edges dynamically, querying approximate Pareto fronts, and finding optimal paths based on decision variables and mroe important based on previous results witout calculatin all (cf review 2022 https://doi.org/10.3390/a16030162)
 cf also 10.3233/FAIA240145  or /10.1007/978-3-031-30675-4_15.
 Preprocessing such as CSP-CH are very useful. They are aso called Index-Based algorithms (they have an extra stage, which is called index construction). Such methods can produce faster query processing
@@ -215,7 +243,7 @@ In python: tons of codes (not laking about the general optmization:  SciPy.optim
 https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm + NAMOA_lazy + ..) in C++
 https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be the best algorithm for the Exact Multi-objective Path Finding)
 
-+ OSMnx based on the populat Networkx but see the faster https://www.rustworkx.org/benchmarks.html (rustworkx: A high-performance graph library for python)
++ OSMnx based on the populat Networkx but see the faster https://www.rustworkx.org/benchmarks.html (rustworkx: A high-performance graph library for python) faster than igraph, graph-tools and NetworkIt
 
 2017 Hrncir et al. https://github.com/agents4its/cycleplanner/tree/mcspeedups
 
@@ -225,6 +253,7 @@ https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be th
 IN SUMMARY:  be careful  to choose the best lexicographic order for the cost: this has impact (cf 2023 Heuristic) 
 * NGA-MOBRP: (2023 article) is the most suitable to be employed within a real time tool for cyclists: good quality metrics in a reasonable computational time. 
 Slightly faster than Multi-Objective Simulated Annealing (MOSA) approach
+
 * NWMOA* (2024 Exact..) an exact MOSP algorithm. Way beter than T-MDA: Targeted Multiobejctive Dijkstra algorithm, that was similar to NAMOA∗ dr-lazy to find minimal pareto set
 From (by mail it seems also faster than : Enhanced Resource Constrained A* (ERCA*)  (2023 A New Approach for the Resource Constrained Shortest Path Problem): way faster than BiPulse, an existing leading algorithm for RCSPP cf https://github.com/rap-lab-org/public_erca
 
@@ -237,16 +266,26 @@ From (by mail it seems also faster than : Enhanced Resource Constrained A* (ERCA
 
   * BB-MO-CBS-pex  multi agent but looks very fast  https://github.com/FangjiW/BBMOCBS-approx used Multi-Objective Multi-Agent Path Finding (MO-MAPF) cf https://github.com/roiteichman/Multi-Agent-Path-Finding-project
 
+* HypRAPTOR and HypTBTR and MhypTBTR and MhypRAPTOR based on Round-Based Public Transit Routing (RAPTOR) and Trip-Based public Transit Routing (TBTR = TB)
+ on https://github.com/transnetlab/transit-routing or https://github.com/kit-algo/ULTRA (the best follwoing "2024 Fast and Delay-Robust Multimodal Journey Planning" that propose Delay-ULTRA,)
+   with faste query time <100 ms for Germany with almot 300 000 stops 21 000 000) cf "ULTRA-TB algorithm outperforms MR, the fastest previously known multimodal algorithm for bicriteria optimization, by an order of magnitude."
+ see also  Connection  Scan  Algorithm  (CSA) and Transfer Connection Database (TCD) (2024: Efficient and Exact Public Transport Routing via a Transfer Connection Database), 
+ sub ms time query and requires significantly less memory cf 2023 FLASH-TB: Integrating Arc-Flags and Trip-Based Public Transit Routing: https://github.com/TransitRouting/Arc-FlagTB
 
+* SPEC algorithm (Shortest Path Enhanced CSP)  30 times faster than the state-of-the-art GPU-accelerated method (Vine: https://github.com/Xtra-Computing/Vine) 
+it solves the exact CSP problem very fast (~100 ms for NothWest USA !)  https://github.com/xiawenwen49/SPEC
 
  * Iterated Local Search (ILS) based algorithms such as 2023 Fast approximate bi‑objective Pareto sets .. + Chord algorithm  (to be checked but 10 second for 150 pairs) used in (2024 Proposal of Hiking Route Planning
 Optimization with Iterated Local Search and Modified Tourist Trip Design Problem) 
 
 * Forest Hop Labeling (FHL) is the only CSP algorithm that can achieve both accurate and efficient results and all articles by the Xiaofang Zhou's group 
-10.1109/ICDE60146.2024.00322 with the exact forest hop labeling (FHL) -cube or better approximate alpha-FHL : 2024 Approximate Skyline Index for Constrained Shortest Pathfinding with Theoretical Guarantee
+10.1109/ICDE60146.2024.00322 with the exact forest hop labeling (FHL) -cube or may be better approximate alpha-FHL : 2024 Approximate Skyline Index for Constrained Shortest Pathfinding with Theoretical Guarantee
 alpha is sometime called epsilon.
-All these algorithms (FHL-cube ofr exact or alpha-FHL for approximate) suprass the standard one that are Sky-Dijkstra and CSP-CH for exact shortest path computation and COLA (COnstrained LAbeling) 
-But COLA (2016 https://doi.org/10.14778/3015274.3015277) use less memory (100Mo).
+All these algorithms (FHL-cube ofr exact or alpha-FHL for approximate) suprass by 3 order of magnitude the standard one that are Sky-Dijkstra (but more memory because of indexing) and CSP-CH for exact shortest path computation and COLA (COnstrained LAbeling) 
+But COLA (2016 https://doi.org/10.14778/3015274.3015277) use less memory (100Mo) cf https://sourceforge.net/projects/cola2016/
+the last one is 2024 A Universal Scheme for Dynamic Partitioned Shortest Path Index  https://github.com/ZXJ-DSA/EPSP
+see other algorithms in https://github.com/ZXJ-DSA like STOP&SHARE  and BMHPS (S (Bidirectional Multi-Hop with In-Partition Shortcut)) that are  very fast but for Multi- Criteria Shortest Paths (MCSPs) (reports a set of shortest
+paths) where each path associates with one criterion) So nt what we want !!!
 
 
 See also the above one such as multi-objective evolutionary algorithms (MOEAs) and

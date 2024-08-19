@@ -52,8 +52,8 @@ Heatmap
 ## Some ideas
 
 Add route you already followed previously (My_ppularity)
-import gpx
-See Strava Segment
+import gpx (cf https://medium.com/@arbatov/personal-routing-machine-with-gpx-tracks-9a6d2530f7a3)
+See Strava Segment (cf Brouter)
 https://climbfinder.com/
 
 For spped may be use C++. Cf for instance https://github.com/organicmaps/organicmaps
