@@ -6,7 +6,7 @@
 '''
 We have started form these algorithm:
 Modified Dijkstra's Algorithm, Yen's algorithm or Bellman of Johnson or Floyd–Warshall
-A* Search Algorithm (f=g+h),
+A* Search Algorithm (f=g+h),  tehn all + D* + theta-star
 Dynamic Programming (DP): Storing minimal costs and resource consumptions in a table, updating values iteratively: (dp[u][d] can represent the maximum elevation gain to reach node u with a distance d) (cf CSP-CH article https://doi.org/10.1609/icaps.v22i1.13495  has been suplented by Label Settigns (LS) that store all pareto set with ~ u adn d)
 Mixed-Integer Linear Programming (MILP) with CPLEX or Gurobi
 Breadth-First Search (BFS) and Multiple BFS (cf 2024: GPU Algorithms for Fastest Path Problem in Temporal Graphs)
@@ -21,13 +21,13 @@ Data structures like labels (especially Forest Hop Labeling (FHL)), priority que
 Speedup Heuristics: Ellipse Pruning, epsilon dominiaince, Arc-Flags, Budget Factors, Merging Similar Nodes, dynamic penalties (Fitness Sharing, Crowding Distance,  Cell-Based Density Operator) to force explorations,
 closely related to decision making (APO—A posteriori aggregation of preferences; INT—Interactive; or APR—A priori aggregation of preferences):  outranking methods like ELECTRE and PROMETHEE (cf 2020 State-of-the-art review on multi-criteria decision-making in the transport sector")
   ...
-Contraction Hierarchies (CH): Node Ordering, Contraction, Shortcut Creation, Hierarchical Graph Construction
+Contraction Hierarchies (CH), cf transitive closure: Node Ordering, Contraction, Shortcut Creation, Hierarchical Graph Construction
 Lazy Queue Management (do not immediately discarded a path, but store it to potentially reinsert it without recalculated it) 
 Binary Heap Queues, Bucket queue, hybrid, Tie-breaking .. the  data structure is key to speedup the iteration over the nodes (cf for insatnce 2024 Bounded-Suboptimal)
 Dimensionality Reduction (focusing on a subset of the objective dimensions): cf Lexicographic Ordering (comparing the elements in a predefined order) or Path Ranking or clustering
 may be used also principal component analysis (PCA), random forest (RF), and k-nearest neighbors (kNN) used in evolution algorythm could be good
 Bidirectional Search (ex BOA*): ex Pre-processing Step: A backwards Dijkstra search from the destination to all other vertices is performed to compute heuristic values.
-Parallelization or Vectorized operation (for instance in Set Dominance Check (SDC)) +  recursive  approach (cf Parallel-Spatial-RG algorithm 2022 A Multi-Threading Algorithm for Constrained Path Optimization Problem on Road Networks )
+Parallelization or Vectorized operation (for instance in Set Dominance Check (SDC)) (see 202: A Parallel Algorithm For Updating A Multi-objective..) +  recursive  approach (cf Parallel-Spatial-RG algorithm 2022 A Multi-Threading Algorithm for Constrained Path Optimization Problem on Road Networks )
 graph partitioning (cf hypergraph later or 2024 A Universal Scheme for Dynamic Partitioned Shortest Path Index, for review of Partitioned Shortest Path (PSP) ...), Graph Neural Networks, Tree Decomposition, Index Construction (for each constraint combination) --> Forest hop labeling (FHL) ...
 slack variables change  inequality constraints in equality (2022): https://doi.org/10.1080/19427867.2020.1860355
 Goal Programming (GP): Objectives are transformed into goals, and deviations from these goals are minimized.
@@ -40,6 +40,8 @@ Dynamic updates
 Probabilistic Road Maps (PRM), random sampling, Rapidly-exploring Random Trees (RRT)
 ripple spread (https://doi.org/10.1007/s40747-023-01260-8 good review article) ripples = waves that spread from one node to neighboring nodes
 + some used of random cf for isnatcne Rapidly-exploring Random Tree (RRT: 2023 robot review)
++ greedy algorithms
++ graph reordnring, compresion, ...
 
 may be intereitng to look toward hypergraph (cf 2023 High-quality hypergraph partitioning, 2023 More Recent Advances in (Hyper)Graph Partitioning,  
 see nice Fig 4 of https://arxiv.org/pdf/2111.06654)
@@ -63,6 +65,8 @@ Most of these are open data sets (Source: transitfeeds.com) (hypergraph)
 EMO2021 Huwawei Logistics Competion https://www.noahlab.com.hk/logistics-ranking/#/home/the-competition
 see also benchmark tests on (2024 Evolutionary constrained multi‑objective optimization Review Liang Yu Vicinagerath)
 and for constrains  WCSPP instances (+ the 12 maps in the 9th DIMACS Implementation Challenge see WC-A* )
+
++ 2015. The Network Data Repository with Interactive Graph Analytics and Visualization.
 
 BUt Performance Metrics are not always clear (Convergence,  Hypervolume)
 
@@ -90,7 +94,7 @@ Due tot the good algorithm 1s query for afull country (like Germany) can be obte
 
 More formally we are in the or multi-objective optimization (MOO) area.
 A lot of work focus on bi-objectif, or multi (meaning 2,3)-objective optimization techniques we stay general
-with  multi-objective search problem (MOSP) (that is with 4,5 .. more objectif), or
+with  multi-objective search problem (MOSP) (that is with 4,5 .. more objectif), or multi-objective shortest path (MOSP) or
  multiobjective path problem or Constrained multi-objective optimization problems (CMOPs), 
 see also Resource Constrained Shortest Path Problem (RCSPP) or 
 shortest path problem with resource constraints (SPPRC) (a well known NP-hard problem), we are given a
@@ -101,6 +105,9 @@ Shortest Path Problems with Time Windows (SPPTWs)
 Resource-Constrained Shortest Path Problems (RCSPPs)
 Resource-Constrained Elementary Shortest Path Problems (RCESPPs)
 Shortest Path Problems with Forbidden Paths (SPPFPs)
+WHAT WE wANT: doubly constrained shortest path problem [DCSP] or doubly resource constrained shortest path problem (DRCSPP) = shortest path problem  with double sided inequality constains. arise in solving equality constrained knapsack problems
+
+
 
 Another name for all this is Multi-Constraint Shortest Path (MCSP). See all work by Xiaofang Zhou's team and Ziyi Liu's thesis (a very good start)
 they do not use the name Pareto set but "skyline path problem"
@@ -185,7 +192,8 @@ BEST
 2024 most recent ones are: Proceedings of the Seventeenth International Symposium on Combinatorial Search (SoCS 2024)
 
 
-
++ a lot for Singl Short PAth (SSP) algorithm or Single Source Shortest Path (SSSP), <1µs for USA (if I remembr) see also 2024 DAWN: Matrix Operation-Optimized Algorithm for  (matrix)
+or gunrock 
 
 OTHERS imprtant one:
 
@@ -285,7 +293,7 @@ All these algorithms (FHL-cube ofr exact or alpha-FHL for approximate) suprass b
 But COLA (2016 https://doi.org/10.14778/3015274.3015277) use less memory (100Mo) cf https://sourceforge.net/projects/cola2016/
 the last one is 2024 A Universal Scheme for Dynamic Partitioned Shortest Path Index  https://github.com/ZXJ-DSA/EPSP
 see other algorithms in https://github.com/ZXJ-DSA like STOP&SHARE  and BMHPS (S (Bidirectional Multi-Hop with In-Partition Shortcut)) that are  very fast but for Multi- Criteria Shortest Paths (MCSPs) (reports a set of shortest
-paths) where each path associates with one criterion) So nt what we want !!!
+paths) where each path associates with one criterion) So not what we want !!!
 
 
 See also the above one such as multi-objective evolutionary algorithms (MOEAs) and

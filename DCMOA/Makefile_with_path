@@ -1,0 +1,57 @@
+WARTHOG_SRC =  $(wildcard domains/*.cpp) \
+                $(wildcard util/*.cpp) \
+                $(wildcard search/*.cpp)
+
+WARTHOG_OBJ = $(WARTHOG_SRC:.cpp=.o)
+
+D_WARTHOG_INCLUDES = -I./ -I.sys -I.heuristics -I.util -I.search -I.domains
+
+D_INCLUDES = $(D_WARTHOG_INCLUDES) -I/usr/include -I/usr/local/include
+D_LIBS = -L./lib -L/usr/local/lib
+
+CFLAGS = -std=c++11 -pedantic -pthread -fopenmp -Wall -Werror -Wno-conversion -Wno-unused-result -Wno-unused-but-set-variable
+FAST_CFLAGS = -O3 -DNDEBUG
+
+CC = g++
+CFLAGS += -DOS_WINDOWS
+
+
+
+
+# Main target that includes path details
+.PHONY: main
+main: CFLAGS += $(FAST_CFLAGS) $(D_INCLUDES) -DPATH
+main: makedirs warthog
+	@echo "linking..."
+	$(CC) programs/roadhog.cpp -o ./bin/roadhog -lwarthog $(CFLAGS) $(D_LIBS) $(D_INCLUDES)
+
+.PHONY: makedirs
+makedirs:
+	@echo "### Creating output directories ###"
+	@mkdir -p ./bin
+	@mkdir -p ./lib
+
+.PHONY: warthog
+warthog: $(WARTHOG_OBJ)
+	@echo "### Archiving object files ###"
+	@echo "sources $(WARTHOG_SRC)"
+	ar -crs lib/lib$(@).a $(WARTHOG_OBJ)
+
+-include $(WARTHOG_OBJ:.o=.d)
+
+$(WARTHOG_OBJ):
+	@echo "compiling..."
+	$(CC) -c $(@:.o=.cpp) $(CFLAGS) -MM -MP -MT $(dir $(@))$(notdir $(@)) -MF $(@:.o=.d)
+	$(CC) -c $(@:.o=.cpp) -o $(@) $(CFLAGS)
+
+
+Release: $(WARTHOG_OBJ)
+	$(CC) $(CFLAGS) $(FAST_CFLAGS) -o $@ $^ $(D_INCLUDES) $(D_LIBS)
+
+.PHONY: clean
+
+clean:
+	@if exist bin rmdir /S /Q bin
+	@if exist lib rmdir /S /Q lib
+	@for %%f in ($(WARTHOG_OBJ:.o=.d)) do del /Q %%f
+	@for %%f in ($(WARTHOG_OBJ)) do del /Q %%f

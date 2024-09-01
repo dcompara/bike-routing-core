@@ -1,0 +1,37 @@
+TO run the program I had to do teh follwoig:
+
+Put in the repository of my (initially Empty Codeblocks project) all subdirectoris (domaines, ..)
+
+Add them one by one in the Search dirctories of the Build
+
+
+
+I run the example by
+
+
+.\bin\Release\roadhog --help
+ 
+.\bin\Release\roadhog --alg NWMOA       --input .\maps\NY.xy --start 1000   --goal 4000
+      
+.\bin\Release\roadhog --alg NWMOA       --input .\maps\NY.xy  --start 5      --goal 0  --path
+
+.\bin\Release\roadhog --alg NWMOA    --input .\maps\NY.xy --start 5      --goal 0  --path  --queue hybrid
+
+
+And for NWRCA
+
+.\bin\Release\roadhog --alg NWRCA       --input .\maps\NY.xy --start 0      --goal 264345 --constraint 80
+
+.\bin\Release\roadhog --alg NWRCA       --input .\maps\NY.xy --start 0      --goal 6000 --constraint 30 --queue hybrid
+
+
+
+*****************   OUR CASE    ************** 
+
+
+.\bin\Release\roadhog --alg NWMOA       --input .\maps\graph_Paris_south.xy  --start 14066      --goal 13953  --path
+
+
+
+
+
