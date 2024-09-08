@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters=".\bin\Release\roadhog --alg DCMOA       --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -20,6 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters=".\bin\Release\roadhog --alg NWMOA --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -30,7 +32,45 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="domains" />
+			<Add directory="heuristics" />
+			<Add directory="maps" />
+			<Add directory="programs" />
+			<Add directory="search" />
+			<Add directory="src" />
+			<Add directory="sys" />
+			<Add directory="util" />
 		</Compiler>
+		<Unit filename="domains/graph.cpp" />
+		<Unit filename="domains/graph.h" />
+		<Unit filename="heuristics/euclidean_heuristic.h" />
+		<Unit filename="heuristics/haversine_heuristic.h" />
+		<Unit filename="heuristics/spherical_heuristic.h" />
+		<Unit filename="heuristics/zero_heuristic.h" />
+		<Unit filename="programs/roadhog.cpp" />
+		<Unit filename="search/core_algs.h" />
+		<Unit filename="search/multiobj_search_NWMOA.h" />
+		<Unit filename="search/multiobj_search_NWMOA_3obj.h" />
+		<Unit filename="search/rcsp_search_DCMOA.h" />
+		<Unit filename="search/rcsp_search_NWRCA.h" />
+		<Unit filename="search/search.h" />
+		<Unit filename="sys/arraylist.h" />
+		<Unit filename="sys/constants.h" />
+		<Unit filename="sys/labels.h" />
+		<Unit filename="sys/linkedlist.h" />
+		<Unit filename="util/input_parser.h" />
+		<Unit filename="util/label_pool.h" />
+		<Unit filename="util/memory.cpp" />
+		<Unit filename="util/memory.h" />
+		<Unit filename="util/pqueue.cpp" />
+		<Unit filename="util/pqueue.h" />
+		<Unit filename="util/pqueue_label_bucket.h" />
+		<Unit filename="util/pqueue_label_bucket2d.h" />
+		<Unit filename="util/pqueue_label_heap.h" />
+		<Unit filename="util/pqueue_label_hybrid.h" />
+		<Unit filename="util/results.h" />
+		<Unit filename="util/timer.cpp" />
+		<Unit filename="util/timer.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

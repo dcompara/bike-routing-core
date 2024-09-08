@@ -32,6 +32,6 @@ And for NWRCA
 .\bin\Release\roadhog --alg NWMOA       --input .\maps\graph_Paris_south.xy  --start 14066      --goal 13953  --path
 
 
+I add a new algorithm the DCMOA: A* for the doubly constrained multi-objective shortest path problem with negative weights
 
-
-
+.\bin\Release\roadhog --alg DCMOA       --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10

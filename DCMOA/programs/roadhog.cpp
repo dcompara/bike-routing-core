@@ -47,9 +47,10 @@ help()
     << "(i) a single file format consisting all objectives (cf. gr/co files) ; \n"
     << "(ii) node/arc ids are zero indexed (cf. 1-indexed) and; \n"
     << "Valid parameters:\n"
-    << "\t--alg [ NWMOA, NWRCA]\n"
+    << "\t--alg [ NWMOA, NWRCA, DCMOA]\n"
     << "\t\tNWMOA: A* for the multi-objective shortest path problem with negative weights (parallel search scheme). \n"
     << "\t\tNWRCA: A* for the resource constrained shortest path problem with negative weights. \n"
+    << "\t\tDCMOA: A* for the doubly constrained multi-objective shortest path problem with negative weights. \n"
     << "\t--input [ graph_file.xy ] \n"
     << "\t--start [ start_ID ] (start vertex ID in 0-index) \n"
     << "\t--goal [ goal_ID ] (goal vertex ID in 0-index) \n"
@@ -79,6 +80,8 @@ alg_manager_multiobj(graph *G, graph *G_rev, experiment exp)
         {NWMOA<LABEL, QUEUE, HEURISTIC>(G, G_rev, exp);}
         else if(exp.alg_name == "NWRCA")
         {NWRCA<LABEL, QUEUE, HEURISTIC>(G, G_rev, exp);}
+        else if(exp.alg_name == "DCMOA")
+        {DCMOA<LABEL, QUEUE, HEURISTIC>(G, G_rev, exp);}
         else
         {std::cerr << "invalid search algorithm "<< exp.alg_name <<std::endl; break;}
     }
@@ -150,6 +153,16 @@ run_experiment(experiment& exp)
     }
 
     bool is_rcsp = exp.alg_name == "NWRCA" ? true : false;
+    if( is_rcsp && exp.constraint == UINT32_MAX )
+    {
+        std::cerr << "--constraint parameter is missing/invalid!\n";
+        return;
+    }
+    else if(exp.constraint == UINT32_MAX )
+    {exp.constraint = 100;}
+
+
+    is_rcsp = exp.alg_name == "DCMOA" ? true : false;
     if( is_rcsp && exp.constraint == UINT32_MAX )
     {
         std::cerr << "--constraint parameter is missing/invalid!\n";

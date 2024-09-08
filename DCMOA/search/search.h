@@ -17,4 +17,5 @@
 #include "multiobj_search_NWMOA.h"
 #include "multiobj_search_NWMOA_3obj.h"
 #include "rcsp_search_NWRCA.h"
+#include "rcsp_search_DCMOA.h"
 

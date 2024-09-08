@@ -41,8 +41,10 @@ public:
             // has_neg_cycle = Bellman_Ford(G_rev, h_, BFS_f, NULL, goal_vertex, obj_index);
 
             if (has_neg_cycle)
-            // {std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl; break;}
-            {std::cerr << "Negative cycle found on dimension: BUT MOVE ON DEBUG " << int(obj_index) << std::endl;}
+                // {std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl; break;}
+            {
+                std::cerr << "Negative cycle found on dimension: BUT MOVE ON DEBUG " << int(obj_index) << std::endl;
+            }
         }
 
         // The instance is unbounded
@@ -71,8 +73,8 @@ public:
 
         // Execute the main A* search
         Multi_search(G, Open_2, LABEL_Pool_, Sol_set_, h_,
-                            Expanded_labels_tr_, Last_label_tr_,
-                            start_vertex, goal_vertex, Paths_, total_comp);
+                     Expanded_labels_tr_, Last_label_tr_,
+                     start_vertex, goal_vertex, Paths_, total_comp);
 
         // Stop timer
         mytimer.stop();
@@ -102,16 +104,18 @@ public:
     ~NWMOA()
     {
         for (sn_id_t id = 0; id < num_vertices; id++)
-        {delete [] h_[id];}
+        {
+            delete [] h_[id];
+        }
         delete [] Last_label_tr_;
         delete [] h_;
         delete [] Expanded_labels_tr_;
         delete Open_1;
         delete [] BFS_f;
 
-        #ifdef PATH
+#ifdef PATH
         delete [] Paths_;
-        #endif
+#endif
     }
 
     size_t
@@ -122,7 +126,9 @@ public:
         {
             // memory of backtracking
             if (Paths_)
-            {bytes += Paths_[id].capacity()*sizeof(std::pair<vertex_deg_t, path_arr_size>);}
+            {
+                bytes += Paths_[id].capacity()*sizeof(std::pair<vertex_deg_t, path_arr_size>);
+            }
 
             // memory of expanded paths
             bytes += Expanded_labels_tr_[id].capacity()*sizeof(LABEL_TR);
@@ -166,24 +172,26 @@ private:
         {
             h_[id] = new cost_t[num_objs]();
             for (dim_t obj_index = 0; obj_index <num_objs; obj_index++)
-            {h_[id][obj_index] = COST_MAX;}
+            {
+                h_[id][obj_index] = COST_MAX;
+            }
             // Initialise min_distances for BFS searches
             BFS_f[id] = SN_ID_MAX;
         }
         // Intialise priority queue of preliminary Dijkstra's search
         Open_1 = new pqueue(1024, h_, num_vertices);
 
-        #ifdef PATH
+#ifdef PATH
         // Intialise array of expanded paths
         Paths_ = new Parent_list[num_vertices]();
-        #else
+#else
         Paths_ = 0;
-        #endif
+#endif
 
     }
 ////////////////////////////////////////////////////////
 /// The main multi-objective A* search happens here/// The main multi-objective A* search happens here
-void *Multi_search(
+    void *Multi_search(
         graph *G
         , Q &Open
         , label_pool<LABEL> &label_pool
@@ -203,7 +211,7 @@ void *Multi_search(
         LABEL *current_label = label_pool.get_label();
         *current_label = LABEL(h[initial], initial, DEG_MAX, PATH_ARR_SIZE_MAX);
 
-        // Insert the initial lable into the queue
+        // Insert the initial label into the queue
         Open.push(current_label);
 
         // Initialise a cost array to be used within the search
@@ -227,17 +235,28 @@ void *Multi_search(
             // Perform Quick Dominance check and prune if the extracted label is dominated
             // the operation "L<<R" means L dominates R
             if (Last_label_tr[current_vertex] << current_label_tr || Last_label_tr[target] << current_label_tr)
-            {label_pool.save_label(current_label); continue;} // if dominated, thus skip expansion + recycle the label
+            {
+                label_pool.save_label(current_label);    // if dominated, thus skip expansion + recycle the label
+                continue;
+            }
 
-            // Perform a linear Dominance chcek against previous expansion of the vertex in lexicographical order
+            // Perform a linear Dominance check against previous expansion of the vertex in lexicographical order
             std::pair<bool, LABEL_TR_iter> check1_result = dominance_check(current_label_tr, Expanded_labels_tr[current_vertex], comp_);
             bool is_dominated = check1_result.first;
-            if (is_dominated) {label_pool.save_label(current_label); continue;} // if dominated, thus skip expansion + recycle the label
+            if (is_dominated)
+            {
+                label_pool.save_label(current_label);    // if dominated, thus skip expansion + recycle the label
+                continue;
+            }
 
-            // Perform a linear Dominance chcek, this time against the target verex
+            // Perform a linear Dominance check, this time against the target verex
             std::pair<bool, LABEL_TR_iter> check2_result = dominance_check(current_label_tr, Expanded_labels_tr[target], comp_);
             is_dominated = check2_result.first;
-            if (is_dominated == true) {label_pool.save_label(current_label); continue;}
+            if (is_dominated == true)
+            {
+                label_pool.save_label(current_label);
+                continue;
+            }
 
             // The extracted label is non-dominated, thus store the location of label in the vector to later add to the expanded list
             LABEL_TR_iter place_to_add = check1_result.second;
@@ -251,7 +270,7 @@ void *Multi_search(
 
             // Never expand the target, but capture the solution
             if (current_vertex == target)
-            {
+           {
                 // Since we are not expanding nodes lexicographically, we need to check if
                 // the new solution dominates any of the previous solutions
                 LABEL* last_sol = 0;
@@ -260,9 +279,12 @@ void *Multi_search(
                 {
                     LABEL* tmp = 0;
                     if (*current_label << (*current_sol)) // the new solution dominates a previous solution
-                    {Sol_set.pop_after(last_sol); tmp = current_sol;} // the dominated solution should be removed
+                    {
+                        Sol_set.pop_after(last_sol);    // the dominated solution should be removed
+                        tmp = current_sol;
+                    }
                     else
-                    last_sol = current_sol;
+                        last_sol = current_sol;
 
                     current_sol = current_sol->get_next(); // try another solution
                     if (tmp) label_pool.save_label(tmp); // recycle the dominated solution label
@@ -274,15 +296,17 @@ void *Multi_search(
 
             // Get ready for expansion, recover g-values from the label
             for (dim_t i = 0; i < num_objs; ++i)
-            {current_label_g[i] = current_label_f[i] - h[current_vertex][i];}
+            {
+                current_label_g[i] = current_label_f[i] - h[current_vertex][i];
+            }
 
-            #ifdef PATH
+#ifdef PATH
             // Retrieve next path id
             path_arr_size path_id = Paths[current_vertex].size();
             // Store backtracking information
             // CAUTION:: Max parent_array_id is UINT16_MAX
             Paths[current_vertex].push_back(std::make_pair(current_label->get_incoming_edge(), current_label->get_path_id()));
-            #endif
+#endif
 
             // recycle the label
             label_pool.save_label(current_label);
@@ -295,26 +319,34 @@ void *Multi_search(
                 sn_id_t tail = edge_data.tail;
 
                 // Check if it is possible to get to the target through the successor vertex
-                if (h[tail][0] == COST_MAX){continue;}
+                if (h[tail][0] == COST_MAX)
+                {
+                    continue;
+                }
 
                 // Build f-values of the extended path
                 std::array<cost_t, DIM> costs_tail;
                 for (dim_t i = 0; i < num_objs; ++i)
-                {costs_tail[i] = current_label_g[i] +  edge_data.costs[i] + h[tail][i];}
+                {
+                    costs_tail[i] = current_label_g[i] +  edge_data.costs[i] + h[tail][i];
+                }
 
                 // Create the truncated label
                 LABEL_TR tail_label_tr(costs_tail);
 
                 // Attempt a quick dominance check against two candidates
-                if (Last_label_tr[tail] << tail_label_tr || Last_label_tr[target] << tail_label_tr) {continue;}
+                if (Last_label_tr[tail] << tail_label_tr || Last_label_tr[target] << tail_label_tr)
+                {
+                    continue;
+                }
 
-                // Genereate a new label and put it into the queue
+                // Generate a new label and put it into the queue
                 LABEL *new_label = label_pool.get_label();
-                #ifdef PATH
+#ifdef PATH
                 *new_label = LABEL(costs_tail, tail, edge_data.tail_incoming, path_id); // keep backtracking information
-                #else
+#else
                 *new_label = LABEL(costs_tail, tail);
-                #endif
+#endif
 
                 // Add it to the queue
                 Open.push(new_label);
@@ -324,68 +356,73 @@ void *Multi_search(
     }
 ////////////////////////////////////////////
 // This function simply prints the costs stored in the label
-void
-print_label(LABEL *label)
-{
-    std::array<cost_t, DIM> label_f = label->get_f();
-    for(dim_t i = 0; i < num_objs; i++)
+    void
+    print_label(LABEL *label)
     {
-        std::cerr<< label_f[i] << " ";
+        std::array<cost_t, DIM> label_f = label->get_f();
+        for(dim_t i = 0; i < num_objs; i++)
+        {
+            std::cerr<< label_f[i] << " ";
+        }
+        std::cerr<<std::endl;
     }
-    std::cerr<<std::endl;
-}
 ////////////////////////////////////////////
 // This function performs a dominance test over a list of (truncated) vectors lexicographically
-std::pair<bool, LABEL_TR_iter>
-dominance_check(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, size_t &comp_)
-{
-    bool dominated = false;
-    LABEL_TR_iter it = Exp_labels_tr.begin();
-    while (it < Exp_labels_tr.end())
+    std::pair<bool, LABEL_TR_iter>
+    dominance_check(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, size_t &comp_)
     {
-        // comp_++;
-        if (new_label_tr <= (*it))
-        break;
+        bool dominated = false;
+        LABEL_TR_iter it = Exp_labels_tr.begin();
+        while (it < Exp_labels_tr.end())
+        {
+            // comp_++;
+            if (new_label_tr <= (*it))
+                break;
 
-        // comp_++;
-        if ((*it) << new_label_tr)
-        {dominated = true; break;}
-        ++it; // Move the iterator to the next element
+            // comp_++;
+            if ((*it) << new_label_tr)
+            {
+                dominated = true;
+                break;
+            }
+            ++it; // Move the iterator to the next element
+        }
+        return std::make_pair(dominated, it);
     }
-    return std::make_pair(dominated, it);
-}
 ////////////////////////////////////////////
 // This function iterates backwards through the list and remove (truncated) vectors dominated by "new_label_tr"
-void remove_dominated(const LABEL_TR& new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it, size_t &comp_)
-{
-    auto reverse_it = Exp_labels_tr.rbegin();
-
-    while (reverse_it != Exp_labels_tr.rend() && reverse_it.base() != it)
+    void remove_dominated(const LABEL_TR& new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it, size_t &comp_)
     {
-        if (new_label_tr << (*reverse_it))
-        reverse_it = decltype(reverse_it)(Exp_labels_tr.erase(std::next(reverse_it).base()));
-        else
-        ++reverse_it; // Move the reverse iterator to the next element
+        auto reverse_it = Exp_labels_tr.rbegin();
+
+        while (reverse_it != Exp_labels_tr.rend() && reverse_it.base() != it)
+        {
+            if (new_label_tr << (*reverse_it))
+                reverse_it = decltype(reverse_it)(Exp_labels_tr.erase(std::next(reverse_it).base()));
+            else
+                ++reverse_it; // Move the reverse iterator to the next element
+        }
     }
-}
 ////////////////////////////////////////////
 // This function iterates forward through the list and remove (truncated) vectors dominated by "new_label_tr"
-void
+    void
     remove_dominated_forward(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it, size_t &comp_)
     {
         while (it < Exp_labels_tr.end())
         {
             if (new_label_tr << (*it))
-            it = Exp_labels_tr.erase(it);
+                it = Exp_labels_tr.erase(it);
             else
-            ++it; // Move the iterator to the next element
+                ++it; // Move the iterator to the next element
         }
     }
 ////////////////////////////////////////////
 // This function just adds the truncated vector "new_label_tr" into the iterator position "it"
-void
-add_to_expanded(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it)
-{Exp_labels_tr.insert(it, new_label_tr);}
+    void
+    add_to_expanded(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it)
+    {
+        Exp_labels_tr.insert(it, new_label_tr);
+    }
 //////////////////////////////////////////////////////
 };
 #endif

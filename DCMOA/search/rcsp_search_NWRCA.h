@@ -6,6 +6,51 @@
 // created: 01/12/2023
 // updated: 17/06/2024
 
+
+/******************************************************
+
+
+NWRCA_H (Resource Constrained A* for RCSP)
+Purpose: Find the shortest path in a graph that satisfies a set of resource limits (constraints).
+Sketch of NWRCA_H Algorithm
+
+1.	Initialization:
+o	Input: Graph G, reversed graph G_rev, start vertex, goal vertex, resource constraints (budgets), number of objectives.
+o	Initialize:
+    	Cost vectors (heuristic h and upper bounds ub).
+    	Resource budgets based on the input constraints.
+    	Priority queue Open.
+    	Data structures for expanded labels and solution sets.
+
+2.	Preprocessing:
+o	Perform a Breadth-First Search (BFS) to find reachable vertices from the start.
+o	Calculate lower bounds for each objective using Dijkstra's algorithm (and upper bounds for non-primary objectives).
+o	If a negative cycle is detected, terminate the algorithm as the problem is unsolvable.
+o	Adjust resource budgets based on the calculated upper bounds and the given tightness constraints.
+
+3.	Main Search Loop:
+o	While Open is not empty:
+1.	Extract the node with the smallest f1 value from Open.
+2.	Budget Check: If the primary cost exceeds the budget, terminate the search early.
+3.	Quick Dominance Check: Check if the node is dominated by the most recently expanded node or if it violates resource budgets. If dominated or violating, discard it.
+4.	Full Dominance Check: Compare the current node against all previously expanded nodes to ensure it's not dominated.
+5.	If the node is non-dominated, expand it:
+    	   Generate new nodes (successors).
+    	Calculate their cost vectors.
+    	Perform dominance and budget checks before adding them to the queue.
+6.	If the node corresponds to the goal:
+    	Update the budget with the cost of the solution.
+    	Add it to the solution set and check for any dominated solutions in the set.
+
+4.	Termination:
+o	The algorithm terminates when the goal is reached and a valid (within budget) path is found.
+o	Output: The shortest path that satisfies all resource constraints.
+
+
+
+******************************************************/
+
+
 template <class LABEL, class Q, class H>
 class NWRCA
 {
@@ -19,14 +64,14 @@ public:
 
         // Initialise necessary parameters and data structures
         initialise_parameters(G, exp);
-        
+
         // Negative Cycle flag
         bool has_neg_cycle = false;
 
         ////////////////////////////////////////////////////
         // Here we do some quick calculations to come up with resource budgets, subject to not having negative cycles
         // Note: This section can be skipped if the resource budgets are already known
-        
+
         // First, find reachable vertices from start, and their distances
         BFS(G, BFS_f, start_vertex); // Forward Breadth First Search
 
@@ -39,7 +84,7 @@ public:
             else
             has_neg_cycle = Dijkstra(G_rev, *Open_1, h_, NULL, BFS_f, NULL, goal_vertex, obj_index);
 
-            if (has_neg_cycle) 
+            if (has_neg_cycle)
             {std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl; break;}
         }
 
@@ -51,7 +96,7 @@ public:
         {budgets_[obj_index] = std::floor(exp.constraint*(ub_[start_vertex][obj_index] - h_[start_vertex][obj_index])/100) + h_[start_vertex][obj_index];}
 
         // Reset lower bounds and BFS array for the upcoming searches
-        for (sn_id_t id = 0; id < G->Num_vertices; id++) 
+        for (sn_id_t id = 0; id < G->Num_vertices; id++)
         {
             {for (dim_t obj_index = 0; obj_index <num_objs; obj_index++) h_[id][obj_index] = COST_MAX;}
             BFS_f[id] = SN_ID_MAX;
@@ -73,7 +118,7 @@ public:
             // ALTERNATIVE: Run Bellman-Ford to compute lower bounds and detect negative cycles
             // has_neg_cycle = Bellman_Ford_Moore(G_rev, h_, BFS_f, NULL, goal_vertex, obj_index);
 
-            if (has_neg_cycle) 
+            if (has_neg_cycle)
             {std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl; break;}
         }
 
@@ -107,7 +152,7 @@ public:
                             Expanded_labels_tr_, Last_label_tr_,
                             start_vertex, goal_vertex,
                             Paths_, total_comp);
-        
+
 
         // Stop timer
         mytimer.stop();
@@ -123,11 +168,11 @@ public:
         res.memory_KB = search_mem/1024;
         res.num_sols_f = Sol_set_.size();
         res.is_rcsp = true;
-        for (dim_t obj_index = 0; obj_index < num_objs; obj_index++) {res.upper_bounds[obj_index] = budgets_[obj_index];} 
-        
+        for (dim_t obj_index = 0; obj_index < num_objs; obj_index++) {res.upper_bounds[obj_index] = budgets_[obj_index];}
+
         // Print results
         res.print_stats(exp);
-        
+
         if(exp.path) // Capture and then print path details if requested
         {
             // recover paths
@@ -135,18 +180,18 @@ public:
             res.print_paths();
         }
     }
-    
+
     ~NWRCA()
     {
         for (sn_id_t id = 0; id < num_vertices; id++)
-        {delete [] h_[id];delete [] ub_[id];} 
+        {delete [] h_[id];delete [] ub_[id];}
         delete [] BFS_f;
-        delete [] Last_label_tr_; 
+        delete [] Last_label_tr_;
         delete [] Expanded_labels_tr_;
-        delete [] h_; delete [] ub_; 
+        delete [] h_; delete [] ub_;
         delete [] budgets_;
         delete Open_1;
-        
+
         #ifdef PATH
         delete [] Paths_;
         #endif
@@ -161,7 +206,7 @@ public:
             // memory of backtracking
             if (Paths_)
             {bytes += Paths_[id].capacity()*sizeof(std::pair<vertex_deg_t, path_arr_size>);}
-            
+
             // memory of expanded paths
             bytes += Expanded_labels_tr_[id].capacity()*sizeof(LABEL_TR);
 
@@ -169,7 +214,7 @@ public:
         return bytes;
     }
 
-    
+
 
 //////////////////////////////////////////////////////
 private:
@@ -204,7 +249,7 @@ private:
         // An array to store resource budgets
         budgets_ = new cost_t[num_objs]();
         budgets_[0] = COST_MAX;
-        
+
         // Initialise arrays per vertex
         for (sn_id_t id = 0; id < num_vertices; id++)
         {
@@ -228,7 +273,9 @@ private:
 
     }
 ////////////////////////////////////////////
-void *Multi_search( 
+
+
+void *Multi_search(
         graph *G
         , Q &Open
         , label_pool<LABEL> &label_pool
@@ -257,42 +304,42 @@ void *Multi_search(
         // Initialise a cost array to be used within the search
         std::array<cost_t, DIM> current_label_g;
 
-        // create a trunacated label for budgets
+        // create a truncated label for budgets
         // all valid labels must weakly dominate the budget vector
         LABEL_TR budget_label_tr(budgets);
-        
+
         // Search while the queue is not empty
         while (Open.size())
         {
             // Extract (pop) the least-cost label (can be non-lexicographical)
-            LABEL *current_label = Open.pop(); 
-            
+            LABEL *current_label = Open.pop();
+
             // recover vertex_id from the label
             sn_id_t current_vertex = current_label->get_id();
 
             // extracting the f-values from the label
             std::array<cost_t, DIM> current_label_f = current_label->get_f();
-            
+
             // Termination criterion, stop the search if the current solution is proved to be optimal
-            if (current_label->get_f_pri() > budgets[0]) 
+            if (current_label->get_f_pri() > budgets[0])
             {label_pool.save_label(current_label); break;}
 
             // Create a truncated label by removing the first element
             LABEL_TR current_label_tr(current_label_f);
 
-            // Perform Quick Dominance chcek and prune if the extracted label is dominated
+            // Perform Quick Dominance check and prune if the extracted label is dominated
             // the operation "L<<R" means L dominates R
-            if (Last_label_tr[current_vertex] << current_label_tr) 
+            if (Last_label_tr[current_vertex] << current_label_tr)
             {label_pool.save_label(current_label); continue;} // if dominated, thus skip expansion + recycle the label
-            
-            // Perform a linear Dominance chcek against previous expansion of the vertex in lexicographical order
+
+            // Perform a linear Dominance check against previous expansion of the vertex in lexicographical order
             std::pair<bool, LABEL_TR_iter> check_result = dominance_check(current_label_tr, Expanded_labels_tr[current_vertex], comp_);
-            bool is_dominated = check_result.first; 
+            bool is_dominated = check_result.first;
             if (is_dominated) {label_pool.save_label(current_label); continue;} // if dominated, thus skip expansion + recycle the label
 
             // The extracted label is non-dominated, thus store the location of label in the vector to later add to the expanded list
             LABEL_TR_iter place_to_add = check_result.second;
-            
+
             // Attempt to remove dominated labels and add the current label to the place alreay obtained above
             remove_dominated(current_label_tr, Expanded_labels_tr[current_vertex], place_to_add, comp_);
             add_to_expanded(current_label_tr, Expanded_labels_tr[current_vertex], place_to_add);
@@ -301,22 +348,22 @@ void *Multi_search(
             Last_label_tr[current_vertex] = current_label_tr;
 
             // Never expand the target, but capture the solution
-            if (current_vertex == target) 
+            if (current_vertex == target)
             {
                 // First, store the cost of the solution
                 budgets[0] = current_label->get_f_pri();
-                // Since we are not expanding nodes lexicographically, we need to check if 
-                // the new solution dominantes any of the previous solutions
+                // Since we are not expanding nodes lexicographically, we need to check if
+                // the new solution dominates any of the previous solutions
                 LABEL* last_sol = 0;
                 LABEL* current_sol = Sol_set.front();
                 while(current_sol && current_sol->get_f_pri() == current_label->get_f_pri())
                 {
                     LABEL* tmp = 0;
                     if (*current_label << (*current_sol)) // the new solution dominates a previous solution
-                    {Sol_set.pop_after(last_sol); tmp = current_sol;} // the dominated olution should be removed
+                    {Sol_set.pop_after(last_sol); tmp = current_sol;} // the dominated solution should be removed
                     else
                     last_sol = current_sol;
-                    
+
                     current_sol = current_sol->get_next(); // try another solution
                     if (tmp) label_pool.save_label(tmp); // recycle the dominated solution label
                 }
@@ -326,7 +373,7 @@ void *Multi_search(
             }
 
             // Get ready for expansion, recover g-values from the label
-            for (dim_t i = 0; i < num_objs; ++i) 
+            for (dim_t i = 0; i < num_objs; ++i)
             {current_label_g[i] = current_label_f[i] - h[current_vertex][i];}
 
             #ifdef PATH
@@ -339,7 +386,7 @@ void *Multi_search(
 
             // recycle the label
             label_pool.save_label(current_label);
-            
+
             // Expand successors
             for (vertex_deg_t edge_id = 0; edge_id < Out_deg[current_vertex]; edge_id++)
             {
@@ -352,7 +399,7 @@ void *Multi_search(
 
                 // Build f-values of the extended path
                 std::array<cost_t, DIM> costs_tail;
-                for (dim_t i = 0; i < num_objs; ++i) 
+                for (dim_t i = 0; i < num_objs; ++i)
                 {costs_tail[i] = current_label_g[i] +  edge_data.costs[i] + h[tail][i];}
 
                 // Create the truncated label of extended path
@@ -362,21 +409,21 @@ void *Multi_search(
                 // every valid label must weakly dominate the budget vector
                 if ( !(tail_label_tr << budget_label_tr) || Last_label_tr[tail] << tail_label_tr)
                 { continue;}
-            
+
                 // Genereate a new label and put it into the queue
-                LABEL *new_label = label_pool.get_label();                
+                LABEL *new_label = label_pool.get_label();
                 #ifdef PATH
                 *new_label = LABEL(costs_tail, tail, edge_data.tail_incoming, path_id); // keep backtracking information
                 #else
                 *new_label = LABEL(costs_tail, tail);
                 #endif
-                
+
                 // Add it to the queue
                 Open.push(new_label);
             }
 
         }
-       
+
         return NULL;
     }
 ////////////////////////////////////////////
@@ -443,6 +490,6 @@ void
 void
 add_to_expanded(LABEL_TR new_label_tr, LABEL_TR_list &Exp_labels_tr, LABEL_TR_iter it)
 {Exp_labels_tr.insert(it, new_label_tr);}
-////////////////////////////////////////////////////// 
+//////////////////////////////////////////////////////
 };
 #endif

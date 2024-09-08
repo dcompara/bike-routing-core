@@ -2,7 +2,7 @@
 # this file is formatted as follows: [header data] [node data] [edge data] 
 # header format: nodes [number of nodes] edges [number of edges]  
 # node data format: v [id] [x] [y] [elevation] 
-# edge data format: e [from_node_id] [to_node_id] [length] [1000 - height_gain] [popularity] [street_width] [100*random] 
+# edge data format: e [from_node_id] [to_node_id] [length] [1000 - height_gain] [popularity] 
 # 
 # 32bit integer values are used throughout. 
 # Identifiers are all zero indexed. 
