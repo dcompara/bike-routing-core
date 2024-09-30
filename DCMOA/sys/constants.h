@@ -21,7 +21,7 @@
 typedef uint32_t uint;
 
 // address space for state identifiers
-typedef uint32_t sn_id_t; 
+typedef uint32_t sn_id_t;
 static const sn_id_t SN_ID_MAX = UINT32_MAX;
 
 // For non-negative integer costs
@@ -41,7 +41,7 @@ static const cost_t COST_MIN = INT32_MIN;
 
 // This parameter sets the dimension of the cost vectors.
 typedef uint8_t dim_t;
-const dim_t DIM = 4;
+const dim_t DIM = 2;
 
 typedef uint8_t vertex_deg_t ;
 const vertex_deg_t DEG_MAX = UINT8_MAX;

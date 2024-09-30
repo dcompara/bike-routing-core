@@ -106,6 +106,7 @@ Resource-Constrained Shortest Path Problems (RCSPPs)
 Resource-Constrained Elementary Shortest Path Problems (RCESPPs)
 Shortest Path Problems with Forbidden Paths (SPPFPs)
 WHAT WE wANT: doubly constrained shortest path problem [DCSP] or doubly resource constrained shortest path problem (DRCSPP) = shortest path problem  with double sided inequality constains. arise in solving equality constrained knapsack problems
+cf "2024 A two-stage method for doubly resource constrained elementary shortest"  https://github.com/hellomuyi/DRCESPP
 
 
 
@@ -241,6 +242,8 @@ updating vertices and edges dynamically, querying approximate Pareto fronts, and
 cf also 10.3233/FAIA240145  or /10.1007/978-3-031-30675-4_15.
 Preprocessing such as CSP-CH are very useful. They are aso called Index-Based algorithms (they have an extra stage, which is called index construction). Such methods can produce faster query processing
 
+A new idea is not to store the data but to ask using API existing ones to get info ""Fast Algorithms for Computing Fixed-Length Round Trips in Real-World Street Networks"" https://zenodo.org/records/13682717
+such as BRouter Garmin Connect OpenRouteService  Trail Router     Komoot    Plotaroute    RouteLoops
 
 
 In python: tons of codes (not laking about the general optmization:  SciPy.optimize  pyOpt, Pyomo): cspy, PyGMO (much better is https://esa.github.io/pygmo2/), pyMCMA, GPOL, pyMultiobjective ( a very good one with all references), paretoset, pathwyse (in C++)... BUt the best one seems to be:

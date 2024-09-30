@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters=".\bin\Release\roadhog --alg DCMOA       --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
+				<Option parameters=".\bin\Debug\roadhog --alg DCMOA  --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters=".\bin\Release\roadhog --alg NWMOA --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
+				<Option parameters=".\bin\Release\roadhog --alg DCMOA --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>

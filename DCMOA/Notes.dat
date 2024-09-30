@@ -35,3 +35,68 @@ And for NWRCA
 I add a new algorithm the DCMOA: A* for the doubly constrained multi-objective shortest path problem with negative weights
 
 .\bin\Release\roadhog --alg DCMOA       --input .\maps\graph_Paris_south_2_objectives.xy  --start 14066      --goal 13953  --path --constraint 10
+
+
+
+
+*****************  OTHER ISSUES *******************
+
+It seesm there is a lot or erros (memory etc...) because I got differente results if running with debugueur than wthut so
+
+
+
+https://drmemory.org/page_download.html
+
+Run Dr. Memory:
+
+You can drag and drop your executable onto the Dr. Memory desktop icon.
+Alternatively, you can run it from the command line:
+bash
+Copier le code
+drmemory -- your_program.exe
+Dr. Memory will run your program and generate a report detailing any memory issues.
+
+
+
+
+
+
+
+
+
+
+I use  AddressSanitizer (ASan) 
+
+add -fsanitize=address   in complileropriton  and -lasan in liker option
+BUt beofr I need to install (unsin Msys2) 
+I got proble with gdb so I usenstall Clang:
+
+Install Clang via MSYS2:
+
+bash
+Copier le code
+pacman -S mingw-w64-x86_64-clang
+Configure Code::Blocks to Use Clang:
+
+Open Code::Blocks and go to Settings > Compiler.
+Create a new compiler profile and set it to use clang++ for the compiler and linker.
+C Compiler: clang.exe
+C++ Compiler: clang++.exe
+Linker for Dynamic Libs: clang++.exe
+Linker for Static Libs: llvm-ar.exe (or ar.exe if you don't have llvm-ar.exe)
+Debugger: This can remain as gdb.exe unless you want to switch to LLDB, which is the debugger typically used with Clang/LLVM.
+Resource Compiler: Leave as windres.exe (since it's a MinGW tool).
+
+
+
+
+Enable AddressSanitizer:
+
+In your project’s build options, add -fsanitize=address to the compiler flags under Other options.
+Also, add -g to include debugging symbols.
+Compile and Run Your Program:
+
+Build your project in Code::Blocks. If AddressSanitizer is supported, you can run your program and catch memory errors directly within Code::Blocks.
+
+
+

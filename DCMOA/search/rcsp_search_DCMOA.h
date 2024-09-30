@@ -6,6 +6,9 @@
 // created: 02/09/2024
 // updated: 02/09/2024
 
+#include <chrono>
+
+
 /******************************************************
 
 Sketch of DCMOA Algorithm
@@ -21,7 +24,6 @@ o	Initialize:
 2.	Preprocessing:
 o	Perform a Breadth-First Search (BFS) to find reachable vertices from the start.
 o	Calculate lower bounds for each objective using Dijkstra's algorithm (and upper bounds for non-primary objectives).
-o	If a negative cycle is detected, terminate the algorithm as the problem is unsolvable.
 o	Adjust resource budgets based on the calculated upper bounds and the given tightness constraints.
 
 3.	Main Search Loop:
@@ -51,51 +53,30 @@ class DCMOA
 {
 
 public:
-    DCMOA(graph *G, graph *G_rev, experiment exp) : LABEL_Pool_(1024)
+// TODO (Daniel#1#): Change size to reach bigger than 1024 ...
+//DEBUG
+    DCMOA(graph *G, graph *G_rev, experiment exp) : LABEL_Pool_(10240)
     {
         // retrieve goal and start vertex
         sn_id_t start_vertex = exp.start - G->Vertex_offset;
         sn_id_t goal_vertex = exp.goal - G->Vertex_offset;
 
-        // Initialise necessary parameters and data structures
+        /****************************************************************
+        o	Initialize:
+            	Cost vectors (heuristic h and upper bounds ub).
+            	Resource budgets based on the input constraints.
+            	Priority queue Open.
+            	Data structures for expanded labels and solution sets.
+        *****************************************************************/
+        //Initialise necessary parameters and data structures
         initialise_parameters(G, exp);
 
 
-        // Negative Cycle flag
-        bool has_neg_cycle = false;
-
-        ////////////////////////////////////////////////////
-        // Here we do some quick calculations to come up with resource budgets, subject to not having negative cycles
-        // Note: This section can be skipped if the resource budgets are already known
-
-        // First, find reachable vertices from start, and their distances
-        BFS(G, BFS_f, start_vertex); // Forward Breadth First Search
-
-        // Calculate lower bounds and check negative cycles
-        for (dim_t obj_index = 0; obj_index <num_objs; obj_index++)
-        {
-            // Run backward Dijkstra's algorithm with re-expansions allowed to calculate lower bounds and detect negative cycles
-            if(obj_index != 0) // we find some upper bound on non-primary costs (resources) through 'ub'
-                // DEBUG It find the lowest. So is it really upper bound??
-                has_neg_cycle =  Dijkstra(G_rev, *Open_1, h_, ub_, BFS_f, NULL, goal_vertex, obj_index);
-            else
-                has_neg_cycle = Dijkstra(G_rev, *Open_1, h_, NULL, BFS_f, NULL, goal_vertex, obj_index);
-
-            if (has_neg_cycle)
-            {
-                std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl;
-                break;
-            }
-        }
-
-        // The instance cannot be solved by DCMOA*
-        if (has_neg_cycle) return;
-
-        // let's setup budget resources based on the tightness given by exp.constraint;
+        // let's setup budget resources
         for (dim_t obj_index = 1; obj_index <num_objs; obj_index++)
         {
-            budgets_[obj_index] = std::floor(exp.constraint*(ub_[start_vertex][obj_index] - h_[start_vertex][obj_index])/100) + h_[start_vertex][obj_index];
-            // budgets_[obj_index] = 11000;
+            // budgets_[obj_index] = std::floor(exp.constraint*(ub_[start_vertex][obj_index] - h_[start_vertex][obj_index])/100) + h_[start_vertex][obj_index];
+            budgets_[obj_index] = 11000;
             std::cout << "DEBUG to be modified " << std::endl;
             std::cout << "upper bound [" << int(obj_index) << "] = " << ub_[start_vertex][obj_index]  << std::endl;
             std::cout << "h [" << int(obj_index) << "] = " << h_[start_vertex][obj_index]  << std::endl;
@@ -103,17 +84,7 @@ public:
             std::cout << "budgets_[" << int(obj_index) << "] = " << budgets_[obj_index]  << std::endl;
         }
 
-        // Reset lower bounds and BFS array for the upcoming searches
-        // DEBUG: is it needed ???
-        for (sn_id_t id = 0; id < G->Num_vertices; id++)
-        {
-            {
-                for (dim_t obj_index = 0; obj_index <num_objs; obj_index++) h_[id][obj_index] = COST_MAX;
-            }
-            BFS_f[id] = SN_ID_MAX;
-        }
 
-        ////////////////////////////////////////////////////
         // start from scratch the preliminary searches needed to calculate lower bounds
         // Turn on the timer
         timer mytimer;
@@ -122,23 +93,10 @@ public:
         // Again, find reachable vertices from start, and their distances
         BFS(G, BFS_f, start_vertex); // Forward Breadth First Search
 
-        // Calculate lower bounds and check negative cycles
+        // Calculate lower bounds
         for (int obj_index = num_objs - 1; obj_index >= 0; obj_index--)
-        {
-            has_neg_cycle = Dijkstra(G_rev, *Open_1, h_, NULL, BFS_f, NULL, goal_vertex, obj_index);
-            // ALTERNATIVE: Run Bellman-Ford to compute lower bounds and detect negative cycles
-            // has_neg_cycle = Bellman_Ford_Moore(G_rev, h_, BFS_f, NULL, goal_vertex, obj_index);
+            Dijkstra(G_rev, *Open_1, h_, NULL, BFS_f, NULL, goal_vertex, obj_index);
 
-            if (has_neg_cycle)
-            {
-                std::cerr << "Negative cycle found on dimension " << int(obj_index) << std::endl;
-                break;
-            }
-        }
-
-
-        // The instance cannot be solved by DCMOA*
-        if (has_neg_cycle) return;
 
         // Now find the largest Delta f-value for the nodes in the priority queue in any iteration of A*
         // We find it for the primary cost (index 0) only
@@ -148,24 +106,38 @@ public:
         // Stop the timer of the initilisation phase
         mytimer.stop();
         double time_init = mytimer.elapsed_time_second();
+
         /////////////////////////////////////////////////////////////////////////////
         // The main search is done here
         // first reset the timer
         mytimer.reset();
         mytimer.start();
 
+        std::cout << "start time for Timer ; t = "  << mytimer.elapsed_time_second() << std::endl;
+
+
+
+
         // Initialise the A*'s priority queue based on the provided Delta f-value
         // Priority queue can be a fixed-size cyclic bucket queue where the size of the buckets is set by max_delta_f
         cost_t bucket_width = 1;
         Q Open_2(bucket_width, h_[start_vertex][0], max_delta_f[0]); // it takes (bucket_width, min f-value, max delta f-value)
 
-        // A counter for the number of dominace checks performed
+        // A counter for the number of dominance checks performed
         size_t total_comp = 0;
 
+
+        std::cout << "start time for Search ; t = "  << mytimer.elapsed_time_second() << " in ns " << ((double)mytimer.elapsed_time_nano() / 1.e9) << std::endl;
+
+        double time_start = get_current_time_in_seconds();
+
         // Execute the main A* search
-        Multi_search(G, Open_2, LABEL_Pool_, Sol_set_, h_, budgets_, Expanded_labels_tr_, Last_label_tr_, start_vertex, goal_vertex, Paths_, total_comp);
+        Multi_search(G, Open_2, LABEL_Pool_, Sol_set_, h_, budgets_, Expanded_labels_tr_, Last_label_tr_, start_vertex, goal_vertex, Paths_, total_comp, time_start);
 
 
+        double time_end = get_current_time_in_seconds();
+
+        std::cout << "end time for Search ; t = "  << (time_end - time_start) << std::endl;
 
 
         // Stop timer
@@ -301,24 +273,24 @@ private:
     }
 
 
-/******************************************
+    /******************************************
 
-	Main Search Loop:
+    	Main Search Loop:
 
-o	While Open is not empty:
-    1.	Extract the node with the smallest f1 value from Open.
-    2.	Budget Check: If the primary cost exceeds the budget, terminate the search early.
-    3.	Quick Dominance Check: Check if the node is dominated by the most recently expanded node (or if it violates resource budgets) discard it.
-    4.	Full Dominance Check: Compare the current node against all previously expanded nodes to ensure it's not dominated.
-    5.	If the node is non-dominated, expand it:
-        	   Generate new nodes (successors).
-        	Calculate their cost vectors.
-        	Perform dominance and budget checks before adding them to the queue.
-    6.	If the node corresponds to the goal:
-        	Update the budget with the cost of the solution.
-        	Add it to the solution set and check for any dominated solutions in the set.
+    o	While Open is not empty:
+        1.	Extract the node with the smallest f1 value from Open.
+        2.	Budget Check: If the primary cost exceeds the budget, terminate the search early.
+        3.	Quick Dominance Check: Check if the node is dominated by the most recently expanded node (or if it violates resource budgets) discard it.
+        4.	Full Dominance Check: Compare the current node against all previously expanded nodes to ensure it's not dominated.
+        5.	If the node is non-dominated, expand it:
+            	   Generate new nodes (successors).
+            	Calculate their cost vectors.
+            	Perform dominance and budget checks before adding them to the queue.
+        6.	If the node corresponds to the goal:
+            	Update the budget with the cost of the solution.
+            	Add it to the solution set and check for any dominated solutions in the set.
 
-*********************************************/
+    *********************************************/
 
 
     void *Multi_search(
@@ -334,6 +306,7 @@ o	While Open is not empty:
         , Parent_list *&Paths
         // , size_t &generated, size_t &expansions, size_t &pruned, size_t &pruned_last
         , size_t &comp_
+        , double time_start
     )
     {
         // Load graph data
@@ -351,114 +324,89 @@ o	While Open is not empty:
         std::array<cost_t, DIM> current_label_g;
 
         // create a truncated label for budgets
-        // all valid labels must weakly dominate the budget vector
+        // because all valid labels must weakly dominate the budget vector
         LABEL_TR budget_label_tr(budgets);
 
+
+        // Done by hand DEBUG
+//        std::array<cost_t, DIM> upper_bound= {11000,1100};
+//        std::array<cost_t, DIM> lower_bound= {10000,950};
+
+        std::array<cost_t, DIM> upper_bound= {11000,1400};
+        std::array<cost_t, DIM> lower_bound= {10000,1250};
+
+        double max_time_seconds = 100.;
+
+
+
         // Search while the queue is not empty
-        while (Open.size())
+        while (Open.size() > 0)
         {
+            // test if the time is too long
+            double current_time = get_current_time_in_seconds();
+
+            if( (current_time - time_start ) > max_time_seconds )
+            {
+                std::cout << " stop because too long " << current_time - time_start << std::endl;
+                break;
+            }
+
+
             // Extract (pop) the least-cost label (can be non-lexicographical)
             LABEL *current_label = Open.pop();
 
             // recover vertex_id from the label
             sn_id_t current_vertex = current_label->get_id();
 
+           // std::cout << " we try the vertex " << current_vertex << std::endl;
+
             // extracting the f-values from the label
             std::array<cost_t, DIM> current_label_f = current_label->get_f();
 
-// TODO (Daniel#1#): Not in NWMOA. SO remove for DEBUG ...
-            // Termination criterion, stop the search if the current solution is proved to be optimal
-//            if (current_label->get_f_pri() > budgets[0])
-//            {
-//                label_pool.save_label(current_label);
-//                // DEBUG
-//                std::cout << "  Termination criterion for budget [0] = " << budgets[0] << " current_label->get_f_pri() = " << current_label->get_f_pri() << std::endl;
-//                break;
-//            }
 
-            if (current_label->get_f_pri() > budgets[0])
+            /***  2.	Budget Check: If one predicted cost (that is always higher than the real one) exceeds the budget, terminate the search early. ***/
+
+            // if f1 too small then go to the next one (recall the search is ordered by f1)
+            if ( current_label->get_f_pri() < lower_bound[0] )
             {
-                label_pool.save_label(current_label);
-                // DEBUG
-                std::cout << "  Termination criterion for budget [0] = " << budgets[0] << " current_label->get_f_pri() = " << current_label->get_f_pri() << std::endl;
+                label_pool.save_label(current_label);  // Is it needed?  DEBUG  is 1024 size ??
                 continue;
             }
+
+
+            // if  at least one of the label cost is bigger that its upper bound, it can not be good (recall h < real cost + positive cost)  --> go to the next one
+            // if ( !(current_label_f << upper_bound) )  // one cost is bigger than upper bound [NEED LABEL]
+            if ( is_bigger_than_upper_bound(current_label_f, upper_bound) )
+            {
+                label_pool.save_label(current_label); // Is it needed?
+                continue;
+            }
+
 
 
             // Create a truncated label by removing the first element
             LABEL_TR current_label_tr(current_label_f);
 
-// TODO (Daniel#1#): DEBUG add NWMOA
-                // Perform Quick Dominance check and prune if the extracted label is dominated
-            // the operation "L<<R" means L dominates R
-            if (Last_label_tr[current_vertex] << current_label_tr || Last_label_tr[target] << current_label_tr)
-            {
-                label_pool.save_label(current_label);    // if dominated, thus skip expansion + recycle the label
-                continue;
-            }
 
 
-            // Perform Quick Dominance check and prune if the extracted label is dominated
+            // Perform Quick dominacne check with the last stored path and prune if the extracted label is dominated
             // the operation "L<<R" means L dominates R
-//            if (Last_label_tr[current_vertex] << current_label_tr)
+//            if (Last_label_tr[current_vertex] << current_label_tr || Last_label_tr[target] << current_label_tr)
 //            {
 //                label_pool.save_label(current_label);    // if dominated, thus skip expansion + recycle the label
 //                continue;
 //            }
 
-            // Perform a linear Dominance check against previous expansion of the vertex in lexicographical order
-            std::pair<bool, LABEL_TR_iter> check_result = dominance_check(current_label_tr, Expanded_labels_tr[current_vertex], comp_);
-            bool is_dominated = check_result.first;
-            if (is_dominated)
-            {
-                label_pool.save_label(current_label);    // if dominated, thus skip expansion + recycle the label
-                continue;
-            }
 
-// TODO (Daniel#1#): DEBUG add the second dominance tets as in MWMOA to test if it work the same way
-       // Perform a linear Dominance check, this time against the target verex
-            std::pair<bool, LABEL_TR_iter> check2_result = dominance_check(current_label_tr, Expanded_labels_tr[target], comp_);
-            is_dominated = check2_result.first;
-            if (is_dominated == true)
-            {
-                label_pool.save_label(current_label);
-                continue;
-            }
-
-            // The extracted label is non-dominated, thus store the location of label in the vector to later add to the expanded list
-            LABEL_TR_iter place_to_add = check_result.second;
-
-            // Attempt to remove dominated labels and add the current label to the place already obtained above
-            remove_dominated(current_label_tr, Expanded_labels_tr[current_vertex], place_to_add, comp_);
-            add_to_expanded(current_label_tr, Expanded_labels_tr[current_vertex], place_to_add);
-
-            // Store the label as the most recent expansion
-            Last_label_tr[current_vertex] = current_label_tr;
 
             // Never expand the target, but capture the solution
             if (current_vertex == target)
             {
-                // First, store the cost of the solution
-                budgets[0] = current_label->get_f_pri();
-                // Since we are not expanding nodes lexicographically, we need to check if
-                // the new solution dominates any of the previous solutions
-                LABEL* last_sol = 0;
-                LABEL* current_sol = Sol_set.front();
-                while(current_sol && current_sol->get_f_pri() == current_label->get_f_pri())
+                if ( is_smaller_than_lower_bound(current_label_f, lower_bound) )
                 {
-                    LABEL* tmp = 0;
-                    if (*current_label << (*current_sol)) // the new solution dominates a previous solution
-                    {
-                        Sol_set.pop_after(last_sol);    // the dominated solution should be removed
-                        tmp = current_sol;
-                    }
-                    else
-                        last_sol = current_sol;
-
-                    current_sol = current_sol->get_next(); // try another solution
-                    if (tmp) label_pool.save_label(tmp); // recycle the dominated solution label
+                    label_pool.save_label(current_label);
+                    continue;
                 }
-
                 Sol_set.push_front(current_label);
                 continue; // no need to expand the solution path
             }
@@ -494,36 +442,25 @@ o	While Open is not empty:
                 }
 
                 // Build f-values of the extended path
-                std::array<cost_t, DIM> costs_tail;
+                std::array<cost_t, DIM> costs_new_path;
                 for (dim_t i = 0; i < num_objs; ++i)
                 {
-                    costs_tail[i] = current_label_g[i] +  edge_data.costs[i] + h[tail][i];
+                    costs_new_path[i] = current_label_g[i] +  edge_data.costs[i] + h[tail][i];
                 }
 
-                // Create the truncated label of extended path
-                LABEL_TR tail_label_tr(costs_tail);
 
-// TODO (Daniel#1#): DEBUG T create articificllai NWMOA
-       // Attempt a quick dominance check against two candidates
-                if (Last_label_tr[tail] << tail_label_tr || Last_label_tr[target] << tail_label_tr)
+                if ( is_bigger_than_upper_bound(costs_new_path, upper_bound) )
                 {
+                    // label_pool.save_label(current_label); // Is it needed?
                     continue;
                 }
-
-
-//                // Attempt Quick dominance and upperbound checks
-//                // every valid label must weakly dominate the budget vector
-//                if ( !(tail_label_tr << budget_label_tr) || Last_label_tr[tail] << tail_label_tr)
-//                {
-//                    continue;
-//                }
 
                 // Genereate a new label and put it into the queue
                 LABEL *new_label = label_pool.get_label();
 #ifdef PATH
-                *new_label = LABEL(costs_tail, tail, edge_data.tail_incoming, path_id); // keep backtracking information
+                *new_label = LABEL(costs_new_path, tail, edge_data.tail_incoming, path_id); // keep backtracking information
 #else
-                *new_label = LABEL(costs_tail, tail);
+                *new_label = LABEL(costs_new_path, tail);
 #endif
 
                 // Add it to the queue
@@ -604,5 +541,59 @@ o	While Open is not empty:
         Exp_labels_tr.insert(it, new_label_tr);
     }
 //////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////////////////////////////////
+// Function to check if at least one elements in the array `current_label_cost` is bigger than or equal to the corresponding elements in `upper_bound`
+// Returns: true if it is the case false on the contrary
+    bool is_bigger_than_upper_bound(const std::array<cost_t, DIM>& current_label_cost, const std::array<cost_t, DIM>& upper_bound)
+    {
+        // Iterate over all elements in the arrays
+        for (std::size_t i = 0; i < DIM; ++i)
+        {
+            // Compare the elements at index `i` in both arrays
+            if (current_label_cost[i] > upper_bound[i])
+            {
+                // If one element in `current_label_cost` is bigger than the corresponding element in `upper_bound`, return true
+                return true;
+            }
+        }
+        return false;
+    }
+//////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////
+// Function to check if at least one elements in the array `current_label_cost` is smaller than or equal to the corresponding elements in `lower_bound`
+// Returns: true if it is the case false on the contrary
+    bool is_smaller_than_lower_bound(const std::array<cost_t, DIM>& current_label_cost, const std::array<cost_t, DIM>& lower_bound)
+    {
+        // Iterate over all elements in the arrays
+        for (std::size_t i = 0; i < DIM; ++i)
+        {
+            // Compare the elements at index `i` in both arrays
+            if (current_label_cost[i] < lower_bound[i])
+            {
+                // If one element in `current_label_cost` is bigger than the corresponding element in `upper_bound`, return true
+                return true;
+            }
+        }
+        return false;
+    }
+//////////////////////////////////////////////////////
+
+
+
+
+// get_current_time_in_seconds
+    double get_current_time_in_seconds()
+    {
+        auto now = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration<double>(now.time_since_epoch());
+        return duration.count();
+    }
+
 };
 #endif

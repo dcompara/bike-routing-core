@@ -7,36 +7,45 @@
 // @updated: 01/09/2023
 //
 
+
+/*****
+
+operator <: Non-lexicographical comparison based on the first element of f_.
+operator <<: Checks if this label is smaller than (dominated by)  another.
+operator <=: if lexicographically smaller
+
+********/
+
 ///////////////////////////////////////
 // Truncated Search LABEL
 struct search_label_tr
 {
     std::array<cost_t, DIM - 1> f_;
-    
-    search_label_tr() 
+
+    search_label_tr()
     {
 		for (dim_t i = 0; i < DIM - 1; i++)
 		{f_[i] = COST_MAX;}
 	}
 
-	search_label_tr(const std::array<cost_t, DIM> &f) 
+	search_label_tr(const std::array<cost_t, DIM> &f)
 	{
 		for (dim_t i = 0; i < DIM - 1; i++)
 		{f_[i] = f[i + 1];}
 	}
-	search_label_tr(const cost_t *f) 
+	search_label_tr(const cost_t *f)
 	{
 		for (dim_t i = 0; i < DIM - 1; i++)
 		{f_[i] = f[i + 1];}
 	}
 
-	search_label_tr(const std::array<cost_t, DIM> &f, dim_t offset) 
+	search_label_tr(const std::array<cost_t, DIM> &f, dim_t offset)
 	{
 		for (dim_t i = 0; i < DIM - 1; i++)
 		{f_[i] = f[(i + 1 + offset) % DIM];}
 	}
 
-	search_label_tr(const cost_t *f, dim_t offset) 
+	search_label_tr(const cost_t *f, dim_t offset)
 	{
 		for (dim_t i = 0; i < DIM - 1; i++)
 		{f_[i] = f[(i + 1 + offset) % DIM];}
@@ -45,24 +54,28 @@ struct search_label_tr
 	inline std::array<cost_t, DIM - 1>
 	get_f() const
 	{return f_;}
-	
-	// IsDominatedBy
-    bool 
+
+	// IsDominatedBy: f  is dominated by other.f: true except if at least one f_[i] > other.f_[i]
+    bool
 	operator <<(const search_label_tr& other) const
     {
 		for (dim_t i = 0; i < DIM - 1; ++i)
 		{if (f_[i] > other.f_[i]) return false;}
 		return true;
 	}
-	bool 
+	bool
 	dominates(const search_label_tr& other, dim_t start_index = 0) const
     {
 		for (dim_t i = start_index; i < DIM - 1; ++i)
 		{if (f_[i] > other.f_[i]) return false;}
 		return true;
 	}
-	// IsLexicographicallySmallerThan
-    bool 
+	// f IsLexicographicallySmallerThan other_f:
+	// If f_[i] < other_f_[i]: The function returns true, meaning the current object is considered smaller.
+    // If f_[i] > other_f_[i]: The function returns false, meaning the current object is considered larger.
+    // If f_[i] == other_f_[i]: The comparison moves to the next element.
+    // If all egal --> false
+    bool
 	operator <=(const search_label_tr& other) const
     {
         for (dim_t i = 0; i < DIM - 1; ++i)
@@ -73,7 +86,7 @@ struct search_label_tr
 		return false;
     }
 
-	bool 
+	bool
 	operator ==(const search_label_tr& other) const
     {
         for (dim_t i = 0; i < DIM - 1; ++i)
@@ -82,8 +95,8 @@ struct search_label_tr
 		}
 		return true;
     }
-	
-	bool 
+
+	bool
 	is_lex_smaller_than(const search_label_tr& other, dim_t start_index = 0) const
     {
         for (dim_t i = start_index; i < DIM - 1; ++i)
@@ -114,11 +127,11 @@ public:
 	{}
 
 	// Non-Lexicographically smaller
-	bool operator<(const search_label_light& other) 
+	bool operator<(const search_label_light& other)
 	{return f_[0] < other.f_[0];}
-	
+
 	// Lexicographically smaller
-	bool 
+	bool
 	operator <<(const search_label_light& other) const
     {
 		for (dim_t i = 0; i < DIM; ++i)
@@ -126,7 +139,7 @@ public:
 		return true;
 	}
 	// IsLexicographicallySmallerThan
-    bool 
+    bool
 	operator <=(const search_label_light& other) const
     {
         for (dim_t i = 0; i < DIM; ++i)
@@ -137,25 +150,25 @@ public:
 		return false;
     }
 
-	search_label_light(const std::array<cost_t, DIM> &f, sn_id_t id) 
+	search_label_light(const std::array<cost_t, DIM> &f, sn_id_t id)
 	{
 		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label_light(const std::array<cost_t, DIM> &f, sn_id_t id, search_label_light *parent)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		next_ = parent;
 	}
 	search_label_light(const std::array<cost_t, DIM> &f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label_light(cost_t *f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 
@@ -164,7 +177,7 @@ public:
 	{
 		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 	}
-	
+
 	inline void
 	set_id(sn_id_t id)
 	{id_ = id;}
@@ -218,7 +231,7 @@ public:
 	// {return 0;}
 
 	// inline void
-	// set_rolling_cost(cost_t rolling_cost_) 
+	// set_rolling_cost(cost_t rolling_cost_)
 	// {}
 
 	// bool check_cycle = false;
@@ -244,11 +257,11 @@ public:
 	{}
 
 	// Non-Lexicographically smaller
-	bool operator<(const search_label_light_pri& other) 
+	bool operator<(const search_label_light_pri& other)
 	{return f_[0] < other.f_[0];}
-	
+
 	// Lexicographically smaller
-	bool 
+	bool
 	operator <<(const search_label_light_pri& other) const
     {
 		for (dim_t i = 0; i < DIM; ++i)
@@ -256,7 +269,7 @@ public:
 		return true;
 	}
 	// IsLexicographicallySmallerThan
-    bool 
+    bool
 	operator <=(const search_label_light_pri& other) const
     {
         for (dim_t i = 0; i < DIM; ++i)
@@ -267,25 +280,25 @@ public:
 		return false;
     }
 
-	search_label_light_pri(const std::array<cost_t, DIM> &f, sn_id_t id) 
+	search_label_light_pri(const std::array<cost_t, DIM> &f, sn_id_t id)
 	{
 		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label_light_pri(const std::array<cost_t, DIM> &f, sn_id_t id, search_label_light_pri *parent)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		next_ = parent;
 	}
 	search_label_light_pri(const std::array<cost_t, DIM> &f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label_light_pri(cost_t *f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 
@@ -348,7 +361,7 @@ public:
 	// {return 0;}
 
 	// inline void
-	// set_rolling_cost(cost_t rolling_cost_) 
+	// set_rolling_cost(cost_t rolling_cost_)
 	// {}
 
 	// bool check_cycle = false;
@@ -375,11 +388,11 @@ public:
 	{}
 
 	// Non-Lexicographically smaller
-	bool operator<(const search_label& other) 
+	bool operator<(const search_label& other)
 	{return f_[0] < other.f_[0];}
-	
+
 	// Lexicographically smaller
-	bool 
+	bool
 	operator <<(const search_label& other) const
     {
 		for (dim_t i = 0; i < DIM; ++i)
@@ -387,7 +400,7 @@ public:
 		return true;
 	}
 	// IsLexicographicallySmallerThan
-    bool 
+    bool
 	operator <=(const search_label& other) const
     {
         for (dim_t i = 0; i < DIM; ++i)
@@ -398,27 +411,27 @@ public:
 		return false;
     }
 
-	search_label(const std::array<cost_t, DIM> &f, sn_id_t id) 
+	search_label(const std::array<cost_t, DIM> &f, sn_id_t id)
 	{
 		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label(const std::array<cost_t, DIM> &f, sn_id_t id, search_label *parent)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		next_ = parent;
 	}
 	search_label(const std::array<cost_t, DIM> &f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		incoming_edge_ = incoming_edge;
 		path_id_ = index;
 	}
 	search_label(cost_t *f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		incoming_edge_ = incoming_edge;
 		path_id_ = index;
@@ -483,7 +496,7 @@ public:
 	// {return rolling_cost;}
 
 	// inline void
-	// set_rolling_cost(cost_t rolling_cost_) 
+	// set_rolling_cost(cost_t rolling_cost_)
 	// {rolling_cost = rolling_cost_;}
 
 	// bool check_cycle = false;
@@ -497,7 +510,7 @@ private:
 	// cost_t rolling_cost;
 };
 ///////////////////////////////////////
-//// SEARCH LABEL WITH PRIORITY
+//// SEARCH LABEL WITH PRIORITY (recall LABEL = search_label_pri)
 class search_label_pri
 {
 public:
@@ -511,11 +524,11 @@ public:
 	{}
 
 	// Non-Lexicographically smaller
-	bool operator<(const search_label_pri& other) 
+	bool operator<(const search_label_pri& other)
 	{return f_[0] < other.f_[0];}
-	
+
 	// Lexicographically smaller
-	bool 
+	bool
 	operator <<(const search_label_pri& other) const
     {
 		for (dim_t i = 0; i < DIM; ++i)
@@ -523,7 +536,7 @@ public:
 		return true;
 	}
 	// IsLexicographicallySmallerThan
-    bool 
+    bool
 	operator <=(const search_label_pri& other) const
     {
         for (dim_t i = 0; i < DIM; ++i)
@@ -534,27 +547,27 @@ public:
 		return false;
     }
 
-	search_label_pri(const std::array<cost_t, DIM> &f, sn_id_t id) 
+	search_label_pri(const std::array<cost_t, DIM> &f, sn_id_t id)
 	{
 		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 	}
 	search_label_pri(const std::array<cost_t, DIM> &f, sn_id_t id, search_label_pri *parent)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		next_ = parent;
 	}
 	search_label_pri(const std::array<cost_t, DIM> &f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		incoming_edge_ = incoming_edge;
 		path_id_ = index;
 	}
 	search_label_pri(cost_t *f, sn_id_t id, vertex_deg_t incoming_edge, path_arr_size index)
 	{
-		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];} 
+		for (dim_t i = 0; i < DIM; i++) {f_[i] = f[i];}
 		id_ = id;
 		incoming_edge_ = incoming_edge;
 		path_id_ = index;
@@ -619,7 +632,7 @@ public:
 	// {return 0;}
 
 	// inline void
-	// set_rolling_cost(cost_t rolling_cost_) 
+	// set_rolling_cost(cost_t rolling_cost_)
 	// {}
 
 	// bool check_cycle = false;

@@ -9,12 +9,12 @@ void BFS(graph *G, sn_id_t *h, sn_id_t source)
     std::queue<sn_id_t> Queue;
     h[source] = 0;
     Queue.push(source);
-    
+
     while (!Queue.empty())
     {
         sn_id_t current_vertex = Queue.front();
         Queue.pop();
-                
+
         for (vertex_deg_t edge_id = 0; edge_id < Out_deg[current_vertex]; edge_id++)
         {
             edge_t edge_data = Edge_data[current_vertex][edge_id];
@@ -25,15 +25,19 @@ void BFS(graph *G, sn_id_t *h, sn_id_t source)
                 h[tail] = h[current_vertex] + 1;
                 Queue.push(tail);
             }
-        
+
         }
-    }    
+    }
 }
 //////////////////////////////////////////////////////
 // Dijkstra's ALgorithm with re-expansions allowed
 // The function prunes vertices not reachable from the opposite direction through the "depth_op" array
 // it also calculates the non-primary costs of paths through the "ub" array
-bool 
+// TODO (Daniel#1#): Check if  ...
+//
+//This is a one-to-all search algorithm where nodes are organized by the lowest first cost value,
+//
+bool
 Dijkstra(graph *G, pqueue &Queue
     , cost_t **h
     , cost_t **ub
@@ -47,7 +51,7 @@ Dijkstra(graph *G, pqueue &Queue
     sn_id_t max_depth = G->Num_vertices;
 
     sn_id_t *depth = new sn_id_t[G->Num_vertices]();
-    
+
     // Reset + Setup Priority Queue
     Queue.clear();
     Queue.set_cost_index(cost_indx);
@@ -59,13 +63,13 @@ Dijkstra(graph *G, pqueue &Queue
             ub[source][cost_indx2] = 0;
     if(parent) parent[source] = SN_ID_MAX;
     Queue.push(source);
-    
+
     while (Queue.size() > 0)
     {
         sn_id_t current_vertex = Queue.pop();
-        
+
         if (depth[current_vertex] + depth_op[current_vertex] >=  max_depth) return true;
-        
+
         for (vertex_deg_t edge_id = 0; edge_id < Out_deg[current_vertex]; edge_id++)
         {
             edge_t edge_data = Edge_data[current_vertex][edge_id];
@@ -94,16 +98,16 @@ Dijkstra(graph *G, pqueue &Queue
 
     delete [] depth;
     return false;
-    
+
 }
 //////////////////////////////////////////////////////
 // Bellman-Ford Algorithm
-bool 
+bool
 Bellman_Ford(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_id_t source, dim_t cost_indx)
 {
     vertex_deg_t *Out_deg = G->Out_deg;
     edge_data_t Edge_data = G->Edge_data;
-    
+
     h[source][cost_indx] = 0;
     if(parent) parent[source] = SN_ID_MAX;
     sn_id_t iteration = 0;
@@ -118,9 +122,9 @@ Bellman_Ford(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_id_t s
             {
                 edge_t edge_data = Edge_data[current_vertex][edge_id];
                 sn_id_t tail = edge_data.tail;
-                
+
                 if (depth_op[tail] == SN_ID_MAX || h[current_vertex][cost_indx] == COST_MAX) continue;
-                
+
                 if (h[current_vertex][cost_indx] + edge_data.costs[cost_indx] < h[tail][cost_indx])
                 {
                     h[tail][cost_indx] = h[current_vertex][cost_indx] + edge_data.costs[cost_indx];
@@ -133,12 +137,12 @@ Bellman_Ford(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_id_t s
     }
     if (change_observed) return true;
     return false;
-    
+
 }
 //////////////////////////////////////////////////////
 // Bellman-Ford algorithm with Moore's improvement
 // If no source vertex is provided, we treat it as a function to compute potentials for Jhonson's algorithm
-bool 
+bool
 Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_id_t source, dim_t cost_indx)
 {
     vertex_deg_t *Out_deg = G->Out_deg;
@@ -150,7 +154,7 @@ Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_
 
     bool *InQueue = new bool[G->Num_vertices]();
     std::queue<sn_id_t> Queue;
-    
+
     if (source == SN_ID_MAX) // This means we intend to find potentials for Johnson's algorithm
     {
         for (sn_id_t vertex = 0; vertex < G->Num_vertices; vertex++)
@@ -169,7 +173,7 @@ Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_
         InQueue[source] = true;
         vertices_current_iter = 1;
     }
-    
+
     while(!Queue.empty())
     {
         if(vertices_current_iter == 0)
@@ -182,9 +186,9 @@ Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_
         sn_id_t current_vertex = Queue.front();
         Queue.pop();
         InQueue[current_vertex] = false;
-        
+
         if (num_iter >=  G->Num_vertices) return true;
-        
+
         for (vertex_deg_t edge_id = 0; edge_id < Out_deg[current_vertex]; edge_id++)
         {
             edge_t edge_data = Edge_data[current_vertex][edge_id];
@@ -198,7 +202,7 @@ Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_
             {
                 h[tail][cost_indx] = g_tail;
                 if(parent) parent[tail] = current_vertex;
-                
+
                 if (!InQueue[tail])
                 {
                     Queue.push(tail);
@@ -212,11 +216,11 @@ Bellman_Ford_Moore(graph *G, cost_t **h, sn_id_t *depth_op, sn_id_t *parent, sn_
 
     delete [] InQueue;
     return false;
-    
+
 }
 //////////////////////////////////////////////////////
-// Graph reformulation of Johnson's algorithm 
-void 
+// Graph reformulation of Johnson's algorithm
+void
 Reweight_Graph(graph *G, graph *G_rev, cost_t **h, dim_t num_objs)
 {
     vertex_deg_t *Out_deg = G->Out_deg;
@@ -235,24 +239,24 @@ Reweight_Graph(graph *G, graph *G_rev, cost_t **h, dim_t num_objs)
 
                 Edge_data[current_vertex][edge_id].costs[obj_index] += h[current_vertex][obj_index] - h[tail][obj_index];
                 Edge_data_rev[tail][edge_data.tail_incoming].costs[obj_index] += h[current_vertex][obj_index] - h[tail][obj_index];
-                
+
             }
-            
+
         }
     }
 }
 //////////////////////////////////////////////////////
-// This function finds the maximum Delta f-value in any iteration of A*'s search based on the hueristic function h
-// ofr the given index "cost_indx"
-void 
+// This function finds the maximum Delta f-value in any iteration of A*'s search based on the heuristic function h
+// for the given index "cost_indx"
+void
 Find_max_delta_f(graph *G, cost_t **h, std::array<cost_t, DIM> &max_delta_f, dim_t cost_indx)
 {
     vertex_deg_t *Out_deg = G->Out_deg;
     edge_data_t Edge_data = G->Edge_data;
-    
+
     // reset max delta f-value
     max_delta_f[cost_indx] = 0;
-    
+
     for (sn_id_t current_vertex = 0; current_vertex < G->Num_vertices; current_vertex++)
     {
         for (vertex_deg_t edge_id = 0; edge_id < Out_deg[current_vertex]; edge_id++)
