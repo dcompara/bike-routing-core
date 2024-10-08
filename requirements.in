@@ -5,6 +5,13 @@ scipy
 matplotlib
 seaborn
 
+# Added from the file to avoid to have to loead them all the time
+geopandas
+osmnx
+folium
+SRTM.py
+matplotlib
+
 # Visualization tools
 plotly
 altair

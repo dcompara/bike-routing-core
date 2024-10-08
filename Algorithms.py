@@ -134,9 +134,11 @@ or only the so called minimal complete set of efficient paths (sometimes called 
  that is to find a representative efficient path for every attribute (non-dominated cost vector). We can also only get the frontier (no two paths have equal costs: 2024 Theoretical Study on Multi-objective Heuristic Search), the "extreme" (convex hull) or obviously satisfiability/constraints.
  New Approach to Multi-Objective A*:   NAMOA∗dr (or NAMOA∗dr-lazy) algorithm is the state of the art One-to-One MOSP algorithm in the literature
 These algorithms are when the  objective function is additive (sum of the cost value per edge) but 
-some are more general (ex cost = cost_path1/cost path_2) cf 2024 Multiobjective (for efficient algorithm). 
-Interesitng is also the One-To-Many Practical applications find the closes five (retaurant) or lcalality not precise location ...
+some are more general (ex cost = cost_path1/cost path_2) cf 2024 Multiobjective (for efficient algorithm) adn also boolean one: see a way to comine in 2024 Ordinal optimization through multi-objective reformulation
+Interesitng is also the One-To-Many Practical applications find the closes five (restaurant) or lcalality not precise location ...
 one-to-one is also called "Door to door" 
+see 2023 Fast One-to-Many Multicriteria Shortest Path Search
+
 
 An important consideration is that the lists of sored path, nodes, ... needed to perfome the calcul can grow exponentially
 
@@ -251,7 +253,7 @@ In python: tons of codes (not laking about the general optmization:  SciPy.optim
 * Platypus NSGA-II, NSGA-III, MOEA/D, IBEA, Epsilon-MOEA, SPEA2, GDE3, OMOPSO, SMPSO, and Epsilon-NSGA-II: https://github.com/Project-Platypus/Platypus  https://pypi.org/project/Platypus-Opt/    https://platypus.readthedocs.io/en/latest/
 * pymoo: Multi-objective Optimization in Python  : GA, DE, BRKGA, NelderMead, PatternSearch, CMAES, ES, SRES, ISRES, NSGA-II, R-NSGA-II, NSGA-III, U-NSGA-III, R-NSGA-III, MOEAD, AGE-MOEA, C-TAEA, SMS-EMOA, and RVEA.  https://pymoo.org/
 + interesting to test
-https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm + NAMOA_lazy + ..) in C++
+https://zenodo.org/records/7702018 (Targeted Multiobjective Dijkstra Algorithm + NAMOA_lazy + ..) in C++  (cf Some of the most popular graph libraries in C++ are Boost Graph Library, Lemon, SNAP, igraph, GTFS, NetworkX,  ...  )
 https://bitbucket.org/s-ahmadi (for insatnce with the NWMOA* that seems to be the best algorithm for the Exact Multi-objective Path Finding)
 
 + OSMnx based on the populat Networkx but see the faster https://www.rustworkx.org/benchmarks.html (rustworkx: A high-performance graph library for python) faster than igraph, graph-tools and NetworkIt
