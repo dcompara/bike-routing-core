@@ -1,4 +1,0 @@
-.\bin\Release\roadhog  --alg NWMOA    --input .\maps\NY.xy --start 5      --goal 0  --path
-
-
-.\bin\Release\roadhog  --alg NWMOA    --input .\maps\output_graph.xy --start 7891467998      --goal 7728123860  --path
