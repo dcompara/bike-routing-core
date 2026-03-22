@@ -1,0 +1,7 @@
+pyproject.toml
+src/brcore/__init__.py
+src/brcore.egg-info/PKG-INFO
+src/brcore.egg-info/SOURCES.txt
+src/brcore.egg-info/dependency_links.txt
+src/brcore.egg-info/requires.txt
+src/brcore.egg-info/top_level.txt

@@ -1,0 +1,65 @@
+************ TO INSTALL *****************
+
+.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m pip install -U pip
+.\.venv\Scripts\python.exe -m pip install -e .
+
+mkdir -Force src\brcore
+ni src\brcore\__init__.py -ItemType File -Force
+
+
+.\.venv\Scripts\python.exe -m pip install -e .
+
++  INsatll auto indentation using Black Formating, autopep8 and Pylance but this does not really work
+
+I want to have also OSM graphs in order to plot. Thus I create Graph_OSM.py. FOr this I need older python like 3.11. SO I create a local environment with
+
+C:\Users\lac\AppData\Local\Programs\Python\Python311\python.exe -m venv .venv_osm
+.\.venv_osm\Scripts\Activate.ps1
+python -m pip install -U pip
+python -m pip install osmnx
+
+
+
+SO I have 
+bike-routing-core/.venv (Py 3.14) used for files under ./src/brcore/**
+
+bike-routing-core/.venv_osm (Py 3.11) used for files under ./src/brOSM/**
+
+
+
+***********  NOW *************
+
+In VS Code if needed : Ctrl+Shift+P → Python: Select Interpreter → choose the .venv one.
+
+ python -u .\scripts\main.py  
+
+
+or for the other one run python -m src.brOSM.Graph_OSM
+
+
+**************  CODE EXPLANAITION **********
+
+bike-routing-core/
+  pyproject.toml
+  src/
+    brcore/
+      __init__.py
+      io/
+        __init__.py
+        load_xy.py            # read your compact graph
+        load_artifacts.py     # seeds/partition/boundaries
+      graph/
+        __init__.py
+        compact.py            # data structures (CSR or adjacency)
+      algo/
+        __init__.py
+        router.py             # placeholder for bidir multiobjective solver
+  scripts/
+    inspect_inputs.py         # quick check: counts, integrity, connectedness
+    run_query.py              # run routing query using artifacts
+  data/
+    (put your .xy and .txt here, or symlink)
+
+
+

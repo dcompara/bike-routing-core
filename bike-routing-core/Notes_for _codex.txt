@@ -1,0 +1,113 @@
+
+BIKE-ROUTING-CORE/
+
+├── .venv/                     # Python virtual environment
+├── .venv_osm/                 # OSM-specific environment (?)
+├── .vscode/                   # VS Code settings
+
+├── data/                      # Precomputed graphs, partitions, seeds
+│   ├── graph_Paris_south_4_objectives.xy
+│   ├── paris_voronoi_boundaries.txt
+│   ├── paris_voronoi_boundary_nodes.txt
+│   ├── paris_voronoi_cells.txt
+│   ├── paris_voronoi_nodes.txt
+│   ├── seeds_latlon.txt
+│   ├── seeds.txt
+│   └── South_graph_with_road_ids.graphml
+
+├── scripts/
+│   └── main.py                # Entry point (runs experiments / routing)
+
+├── src/
+│   └── brcore/               # Core package
+│
+│       ├── algo/             # Algorithm-related modules
+│       │   ├── coords.py
+│       │   ├── heuristic.py
+│       │   ├── heuristics_int.py
+│       │   ├── params.py
+│       │   └── search_space_reduction.py
+│
+│       ├── graph/            # Graph representation / preprocessing
+│       │   └── compact.py
+│
+│       ├── io/               # Input / output utilities
+│       │   ├── load_plot.xy.py
+│       │   └── loaders.py
+│
+│       └── __init__.py
+
+├── brOSM/                    # OSM-specific utilities
+│   ├── Graph_OSM.py
+│   ├── partition.py
+│   └── save_graph_xy.py
+
+├── brcore.egg-info/          # Packaging metadata
+
+├── bike-routing-core.code-workspace
+├── CODE_ChatGPT.docx         # Algorithm design discussions
+├── Notes.txt                 # Misc notes
+├── pyproject.toml            # Project configuration
+
+
+
+## Current understanding (to be refined)
+
+### Data layer
+- Precomputed graphs stored in `.xy` and `.graphml`
+- Voronoi partition already computed and stored as text files
+- Seeds available (lat/lon + node IDs)
+
+### Graph layer
+- `brOSM/Graph_OSM.py` likely handles OSM graph creation
+- `src/brcore/graph/compact.py` likely builds a compact / optimized graph representation
+
+### Algorithm layer (incomplete / core work)
+- `algo/heuristic.py`, `heuristics_int.py`: heuristics for search
+- `search_space_reduction.py`: pruning / dominance / reduction strategies
+- `params.py`: algorithm parameters
+- `coords.py`: coordinate utilities
+
+⚠️ Core multi-objective routing algorithm NOT fully implemented
+
+### Partition layer
+- `brOSM/partition.py`: graph partitioning (Voronoi-based)
+- Precomputed partition stored in `data/`
+
+### IO / Visualization
+- `io/loaders.py`: graph loading
+- `io/load_plot.xy.py`: plotting / visualization
+- `scripts/main.py`: main execution script
+
+### Status summary
+- Graph loading: working
+- Visualization: working
+- Partition: precomputed + partial code exists
+- Routing algorithm: missing / incomplete (main focus)
+
+
+
+**************  For Codex: explanation **********
+
+Current status:
+- graph loading works
+- plotting works
+- path display works
+- partition draft exists
+- core multiobjective border algorithm not finished
+
+Authoritative files:
+- src/graph/load_graph.py
+- src/visualization/plot_routes.py
+- src/config.py
+
+Legacy / experimental:
+- old_tests/...
+- draft_partition_v1.py
+- temp_notebook_export.py
+
+Goal:
+Implement two-step routing:
+1. local intra-cell exploration
+2. border/portal overlay search
+with box constraints on objectives.

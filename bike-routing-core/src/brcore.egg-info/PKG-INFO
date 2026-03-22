@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: brcore
+Version: 0.1.0
+Summary: Bike routing core: compact graph IO + preprocessing artifacts + routing algorithms
+Requires-Python: >=3.10
+Requires-Dist: numpy
