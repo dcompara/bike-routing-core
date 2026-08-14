@@ -2,8 +2,8 @@ from __future__ import annotations
 import numpy as np
 import math
 
-# Earth's radius in meters, used for converting geographic coordinates to Cartesian coordinates.
-R_EARTH_M = 6_371_000
+# Mean Earth radius (meters).  https://en.wikipedia.org/wiki/Earth_radius
+EARTH_RADIUS_M = 6_371_000
 
 
 def build_local_xy_int(nodes_latlon_microdeg: np.ndarray) -> np.ndarray:
@@ -31,8 +31,8 @@ def build_local_xy_int(nodes_latlon_microdeg: np.ndarray) -> np.ndarray:
     lon0_r = math.radians(lon0)
 
     # Compute local Cartesian coordinates (x, y) using spherical Earth approximation.
-    x = R_EARTH_M * np.cos(lat0_r) * (lon_r - lon0_r)
-    y = R_EARTH_M * (lat_r - lat0_r)
+    x = EARTH_RADIUS_M * np.cos(lat0_r) * (lon_r - lon0_r)
+    y = EARTH_RADIUS_M * (lat_r - lat0_r)
 
     # Create an empty array to store the results, round and cast to 32-bit integers.
     xy = np.empty((nodes_latlon_microdeg.shape[0], 2), dtype=np.int32)

@@ -2,16 +2,13 @@ from __future__ import annotations
 import math
 import numpy as np
 
-
-
+from brcore.algo.coords import EARTH_RADIUS_M
 
 # Coordinates are micro-degrees:
 #   lat_microdeg = lat * 1e6
 #   lon_microdeg = lon * 1e6
 DEG_TO_RAD_PER_MICRODEG = math.pi / 180.0 / 1_000_000.0
 
-# Mean Earth radius (meters).  https://en.wikipedia.org/wiki/Earth_radius
-EARTH_RAD_M = 6_371_000.7714
 
 def haversine_m_microdeg(lon1_u: int, lat1_u: int, lon2_u: int, lat2_u: int) -> float:
     """
@@ -31,7 +28,7 @@ def haversine_m_microdeg(lon1_u: int, lat1_u: int, lon2_u: int, lat2_u: int) -> 
 
     a = 0.5 - math.cos(dlat) * 0.5 + math.cos(lat1) * math.cos(lat2) * (1.0 - math.cos(dlon)) * 0.5
     # Great-circle distance = 2 R asin(sqrt(a))
-    return 2.0 * EARTH_RAD_M * math.asin(math.sqrt(a))
+    return 2.0 * EARTH_RADIUS_M * math.asin(math.sqrt(a))
 
 def haversine_dm_microdeg(lon1_u: int, lat1_u: int, lon2_u: int, lat2_u: int) -> int:
     """
@@ -84,8 +81,8 @@ def build_local_xy_m(nodes_latlon_microdeg: np.ndarray, ref_lat_microdeg: int | 
     ref_lat_r = np.deg2rad(ref_lat)
     ref_lon_r = np.deg2rad(ref_lon)
 
-    x = EARTH_RAD_M * np.cos(ref_lat_r) * (lon_r - ref_lon_r)
-    y = EARTH_RAD_M * (lat_r - ref_lat_r)
+    x = EARTH_RADIUS_M * np.cos(ref_lat_r) * (lon_r - ref_lon_r)
+    y = EARTH_RADIUS_M * (lat_r - ref_lat_r)
 
     xy = np.empty((nodes_latlon_microdeg.shape[0], 2), dtype=np.float64)
     xy[:, 0] = x

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 
 # ---- Feature ordering convention (must match your path accumulator x_vec) ----
-# Example: [length_m, elevation_m, popularity, narrowness_or_width_cost]
-FEATURES = ("length", "elevation", "popularity", "narrowness")
+# Example: [length_m, elevation_m, popularity, street_width]
+FEATURES = ("length", "elevation", "popularity", "street_width")
 N_FEATURES = len(FEATURES)
 
 # ---- Hard constraints (lower/upper) ----
@@ -14,6 +14,16 @@ UPPER = np.array([35000.0, 500.0, 255, 15], dtype=np.float64)
 
 # ---- Weights for Chebyshev (dimensionless priorities) ----
 W = np.array([1.0, 0.8, 0.6, 0.4], dtype=np.float64)
+
+# ---- Sparse portal search defaults ----
+DEFAULT_TIME_BUDGET_S = 0.5
+DEFAULT_ARCHIVE_SIZE = 3
+
+MAX_ACTIVE_PORTALS_PER_CELL = 4
+MAX_LABELS_PER_PORTAL = 4
+MAX_SHORTCUTS_PER_PAIR = 2
+LOCAL_EXPAND_LIMIT = 64
+ADVANCE_ROUND_BUDGET = 1
 
 # ---- Search-space-reduction parameters ----
 CORRIDOR_SLACK_M = 1500
