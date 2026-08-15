@@ -5,7 +5,7 @@ import heapq
 import itertools
 import logging
 import time
-from typing import Dict, Iterable, List, Literal, Sequence, Set, Tuple, TypedDict
+from typing import Dict, Iterable, List, Literal, Sequence, Set, Tuple, TypeVar, TypedDict
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 trace_logger = logging.getLogger(f"{__name__}.trace")
 
 Direction = Literal["fwd", "bwd"]
+CountKey = TypeVar("CountKey", int, str)
 CELL93_DIAGNOSTIC_CELL = 93
 CELL93_DIAGNOSTIC_PORTAL = 2515
+COMPLETION_LENGTH_LB_TOLERANCE_M = 1e-6
 
 
 class BackwardCrossingExitRow(TypedDict):
@@ -117,6 +119,10 @@ class RouteAccumulator:
         )
 
 
+BridgeCrossing = Tuple[int, int, RouteAccumulator, int | None]
+BridgeFallbackSelectionRole = Literal["primary", "quality", "structural_fill"]
+
+
 @dataclass(frozen=True)
 class ConstraintBox:
     lower: np.ndarray
@@ -162,14 +168,18 @@ class SparsePortalConfig:
     max_shortcuts_per_pair: int = 2
     local_expand_limit: int = 64
     advance_round_budget: int = 1
+    max_cell_visits_per_route: int = 2
     trace_search: bool = False
     trace_portals: Set[int] | None = None
     trace_cells: Set[int] | None = None
     max_trace_events: int = 500
     max_backward_directional_repairs_per_cell: int = 2
     backward_directional_repair_scan_limit: int = 256
+    max_forward_directional_repairs_per_cell: int = 2
+    forward_directional_repair_scan_limit: int = 256
     max_bridge_edges_per_cell_pair: int = 2
     bridge_refinement_scan_limit: int = 256
+    validate_incremental_bridge_detection: bool = False
 
 
 @dataclass(frozen=True)
@@ -213,6 +223,7 @@ class PortalLabel:
     metrics: RouteAccumulator
     priority: float
     visited_cells: frozenset[int]
+    revisited_cells: frozenset[int]
     last_road_id: int | None
     road_changes: int
     parent: "PortalLabel | None" = None
@@ -224,11 +235,19 @@ class PortalLabel:
             f"portal={portal} dir={self.direction} "
             f"metrics=({self.metrics.compact_summary()}) score={self.priority:.4f} "
             f"visited_cells={len(self.visited_cells)} "
+            f"revisited_cells={len(self.revisited_cells)} "
             f"road_changes={self.road_changes}"
         )
 
     def __repr__(self) -> str:
         return f"PortalLabel({self.compact_summary()})"
+
+
+@dataclass(frozen=True)
+class CellHistoryUpdate:
+    visited_cells: frozenset[int]
+    revisited_cells: frozenset[int]
+    second_visits_added: int
 
 
 @dataclass
@@ -248,6 +267,19 @@ class BackwardDirectionalRepairCandidate:
     pred: int
     node: int
     pred_cell: int
+    local_metrics: RouteAccumulator
+    combined_metrics: RouteAccumulator
+    path_nodes: Tuple[int, ...]
+    first_road_id: int | None
+    last_road_id: int | None
+    road_changes: int
+
+
+@dataclass(frozen=True)
+class ForwardDirectionalRepairCandidate:
+    node: int
+    dst: int
+    dst_cell: int
     local_metrics: RouteAccumulator
     combined_metrics: RouteAccumulator
     path_nodes: Tuple[int, ...]
@@ -479,6 +511,10 @@ class SearchAuditCounters:
     feasibility_checked_on_combined_accumulator: int = 0
     rejected_length: int = 0
     rejected_elevation: int = 0
+    rejected_length_completion_lower_bound: int = 0
+    rejected_length_completion_lower_bound_by_direction: Dict[str, int] = field(
+        default_factory=lambda: {"fwd": 0, "bwd": 0}
+    )
     rejected_avg_popularity: int = 0
     rejected_avg_width: int = 0
     rejected_by_score_prune: int = 0
@@ -495,6 +531,14 @@ class SearchAuditCounters:
     one_edge_join_shared_only_edge_cells: int = 0
     one_edge_join_shared_multiple_cells: int = 0
     one_edge_join_unexpected_shared_cells: Dict[int, int] = field(default_factory=dict)
+    second_cell_visits_allowed: int = 0
+    second_cell_visits_allowed_by_direction: Dict[str, int] = field(
+        default_factory=lambda: {"fwd": 0, "bwd": 0, "join": 0}
+    )
+    rejected_third_cell_visit: int = 0
+    rejected_third_cell_visit_by_direction: Dict[str, int] = field(
+        default_factory=lambda: {"fwd": 0, "bwd": 0, "join": 0}
+    )
     representative_accept_count: Dict[str, int] = field(
         default_factory=lambda: {"fwd": 0, "bwd": 0}
     )
@@ -515,6 +559,7 @@ class SearchAuditCounters:
         default_factory=lambda: {"fwd": 0, "bwd": 0}
     )
     local_shortcuts_discovered_by_cell: Dict[int, int] = field(default_factory=dict)
+    local_shortcut_ordering_changed_by_road_continuity: int = 0
     terminal_completion_attempts: int = 0
     terminal_completion_successes: int = 0
     terminal_leak_rejected_after_failed_completion: int = 0
@@ -573,12 +618,59 @@ class SearchAuditCounters:
     backward_directional_repair_candidates_seen: int = 0
     backward_directional_repair_candidates_unvisited: int = 0
     backward_directional_repair_cells: Dict[int, int] = field(default_factory=dict)
+    backward_directional_repair_attempted_cells: Dict[int, int] = field(
+        default_factory=dict
+    )
+    backward_directional_repair_budget_exhausted_by_cell: Dict[int, int] = field(
+        default_factory=dict
+    )
+    backward_directional_repair_ordering_changed_by_road_continuity: int = 0
+    forward_directional_portal_refinements_attempted: int = 0
+    forward_directional_portal_refinements_inserted: int = 0
+    forward_directional_repair_children_generated: int = 0
+    forward_directional_repair_candidates_seen: int = 0
+    forward_directional_repair_candidates_unvisited: int = 0
+    forward_directional_repair_cells: Dict[int, int] = field(default_factory=dict)
+    forward_directional_repair_attempted_cells: Dict[int, int] = field(
+        default_factory=dict
+    )
+    forward_directional_repair_budget_exhausted_by_cell: Dict[int, int] = field(
+        default_factory=dict
+    )
+    forward_directional_repair_ordering_changed_by_road_continuity: int = 0
     bridge_refinements_attempted: int = 0
+    bridge_candidates_reconstructible: int = 0
+    bridge_immediate_feasible_selections: int = 0
     bridge_edges_inserted: int = 0
     bridge_join_attempts: int = 0
     bridge_join_successes: int = 0
+    bridge_fallback_edges_attempted: int = 0
+    bridge_fallback_edges_inserted: int = 0
+    bridge_fallback_children_generated: int = 0
+    bridge_fallback_children_accepted: int = 0
+    complementary_connector_sets_considered: int = 0
+    complementary_quality_candidate_distinct: int = 0
+    complementary_quality_candidate_insert_attempted: int = 0
+    complementary_quality_candidate_inserted: int = 0
+    complementary_quality_candidate_rejected_by_overlay_capacity: int = 0
+    complementary_quality_candidate_examples: List[Dict[str, object]] = field(
+        default_factory=list
+    )
+    bridge_immediate_join_successes: int = 0
+    later_join_successes_through_bridge: int = 0
     bridge_refinement_cell_pairs: Dict[str, int] = field(default_factory=dict)
     bridge_repair_children_generated: int = 0
+    bridge_detection_coverage_checks: int = 0
+    bridge_detection_calls: int = 0
+    bridge_detection_skipped_unchanged_coverage: int = 0
+    bridge_detection_total_time_s: float = 0.0
+    bridge_incremental_detection_calls: int = 0
+    bridge_incremental_new_fwd_cells: int = 0
+    bridge_incremental_new_bwd_cells: int = 0
+    bridge_incremental_neighbor_lookups: int = 0
+    bridge_incremental_pending_pairs_discovered: int = 0
+    bridge_incremental_detection_total_time_s: float = 0.0
+    bridge_incremental_crosscheck_mismatches: int = 0
     archive_rejected_exact_duplicate: int = 0
     archive_rejected_high_overlap: int = 0
     archive_replaced_near_duplicate: int = 0
@@ -592,6 +684,12 @@ class SearchAuditCounters:
             ),
             "rejected_length": self.rejected_length,
             "rejected_elevation": self.rejected_elevation,
+            "rejected_length_completion_lower_bound": (
+                self.rejected_length_completion_lower_bound
+            ),
+            "rejected_length_completion_lower_bound_by_direction": dict(
+                sorted(self.rejected_length_completion_lower_bound_by_direction.items())
+            ),
             "rejected_avg_popularity": self.rejected_avg_popularity,
             "rejected_avg_width": self.rejected_avg_width,
             "rejected_by_score_prune": self.rejected_by_score_prune,
@@ -622,6 +720,14 @@ class SearchAuditCounters:
             "one_edge_join_unexpected_shared_cells": dict(
                 sorted(self.one_edge_join_unexpected_shared_cells.items())
             ),
+            "second_cell_visits_allowed": self.second_cell_visits_allowed,
+            "second_cell_visits_allowed_by_direction": dict(
+                sorted(self.second_cell_visits_allowed_by_direction.items())
+            ),
+            "rejected_third_cell_visit": self.rejected_third_cell_visit,
+            "rejected_third_cell_visit_by_direction": dict(
+                sorted(self.rejected_third_cell_visit_by_direction.items())
+            ),
             "representative_accept_count": dict(
                 sorted(self.representative_accept_count.items())
             ),
@@ -649,6 +755,9 @@ class SearchAuditCounters:
             ),
             "local_shortcuts_discovered_by_cell": dict(
                 sorted(self.local_shortcuts_discovered_by_cell.items())
+            ),
+            "local_shortcut_ordering_changed_by_road_continuity": (
+                self.local_shortcut_ordering_changed_by_road_continuity
             ),
             "terminal_completion_attempts": self.terminal_completion_attempts,
             "terminal_completion_successes": self.terminal_completion_successes,
@@ -756,15 +865,120 @@ class SearchAuditCounters:
             "backward_directional_repair_cells": dict(
                 sorted(self.backward_directional_repair_cells.items())
             ),
+            "backward_directional_repair_attempted_cells": dict(
+                sorted(self.backward_directional_repair_attempted_cells.items())
+            ),
+            "backward_directional_repair_budget_exhausted_by_cell": dict(
+                sorted(
+                    self.backward_directional_repair_budget_exhausted_by_cell.items()
+                )
+            ),
+            "backward_directional_repair_ordering_changed_by_road_continuity": (
+                self.backward_directional_repair_ordering_changed_by_road_continuity
+            ),
+            "forward_directional_portal_refinements_attempted": (
+                self.forward_directional_portal_refinements_attempted
+            ),
+            "forward_directional_portal_refinements_inserted": (
+                self.forward_directional_portal_refinements_inserted
+            ),
+            "forward_directional_repair_children_generated": (
+                self.forward_directional_repair_children_generated
+            ),
+            "forward_directional_repair_candidates_seen": (
+                self.forward_directional_repair_candidates_seen
+            ),
+            "forward_directional_repair_candidates_unvisited": (
+                self.forward_directional_repair_candidates_unvisited
+            ),
+            "forward_directional_repair_cells": dict(
+                sorted(self.forward_directional_repair_cells.items())
+            ),
+            "forward_directional_repair_attempted_cells": dict(
+                sorted(self.forward_directional_repair_attempted_cells.items())
+            ),
+            "forward_directional_repair_budget_exhausted_by_cell": dict(
+                sorted(
+                    self.forward_directional_repair_budget_exhausted_by_cell.items()
+                )
+            ),
+            "forward_directional_repair_ordering_changed_by_road_continuity": (
+                self.forward_directional_repair_ordering_changed_by_road_continuity
+            ),
             "bridge_refinements_attempted": self.bridge_refinements_attempted,
+            "bridge_candidates_reconstructible": (
+                self.bridge_candidates_reconstructible
+            ),
+            "bridge_immediate_feasible_selections": (
+                self.bridge_immediate_feasible_selections
+            ),
             "bridge_edges_inserted": self.bridge_edges_inserted,
             "bridge_join_attempts": self.bridge_join_attempts,
             "bridge_join_successes": self.bridge_join_successes,
+            "bridge_fallback_edges_attempted": self.bridge_fallback_edges_attempted,
+            "bridge_fallback_edges_inserted": self.bridge_fallback_edges_inserted,
+            "bridge_fallback_children_generated": (
+                self.bridge_fallback_children_generated
+            ),
+            "bridge_fallback_children_accepted": (
+                self.bridge_fallback_children_accepted
+            ),
+            "complementary_connector_sets_considered": (
+                self.complementary_connector_sets_considered
+            ),
+            "complementary_quality_candidate_distinct": (
+                self.complementary_quality_candidate_distinct
+            ),
+            "complementary_quality_candidate_insert_attempted": (
+                self.complementary_quality_candidate_insert_attempted
+            ),
+            "complementary_quality_candidate_inserted": (
+                self.complementary_quality_candidate_inserted
+            ),
+            "complementary_quality_candidate_rejected_by_overlay_capacity": (
+                self.complementary_quality_candidate_rejected_by_overlay_capacity
+            ),
+            "complementary_quality_candidate_examples": (
+                self.complementary_quality_candidate_examples
+            ),
+            "bridge_immediate_join_successes": (
+                self.bridge_immediate_join_successes
+            ),
+            "later_join_successes_through_bridge": (
+                self.later_join_successes_through_bridge
+            ),
             "bridge_refinement_cell_pairs": dict(
                 sorted(self.bridge_refinement_cell_pairs.items())
             ),
             "bridge_repair_children_generated": (
                 self.bridge_repair_children_generated
+            ),
+            "bridge_detection_coverage_checks": self.bridge_detection_coverage_checks,
+            "bridge_detection_calls": self.bridge_detection_calls,
+            "bridge_detection_skipped_unchanged_coverage": (
+                self.bridge_detection_skipped_unchanged_coverage
+            ),
+            "bridge_detection_total_time_s": self.bridge_detection_total_time_s,
+            "bridge_incremental_detection_calls": (
+                self.bridge_incremental_detection_calls
+            ),
+            "bridge_incremental_new_fwd_cells": (
+                self.bridge_incremental_new_fwd_cells
+            ),
+            "bridge_incremental_new_bwd_cells": (
+                self.bridge_incremental_new_bwd_cells
+            ),
+            "bridge_incremental_neighbor_lookups": (
+                self.bridge_incremental_neighbor_lookups
+            ),
+            "bridge_incremental_pending_pairs_discovered": (
+                self.bridge_incremental_pending_pairs_discovered
+            ),
+            "bridge_incremental_detection_total_time_s": (
+                self.bridge_incremental_detection_total_time_s
+            ),
+            "bridge_incremental_crosscheck_mismatches": (
+                self.bridge_incremental_crosscheck_mismatches
             ),
             "archive_rejected_exact_duplicate": (
                 self.archive_rejected_exact_duplicate
@@ -798,12 +1012,24 @@ class AnytimeSearchState:
     active_portals: Set[int]
     nodes_by_cell: Dict[int, Set[int]]
     reverse_adj: Dict[int, List[Tuple[int, RouteAccumulator, int | None]]]
+    retained_cell_neighbors: Dict[int, Set[int]]
+    retained_crossings_by_cell_pair: Dict[Tuple[int, int], List[BridgeCrossing]]
+    retained_cell_crossing_index_time_s: float
+    retained_directed_inter_cell_crossings: int
+    retained_directed_cell_pair_count: int
+    retained_undirected_cell_pair_count: int
     overlay: OverlayGraph
     archive: SolutionArchive
     labels: Dict[Direction, Dict[int, List[PortalLabel]]]
     frontier: Dict[Direction, List[tuple]]
     local_engines: Dict[Tuple[int, int, Direction], LocalCellEngineState]
     deadline: float
+    min_len_from_source: np.ndarray
+    min_len_to_target: np.ndarray
+    dijkstra_source_time_s: float
+    dijkstra_target_time_s: float
+    dijkstra_source_finite_count: int
+    dijkstra_target_finite_count: int
     audit: SearchAuditCounters = field(default_factory=SearchAuditCounters)
     turn: int = 0
     push_counter: itertools.count = field(default_factory=itertools.count)
@@ -811,10 +1037,26 @@ class AnytimeSearchState:
     trace_event_count: int = 0
     trace_limit_notified: bool = False
     touched_cells: Dict[int, int] = field(default_factory=dict)
-    backward_directional_refinement_attempted_cells: Set[int] = field(
+    forward_directional_refinement_attempted_portals: Set[Tuple[int, int]] = field(
         default_factory=set
     )
+    backward_directional_refinement_attempted_portals: Set[Tuple[int, int]] = field(
+        default_factory=set
+    )
+    forward_directional_repair_edges_by_cell: Dict[int, int] = field(
+        default_factory=dict
+    )
+    backward_directional_repair_edges_by_cell: Dict[int, int] = field(
+        default_factory=dict
+    )
     pending_bridge_cell_pairs: Set[Tuple[int, int]] = field(default_factory=set)
+    last_bridge_detection_fwd_cells: frozenset[int] | None = None
+    last_bridge_detection_bwd_cells: frozenset[int] | None = None
+    bridge_seen_fwd_cells: Set[int] = field(default_factory=set)
+    bridge_seen_bwd_cells: Set[int] = field(default_factory=set)
+    bridge_refinement_attempted_cell_pairs: Set[Tuple[int, int]] = field(
+        default_factory=set
+    )
     bridge_inserted_crossings_by_cell_pair: Dict[
         Tuple[int, int], Set[Tuple[int, int]]
     ] = field(default_factory=dict)
@@ -858,11 +1100,54 @@ class AnytimeSearchState:
             )
         return bool(reasons)
 
-    def enqueue(self, label: PortalLabel) -> None:
+    def completion_length_lower_bound(self, label: PortalLabel) -> float:
+        portal = int(label.portal)
+        if label.direction == "fwd":
+            if portal < 0 or portal >= len(self.min_len_to_target):
+                return float("inf")
+            return float(self.min_len_to_target[portal])
+        if portal < 0 or portal >= len(self.min_len_from_source):
+            return float("inf")
+        return float(self.min_len_from_source[portal])
+
+    def rejects_completion_length_lower_bound(self, label: PortalLabel) -> bool:
+        remaining_lb = self.completion_length_lower_bound(label)
+        upper_length = float(self.query.constraints.upper[0])
+        total_lb = label.metrics.length + remaining_lb
+        if np.isfinite(remaining_lb):
+            reject = total_lb > upper_length + COMPLETION_LENGTH_LB_TOLERANCE_M
+        else:
+            reject = True
+        if not reject:
+            return False
+
+        self.audit.rejected_length_completion_lower_bound += 1
+        _increment_count(
+            self.audit.rejected_length_completion_lower_bound_by_direction,
+            label.direction,
+        )
+        if label.direction == "bwd":
+            _record_backward_rejection(self, "length_completion_lower_bound")
+        logger.debug(
+            "Completion length lower-bound reject portal=%s dir=%s "
+            "accumulated_length=%.3f remaining_lb=%s total_lb=%s Lmax=%.3f",
+            label.portal,
+            label.direction,
+            label.metrics.length,
+            f"{remaining_lb:.3f}" if np.isfinite(remaining_lb) else "inf",
+            f"{total_lb:.3f}" if np.isfinite(total_lb) else "inf",
+            upper_length,
+        )
+        return True
+
+    def enqueue(self, label: PortalLabel) -> bool:
+        if self.rejects_completion_length_lower_bound(label):
+            return False
         heapq.heappush(
             self.frontier[label.direction],
             (label.priority, label.road_changes, next(self.push_counter), label),
         )
+        return True
 
     def add_overlay_edge(self, edge: OverlayEdge) -> bool:
         bucket = self.overlay.out_edges.setdefault(edge.src, [])
@@ -1023,6 +1308,7 @@ def log_label_pop(state: AnytimeSearchState, label: PortalLabel) -> None:
         portal=label.portal,
         cell=cell,
         visited_cells=sorted(label.visited_cells),
+        revisited_cells=sorted(label.revisited_cells),
         metrics=label.metrics.compact_summary(),
         score=f"{label.priority:.4f}",
         in_degree=len(state.overlay.in_edges.get(label.portal, [])),
@@ -1099,6 +1385,11 @@ def log_child_generation(
         ),
         visited_cells=(
             sorted(child_label.visited_cells)
+            if child_label is not None
+            else None
+        ),
+        revisited_cells=(
+            sorted(child_label.revisited_cells)
             if child_label is not None
             else None
         ),
@@ -1213,6 +1504,75 @@ def _road_change_delta(left: int | None, right: int | None) -> int:
     if left is None or right is None:
         return 0
     return int(left != right)
+
+
+@dataclass(frozen=True)
+class RoadContinuityPreference:
+    continues_road: bool
+    incremental_road_changes: int
+
+
+def _valid_road_id(road_id: int | None) -> int | None:
+    if road_id is None or road_id < 0:
+        return None
+    return road_id
+
+
+def _extension_road_continuity_preference(
+    label: PortalLabel,
+    first_road_id: int | None,
+    last_road_id: int | None,
+    road_changes: int,
+) -> RoadContinuityPreference:
+    parent_road_id = _valid_road_id(label.last_road_id)
+    first = _valid_road_id(first_road_id)
+    last = _valid_road_id(last_road_id)
+
+    if label.direction == "fwd":
+        boundary_delta = _road_change_delta(parent_road_id, first)
+        continues_road = parent_road_id is not None and parent_road_id == first
+    else:
+        boundary_delta = _road_change_delta(last, parent_road_id)
+        continues_road = parent_road_id is not None and last == parent_road_id
+
+    return RoadContinuityPreference(
+        continues_road=continues_road,
+        incremental_road_changes=road_changes + boundary_delta,
+    )
+
+
+def _extension_road_continuity_sort_fields(
+    label: PortalLabel,
+    first_road_id: int | None,
+    last_road_id: int | None,
+    road_changes: int,
+) -> Tuple[bool, int]:
+    preference = _extension_road_continuity_preference(
+        label,
+        first_road_id,
+        last_road_id,
+        road_changes,
+    )
+    return (not preference.continues_road, preference.incremental_road_changes)
+
+
+def _local_shortcut_candidate_order_key(
+    label: PortalLabel,
+    edge: OverlayEdge,
+) -> Tuple[float, float, bool, int, int, int, int]:
+    return (
+        edge.metrics.length,
+        edge.metrics.elevation,
+        *_extension_road_continuity_sort_fields(
+            label,
+            edge.first_road_id,
+            edge.last_road_id,
+            edge.road_changes,
+        ),
+        edge.road_changes,
+        edge.src,
+        edge.dst,
+    )
 
 
 def _append_road_id(
@@ -1532,7 +1892,7 @@ def reconstruct_backward_label_path(label: PortalLabel) -> Tuple[int, ...]:
     return _merge_segments(segments)
 
 
-def _increment_count(counter: Dict[int, int], key: int) -> None:
+def _increment_count(counter: Dict[CountKey, int], key: CountKey) -> None:
     counter[key] = counter.get(key, 0) + 1
 
 
@@ -1547,6 +1907,277 @@ def _increment_nested_count(
 
 def _increment_direction_count(counter: Dict[str, int], direction: Direction) -> None:
     counter[direction] = counter.get(direction, 0) + 1
+
+
+def _effective_max_cell_visits(state: AnytimeSearchState) -> int:
+    # The label representation tracks first and second contiguous visits.
+    return 1 if state.config.max_cell_visits_per_route <= 1 else 2
+
+
+def _compressed_cell_sequence_from_nodes(
+    state: AnytimeSearchState,
+    path_nodes: Sequence[int],
+) -> Tuple[int, ...]:
+    cells: List[int] = []
+    previous_cell: int | None = None
+    for node in path_nodes:
+        cell = state.trace_cell(int(node))
+        if cell != previous_cell:
+            cells.append(cell)
+            previous_cell = cell
+    return tuple(cells)
+
+
+def _cell_visit_counts_from_sequence(
+    cell_sequence: Sequence[int],
+) -> Dict[int, int]:
+    counts: Dict[int, int] = {}
+    for cell in cell_sequence:
+        counts[int(cell)] = counts.get(int(cell), 0) + 1
+    return counts
+
+
+def _cell_visit_count(label: PortalLabel, cell: int) -> int:
+    if cell in label.revisited_cells:
+        return 2
+    if cell in label.visited_cells:
+        return 1
+    return 0
+
+
+def _apply_cell_visits_to_history(
+    state: AnytimeSearchState,
+    visited_cells: frozenset[int],
+    revisited_cells: frozenset[int],
+    cell_visits_to_add: Sequence[int],
+) -> CellHistoryUpdate | None:
+    max_visits = _effective_max_cell_visits(state)
+    visited = set(visited_cells)
+    revisited = set(revisited_cells)
+    second_visits_added = 0
+
+    for cell in cell_visits_to_add:
+        cell_id = int(cell)
+        current_count = 2 if cell_id in revisited else 1 if cell_id in visited else 0
+        if current_count >= max_visits:
+            return None
+        if current_count == 0:
+            visited.add(cell_id)
+            continue
+        revisited.add(cell_id)
+        second_visits_added += 1
+
+    return CellHistoryUpdate(
+        visited_cells=frozenset(visited),
+        revisited_cells=frozenset(revisited),
+        second_visits_added=second_visits_added,
+    )
+
+
+def _extend_label_cell_history(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+    edge: OverlayEdge,
+) -> CellHistoryUpdate | None:
+    edge_cells = _compressed_cell_sequence_from_nodes(state, edge.path_nodes)
+    current_cell = state.trace_cell(label.portal)
+    if not edge_cells:
+        additions: Tuple[int, ...] = ()
+    elif label.direction == "fwd":
+        additions = edge_cells[1:] if edge_cells[0] == current_cell else edge_cells
+    else:
+        additions = edge_cells[:-1] if edge_cells[-1] == current_cell else edge_cells
+    return _apply_cell_visits_to_history(
+        state,
+        label.visited_cells,
+        label.revisited_cells,
+        additions,
+    )
+
+
+def _edge_extension_would_exceed_cell_visit_limit(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+    edge: OverlayEdge,
+) -> bool:
+    return _extend_label_cell_history(state, label, edge) is None
+
+
+def _record_second_cell_visits_allowed(
+    state: AnytimeSearchState,
+    context: Direction | Literal["join"],
+    count: int,
+) -> None:
+    if count <= 0:
+        return
+    state.audit.second_cell_visits_allowed += count
+    state.audit.second_cell_visits_allowed_by_direction[context] = (
+        state.audit.second_cell_visits_allowed_by_direction.get(context, 0) + count
+    )
+
+
+def _record_rejected_third_cell_visit(
+    state: AnytimeSearchState,
+    context: Direction | Literal["join"],
+) -> None:
+    state.audit.rejected_third_cell_visit += 1
+    state.audit.rejected_third_cell_visit_by_direction[context] = (
+        state.audit.rejected_third_cell_visit_by_direction.get(context, 0) + 1
+    )
+
+
+def _path_cell_visit_limit_result(
+    state: AnytimeSearchState,
+    path_nodes: Sequence[int],
+) -> Tuple[bool, Tuple[int, ...], Dict[int, int]]:
+    cell_sequence = _compressed_cell_sequence_from_nodes(state, path_nodes)
+    counts = _cell_visit_counts_from_sequence(cell_sequence)
+    max_visits = _effective_max_cell_visits(state)
+    return (
+        all(count <= max_visits for count in counts.values()),
+        cell_sequence,
+        counts,
+    )
+
+
+def _debug_cell_visit_sequence_result(
+    cell_sequence: Sequence[int],
+    max_cell_visits_per_route: int,
+) -> Dict[str, object]:
+    max_visits = 1 if max_cell_visits_per_route <= 1 else 2
+    counts = _cell_visit_counts_from_sequence(cell_sequence)
+    return {
+        "accepted": all(count <= max_visits for count in counts.values()),
+        "max_cell_visits_per_route": max_visits,
+        "visit_counts": dict(sorted(counts.items())),
+        "twice_visited_cells": sorted(
+            cell for cell, count in counts.items() if count == 2
+        ),
+        "over_limit_cells": sorted(
+            cell for cell, count in counts.items() if count > max_visits
+        ),
+    }
+
+
+def _debug_extend_cell_sequence_result(
+    parent_sequence: Sequence[int],
+    edge_sequence: Sequence[int],
+    direction: Direction,
+    max_cell_visits_per_route: int,
+) -> Dict[str, object]:
+    if direction == "fwd":
+        additions = tuple(edge_sequence[1:]) if edge_sequence else ()
+        combined = tuple(parent_sequence) + additions
+    else:
+        prefix = tuple(edge_sequence[:-1]) if edge_sequence else ()
+        combined = prefix + tuple(parent_sequence)
+    result = _debug_cell_visit_sequence_result(
+        combined,
+        max_cell_visits_per_route,
+    )
+    result["parent_sequence"] = tuple(parent_sequence)
+    result["edge_sequence"] = tuple(edge_sequence)
+    result["combined_sequence"] = combined
+    result["direction"] = direction
+    return result
+
+
+def _debug_join_cell_sequence_result(
+    fwd_sequence: Sequence[int],
+    connector_sequence: Sequence[int],
+    bwd_sequence: Sequence[int],
+    max_cell_visits_per_route: int,
+) -> Dict[str, object]:
+    connector_tail = tuple(connector_sequence[1:]) if connector_sequence else ()
+    bwd_tail = tuple(bwd_sequence[1:]) if bwd_sequence else ()
+    combined = tuple(fwd_sequence) + connector_tail + bwd_tail
+    result = _debug_cell_visit_sequence_result(
+        combined,
+        max_cell_visits_per_route,
+    )
+    result["fwd_sequence"] = tuple(fwd_sequence)
+    result["connector_sequence"] = tuple(connector_sequence)
+    result["bwd_sequence"] = tuple(bwd_sequence)
+    result["combined_sequence"] = combined
+    return result
+
+
+def debug_cell_visit_helper_examples() -> Dict[str, object]:
+    reference = (
+        36,
+        93,
+        79,
+        93,
+        79,
+        40,
+        99,
+        97,
+        56,
+        48,
+        30,
+        54,
+        13,
+        49,
+        87,
+        31,
+        37,
+        1,
+    )
+    examples = {
+        "reference_max1": _debug_cell_visit_sequence_result(reference, 1),
+        "reference_max2": _debug_cell_visit_sequence_result(reference, 2),
+        "reference_plus_93_max2": _debug_cell_visit_sequence_result(
+            reference + (93,),
+            2,
+        ),
+        "reference_plus_79_max2": _debug_cell_visit_sequence_result(
+            reference + (79,),
+            2,
+        ),
+        "forward_a": _debug_extend_cell_sequence_result(
+            (36, 93),
+            (93, 79),
+            "fwd",
+            2,
+        ),
+        "forward_b": _debug_extend_cell_sequence_result(
+            (36, 93, 79),
+            (79, 93),
+            "fwd",
+            2,
+        ),
+        "forward_c": _debug_extend_cell_sequence_result(
+            (36, 93, 79, 93),
+            (93, 79),
+            "fwd",
+            2,
+        ),
+        "forward_d": _debug_extend_cell_sequence_result(
+            (36, 93, 79, 93, 79),
+            (79, 93),
+            "fwd",
+            2,
+        ),
+        "backward_equivalent": _debug_extend_cell_sequence_result(
+            (93, 79),
+            (36, 93),
+            "bwd",
+            2,
+        ),
+        "join_connector_overlap_ok": _debug_join_cell_sequence_result(
+            (36, 93, 79),
+            (79, 93),
+            (93, 40),
+            2,
+        ),
+        "join_third_visit_rejected": _debug_join_cell_sequence_result(
+            (36, 93, 79, 93, 40),
+            (40, 79),
+            (79, 93),
+            2,
+        ),
+    }
+    return examples
 
 
 def _record_backward_rejection(
@@ -1576,8 +2207,7 @@ def _is_backward_edge_usable_for_label(
     label: PortalLabel,
     edge: OverlayEdge,
 ) -> bool:
-    next_cell = state.trace_cell(edge.src)
-    return not (edge.kind == "inter" and next_cell in label.visited_cells)
+    return not _edge_extension_would_exceed_cell_visit_limit(state, label, edge)
 
 
 def _usable_backward_edge_count(
@@ -1727,6 +2357,7 @@ def _record_accepted_representative_label(
     logger.debug(
         "Representative audit accept dir=%s portal=%s current_cell=%s "
         "path_length_in_cells=%s visited_cells_size=%s visited_cells=%s "
+        "revisited_cells=%s "
         "has_source_cell_far_from_source=%s has_target_cell_far_from_target=%s "
         "road_changes=%s last_road_id=%s accept_reasons=%s",
         label.direction,
@@ -1735,6 +2366,7 @@ def _record_accepted_representative_label(
         cell_path_length,
         visited_cells_size,
         sorted(label.visited_cells),
+        sorted(label.revisited_cells),
         has_source_cell_far,
         has_target_cell_far,
         label.road_changes,
@@ -1884,6 +2516,105 @@ def _build_reverse_adjacency(
                 )
             )
     return reverse_adj
+
+
+def _build_retained_cell_crossing_index(
+    G: CompactDiGraph,
+    partition: Dict[int, int],
+    kept_nodes: Set[int],
+) -> Tuple[
+    Dict[int, Set[int]],
+    Dict[Tuple[int, int], List[BridgeCrossing]],
+    int,
+    int,
+]:
+    neighbors: Dict[int, Set[int]] = {}
+    crossings_by_pair: Dict[Tuple[int, int], List[BridgeCrossing]] = {}
+    directed_crossings = 0
+    undirected_pairs: Set[Tuple[int, int]] = set()
+
+    for u in kept_nodes:
+        cell_u = partition.get(u)
+        if cell_u is None:
+            continue
+        to, weights, _ = G.neighbors(u)
+        for idx, v_raw in enumerate(to):
+            v = int(v_raw)
+            if v not in kept_nodes:
+                continue
+            cell_v = partition.get(v)
+            if cell_v is None or cell_v == cell_u:
+                continue
+            neighbors.setdefault(cell_u, set()).add(cell_v)
+            neighbors.setdefault(cell_v, set()).add(cell_u)
+            crossings_by_pair.setdefault((cell_u, cell_v), []).append(
+                (
+                    u,
+                    v,
+                    RouteAccumulator.from_edge_weights(weights[idx]),
+                    _road_id_from_neighbor(G, u, idx),
+                )
+            )
+            directed_crossings += 1
+            undirected_pairs.add(
+                (cell_u, cell_v) if cell_u <= cell_v else (cell_v, cell_u)
+            )
+
+    return neighbors, crossings_by_pair, directed_crossings, len(undirected_pairs)
+
+
+def _dijkstra_forward_retained_length(
+    G: CompactDiGraph,
+    kept_nodes: Set[int],
+    source: int,
+) -> np.ndarray:
+    dist = np.full(G.n_nodes, float("inf"), dtype=np.float64)
+    if source not in kept_nodes:
+        return dist
+
+    dist[source] = 0.0
+    frontier: List[Tuple[float, int]] = [(0.0, source)]
+    while frontier:
+        length, node = heapq.heappop(frontier)
+        if length != float(dist[node]):
+            continue
+        to, weights, _ = G.neighbors(node)
+        for idx, nxt_raw in enumerate(to):
+            nxt = int(nxt_raw)
+            if nxt not in kept_nodes:
+                continue
+            edge_length = float(weights[idx][0])
+            next_length = length + edge_length
+            if next_length < float(dist[nxt]):
+                dist[nxt] = next_length
+                heapq.heappush(frontier, (next_length, nxt))
+    return dist
+
+
+def _dijkstra_reverse_retained_length(
+    reverse_adj: Dict[int, List[Tuple[int, RouteAccumulator, int | None]]],
+    n_nodes: int,
+    kept_nodes: Set[int],
+    target: int,
+) -> np.ndarray:
+    dist = np.full(n_nodes, float("inf"), dtype=np.float64)
+    if target not in kept_nodes:
+        return dist
+
+    dist[target] = 0.0
+    frontier: List[Tuple[float, int]] = [(0.0, target)]
+    while frontier:
+        length, node = heapq.heappop(frontier)
+        if length != float(dist[node]):
+            continue
+        for pred, edge_metrics, _ in reverse_adj.get(node, []):
+            if pred not in kept_nodes:
+                continue
+            next_length = length + edge_metrics.length
+            if next_length < float(dist[pred]):
+                dist[pred] = next_length
+                heapq.heappush(frontier, (next_length, pred))
+    return dist
 
 
 def _cell93_adjacent_cells_for_portal(
@@ -2176,6 +2907,7 @@ def _make_root_label(state: AnytimeSearchState, node: int, direction: Direction)
         metrics=RouteAccumulator(),
         priority=0.0,
         visited_cells=visited,
+        revisited_cells=frozenset(),
         last_road_id=None,
         road_changes=0,
         parent=None,
@@ -2460,12 +3192,12 @@ def _archive_join_candidate(
     return added
 
 
-def _one_edge_join_has_cell_conflict(
+def _record_one_edge_join_shared_cell_diagnostics(
     state: AnytimeSearchState,
     fwd_label: PortalLabel,
     edge: OverlayEdge,
     bwd_label: PortalLabel,
-) -> bool:
+) -> None:
     p_cell = state.trace_cell(edge.src)
     q_cell = state.trace_cell(edge.dst)
     edge_cells = {
@@ -2496,7 +3228,7 @@ def _one_edge_join_has_cell_conflict(
     for cell_id in unexpected_shared_cells:
         _increment_count(state.audit.one_edge_join_unexpected_shared_cells, cell_id)
     logger.debug(
-        "One-edge join shared_cells src=%s dst=%s p_cell=%s q_cell=%s "
+        "One-edge join shared_cells diagnostics src=%s dst=%s p_cell=%s q_cell=%s "
         "edge_cells=%s shared_cells=%s unexpected_shared_cells=%s "
         "source_cell=%s target_cell=%s",
         edge.src,
@@ -2509,7 +3241,40 @@ def _one_edge_join_has_cell_conflict(
         state.trace_cell(state.query.source),
         state.trace_cell(state.query.target),
     )
-    return bool(unexpected_shared_cells)
+
+
+def _complete_path_has_cell_visit_conflict(
+    state: AnytimeSearchState,
+    path_nodes: Sequence[int],
+    *,
+    context: Literal["join"],
+) -> bool:
+    ok, cell_sequence, counts = _path_cell_visit_limit_result(state, path_nodes)
+    max_visits = _effective_max_cell_visits(state)
+    if ok:
+        second_visits = sum(1 for count in counts.values() if count == 2)
+        _record_second_cell_visits_allowed(state, context, second_visits)
+        logger.debug(
+            "Complete path cell-visit check context=%s accepted=True "
+            "max_visits=%s cell_sequence=%s counts=%s",
+            context,
+            max_visits,
+            cell_sequence,
+            dict(sorted(counts.items())),
+        )
+        return False
+
+    _record_rejected_third_cell_visit(state, context)
+    logger.debug(
+        "Complete path cell-visit check context=%s accepted=False "
+        "max_visits=%s cell_sequence=%s counts=%s over_limit=%s",
+        context,
+        max_visits,
+        cell_sequence,
+        dict(sorted(counts.items())),
+        sorted(cell for cell, count in counts.items() if count > max_visits),
+    )
+    return True
 
 
 def _reconstruct_one_edge_join_path(
@@ -2538,6 +3303,24 @@ def _emit_same_portal_join_candidate(
     trigger_dir: Direction,
 ) -> bool:
     state.audit.same_portal_join_attempts += 1
+    fwd_path = reconstruct_forward_label_path(fwd_label)
+    bwd_path = reconstruct_backward_label_path(bwd_label)
+    full_path = tuple(list(fwd_path) + list(bwd_path[1:]))
+    if _complete_path_has_cell_visit_conflict(
+        state,
+        full_path,
+        context="join",
+    ):
+        log_join_attempt(
+            state,
+            kind="same_portal",
+            trigger_dir=trigger_dir,
+            portals=(fwd_label.portal,),
+            succeeded=False,
+            reason="third_cell_visit",
+        )
+        return False
+
     metrics = fwd_label.metrics.plus(bwd_label.metrics)
     feasible = _is_combined_route_feasible(state, metrics)
     logger.debug(
@@ -2558,9 +3341,6 @@ def _emit_same_portal_join_candidate(
         )
         return False
 
-    fwd_path = reconstruct_forward_label_path(fwd_label)
-    bwd_path = reconstruct_backward_label_path(bwd_label)
-    full_path = tuple(list(fwd_path) + list(bwd_path[1:]))
     road_changes = _same_portal_join_road_changes(fwd_label, bwd_label)
     added = _archive_join_candidate(
         state,
@@ -2590,12 +3370,38 @@ def _emit_one_edge_join_candidate(
     bwd_label: PortalLabel,
     *,
     trigger_dir: Direction,
+    bridge_join_context: Literal["normal", "immediate_bridge"] = "normal",
 ) -> bool:
     state.audit.one_edge_join_attempts += 1
-    if _one_edge_join_has_cell_conflict(state, fwd_label, edge, bwd_label):
+    _record_one_edge_join_shared_cell_diagnostics(state, fwd_label, edge, bwd_label)
+
+    full_path = _reconstruct_one_edge_join_path(fwd_label, edge, bwd_label)
+    if full_path is None:
+        state.audit.one_edge_join_rejected_reconstruction += 1
+        logger.debug(
+            "Join candidate kind=one_edge trigger_dir=%s src=%s dst=%s rejected=reconstruction",
+            trigger_dir,
+            edge.src,
+            edge.dst,
+        )
+        log_join_attempt(
+            state,
+            kind="one_edge",
+            trigger_dir=trigger_dir,
+            portals=(edge.src, edge.dst),
+            succeeded=False,
+            reason="reconstruction",
+        )
+        return False
+
+    if _complete_path_has_cell_visit_conflict(
+        state,
+        full_path,
+        context="join",
+    ):
         state.audit.one_edge_join_rejected_cell_conflict += 1
         logger.debug(
-            "Join candidate kind=one_edge trigger_dir=%s src=%s dst=%s rejected=cell_conflict "
+            "Join candidate kind=one_edge trigger_dir=%s src=%s dst=%s rejected=third_cell_visit "
             "fwd_cells=%s bwd_cells=%s",
             trigger_dir,
             edge.src,
@@ -2609,7 +3415,7 @@ def _emit_one_edge_join_candidate(
             trigger_dir=trigger_dir,
             portals=(edge.src, edge.dst),
             succeeded=False,
-            reason="cell_conflict",
+            reason="third_cell_visit",
         )
         return False
 
@@ -2634,25 +3440,6 @@ def _emit_one_edge_join_candidate(
         )
         return False
 
-    full_path = _reconstruct_one_edge_join_path(fwd_label, edge, bwd_label)
-    if full_path is None:
-        state.audit.one_edge_join_rejected_reconstruction += 1
-        logger.debug(
-            "Join candidate kind=one_edge trigger_dir=%s src=%s dst=%s rejected=reconstruction",
-            trigger_dir,
-            edge.src,
-            edge.dst,
-        )
-        log_join_attempt(
-            state,
-            kind="one_edge",
-            trigger_dir=trigger_dir,
-            portals=(edge.src, edge.dst),
-            succeeded=False,
-            reason="reconstruction",
-        )
-        return False
-
     logger.debug(
         "Join candidate kind=one_edge trigger_dir=%s src=%s dst=%s feasible=True route=%s",
         trigger_dir,
@@ -2671,6 +3458,8 @@ def _emit_one_edge_join_candidate(
     )
     if added:
         state.audit.one_edge_join_successes += 1
+        if edge.bridge_cell_pair is not None and bridge_join_context == "normal":
+            state.audit.later_join_successes_through_bridge += 1
     log_join_attempt(
         state,
         kind="one_edge",
@@ -2775,6 +3564,7 @@ def _synthetic_terminal_root_label(
         metrics=RouteAccumulator(),
         priority=0.0,
         visited_cells=visited,
+        revisited_cells=frozenset(),
         last_road_id=None,
         road_changes=0,
         parent=None,
@@ -3112,9 +3902,11 @@ def _record_backward_child_entering_new_cell(
     reachable_nodes = sorted(_backward_reachable_nodes_in_cell(state, child_label.portal))
     exit_cells = sorted({int(row["cell"]) for row in exit_rows})
     usable_exit_cells = [
-        cell for cell in exit_cells if cell not in child_label.visited_cells
+        cell
+        for cell in exit_cells
+        if _cell_visit_count(child_label, cell) < _effective_max_cell_visits(state)
     ]
-    all_exit_cells_already_visited = bool(exit_cells) and not usable_exit_cells
+    all_exit_cells_already_at_visit_limit = bool(exit_cells) and not usable_exit_cells
     only_return_to_previous_cell = bool(exit_cells) and set(exit_cells) == {
         parent_cell
     }
@@ -3135,11 +3927,12 @@ def _record_backward_child_entering_new_cell(
         "edge_src": edge.src,
         "edge_dst": edge.dst,
         "visited_cells": sorted(child_label.visited_cells),
+        "revisited_cells": sorted(child_label.revisited_cells),
         "backward_reachable_nodes_inside_child_cell": reachable_nodes,
         "possible_backward_exits_after_entry": exit_rows,
         "exit_cells": exit_cells,
-        "usable_exit_cells_not_already_visited": usable_exit_cells,
-        "all_exit_cells_already_visited": all_exit_cells_already_visited,
+        "usable_exit_cells_below_visit_limit": usable_exit_cells,
+        "all_exit_cells_already_at_visit_limit": all_exit_cells_already_at_visit_limit,
         "only_return_to_previous_cell": only_return_to_previous_cell,
         "dead_cell_entry": dead_cell_entry,
     }
@@ -3148,7 +3941,7 @@ def _record_backward_child_entering_new_cell(
         "Backward cul-de-sac entry context=%s parent=%s parent_cell=%s "
         "child=%s child_cell=%s visited_cells=%s exit_cells=%s "
         "reachable_nodes_inside_child_cell=%s usable_exit_cells=%s "
-        "all_exit_cells_already_visited=%s "
+        "all_exit_cells_already_at_visit_limit=%s "
         "only_return_to_previous_cell=%s dead_cell_entry=%s "
         "possible_backward_exits=%s",
         context,
@@ -3160,7 +3953,7 @@ def _record_backward_child_entering_new_cell(
         exit_cells,
         reachable_nodes,
         usable_exit_cells,
-        all_exit_cells_already_visited,
+        all_exit_cells_already_at_visit_limit,
         only_return_to_previous_cell,
         dead_cell_entry,
         exit_rows,
@@ -3639,18 +4432,17 @@ def _expand_representative_label(
             if id(edge) in skip_edge_ids:
                 continue
             next_cell = state.trace_cell(edge.dst)
-            if edge.kind == "inter" and next_cell in label.visited_cells:
+            cell_history = _extend_label_cell_history(state, label, edge)
+            if cell_history is None:
+                _record_rejected_third_cell_visit(state, label.direction)
                 log_child_generation(
                     state,
                     label,
                     edge=edge,
                     status="rejected",
-                    reason="visited_cell",
+                    reason="third_cell_visit",
                 )
                 continue
-            next_visited = label.visited_cells
-            if edge.kind == "inter" and next_cell != current_cell:
-                next_visited = frozenset(set(label.visited_cells) | {next_cell})
             new_metrics = label.metrics.plus(edge.metrics)
             if state.is_partially_hopeless(new_metrics, label.direction):
                 log_child_generation(
@@ -3661,6 +4453,11 @@ def _expand_representative_label(
                     reason="metric_upper_bound",
                 )
                 continue
+            _record_second_cell_visits_allowed(
+                state,
+                label.direction,
+                cell_history.second_visits_added,
+            )
             next_last_road_id, next_road_changes = _extend_label_road_continuity(
                 label,
                 edge,
@@ -3670,7 +4467,8 @@ def _expand_representative_label(
                 direction="fwd",
                 metrics=new_metrics,
                 priority=state.partial_priority(new_metrics),
-                visited_cells=next_visited,
+                visited_cells=cell_history.visited_cells,
+                revisited_cells=cell_history.revisited_cells,
                 last_road_id=next_last_road_id,
                 road_changes=next_road_changes,
                 parent=label,
@@ -3703,14 +4501,23 @@ def _expand_representative_label(
                 next_label.priority,
                 _fmt_route_vector(next_label.metrics),
             )
-            state.enqueue(next_label)
-            log_child_generation(
-                state,
-                label,
-                child_label=next_label,
-                edge=edge,
-                status="enqueued",
-            )
+            if state.enqueue(next_label):
+                log_child_generation(
+                    state,
+                    label,
+                    child_label=next_label,
+                    edge=edge,
+                    status="enqueued",
+                )
+            else:
+                log_child_generation(
+                    state,
+                    label,
+                    child_label=next_label,
+                    edge=edge,
+                    status="rejected",
+                    reason="length_completion_lower_bound",
+                )
         return generated_children
 
     edges = state.overlay.in_edges.get(label.portal, [])
@@ -3734,12 +4541,14 @@ def _expand_representative_label(
             )
             continue
         next_cell = state.trace_cell(edge.src)
-        if edge.kind == "inter" and next_cell in label.visited_cells:
+        cell_history = _extend_label_cell_history(state, label, edge)
+        if cell_history is None:
             state.audit.backward_rejected_visited_cells += 1
-            _record_backward_rejection(state, "visited_cells")
-            _record_trace_child_rejection(trace, "visited_cells")
+            _record_rejected_third_cell_visit(state, label.direction)
+            _record_backward_rejection(state, "third_cell_visit")
+            _record_trace_child_rejection(trace, "third_cell_visit")
             logger.debug(
-                "Backward successor skipped portal=%s edge_src=%s reason=visited_cell cell=%s",
+                "Backward successor skipped portal=%s edge_src=%s reason=third_cell_visit cell=%s",
                 label.portal,
                 edge.src,
                 next_cell,
@@ -3749,12 +4558,9 @@ def _expand_representative_label(
                 label,
                 edge=edge,
                 status="rejected",
-                reason="visited_cell",
+                reason="third_cell_visit",
             )
             continue
-        next_visited = label.visited_cells
-        if edge.kind == "inter" and next_cell != current_cell:
-            next_visited = frozenset(set(label.visited_cells) | {next_cell})
         new_metrics = edge.metrics.plus(label.metrics)
         if state.is_partially_hopeless(new_metrics, label.direction):
             if new_metrics.length > float(state.query.constraints.upper[0]):
@@ -3775,6 +4581,11 @@ def _expand_representative_label(
                 reason="metric_upper_bound",
             )
             continue
+        _record_second_cell_visits_allowed(
+            state,
+            label.direction,
+            cell_history.second_visits_added,
+        )
         next_last_road_id, next_road_changes = _extend_label_road_continuity(
             label,
             edge,
@@ -3784,7 +4595,8 @@ def _expand_representative_label(
             direction="bwd",
             metrics=new_metrics,
             priority=state.partial_priority(new_metrics),
-            visited_cells=next_visited,
+            visited_cells=cell_history.visited_cells,
+            revisited_cells=cell_history.revisited_cells,
             last_road_id=next_last_road_id,
             road_changes=next_road_changes,
             parent=label,
@@ -3834,22 +4646,32 @@ def _expand_representative_label(
             next_label.priority,
             _fmt_route_vector(next_label.metrics),
         )
-        state.enqueue(next_label)
-        log_child_generation(
-            state,
-            label,
-            child_label=next_label,
-            edge=edge,
-            status="enqueued",
-        )
-        logger.debug(
-            "Backward successor enqueued parent=%s child=%s kind=%s priority=%.4f route=%s",
-            label.portal,
-            next_label.portal,
-            edge.kind,
-            next_label.priority,
-            _fmt_route_vector(next_label.metrics),
-        )
+        if state.enqueue(next_label):
+            log_child_generation(
+                state,
+                label,
+                child_label=next_label,
+                edge=edge,
+                status="enqueued",
+            )
+            logger.debug(
+                "Backward successor enqueued parent=%s child=%s kind=%s priority=%.4f route=%s",
+                label.portal,
+                next_label.portal,
+                edge.kind,
+                next_label.priority,
+                _fmt_route_vector(next_label.metrics),
+            )
+        else:
+            _record_trace_child_rejection(trace, "length_completion_lower_bound")
+            log_child_generation(
+                state,
+                label,
+                child_label=next_label,
+                edge=edge,
+                status="rejected",
+                reason="length_completion_lower_bound",
+            )
     return generated_children
 
 
@@ -3870,6 +4692,18 @@ def _local_engine_has_pending_work(
     return engine is not None and bool(engine.frontier) and not engine.exhausted
 
 
+def _has_usable_forward_cross_cell_edge(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> bool:
+    current_cell = state.trace_cell(label.portal)
+    return any(
+        state.trace_cell(edge.dst) != current_cell
+        and not _edge_extension_would_exceed_cell_visit_limit(state, label, edge)
+        for edge in state.overlay.out_edges.get(label.portal, [])
+    )
+
+
 def _enqueue_child_label_through_edge(
     state: AnytimeSearchState,
     label: PortalLabel,
@@ -3888,18 +4722,17 @@ def _enqueue_child_label_through_edge(
         if edge.src != label.portal:
             return False
         next_cell = state.trace_cell(edge.dst)
-        if edge.kind == "inter" and next_cell in label.visited_cells:
+        cell_history = _extend_label_cell_history(state, label, edge)
+        if cell_history is None:
+            _record_rejected_third_cell_visit(state, label.direction)
             log_child_generation(
                 state,
                 label,
                 edge=edge,
                 status="rejected",
-                reason="visited_cell",
+                reason="third_cell_visit",
             )
             return False
-        next_visited = label.visited_cells
-        if edge.kind == "inter" and next_cell != current_cell:
-            next_visited = frozenset(set(label.visited_cells) | {next_cell})
         new_metrics = label.metrics.plus(edge.metrics)
         if state.is_partially_hopeless(new_metrics, label.direction):
             log_child_generation(
@@ -3910,6 +4743,11 @@ def _enqueue_child_label_through_edge(
                 reason="metric_upper_bound",
             )
             return False
+        _record_second_cell_visits_allowed(
+            state,
+            label.direction,
+            cell_history.second_visits_added,
+        )
         next_last_road_id, next_road_changes = _extend_label_road_continuity(
             label,
             edge,
@@ -3919,7 +4757,8 @@ def _enqueue_child_label_through_edge(
             direction="fwd",
             metrics=new_metrics,
             priority=state.partial_priority(new_metrics),
-            visited_cells=next_visited,
+            visited_cells=cell_history.visited_cells,
+            revisited_cells=cell_history.revisited_cells,
             last_road_id=next_last_road_id,
             road_changes=next_road_changes,
             parent=label,
@@ -3929,21 +4768,20 @@ def _enqueue_child_label_through_edge(
         if edge.dst != label.portal:
             return False
         next_cell = state.trace_cell(edge.src)
-        if edge.kind == "inter" and next_cell in label.visited_cells:
+        cell_history = _extend_label_cell_history(state, label, edge)
+        if cell_history is None:
             state.audit.backward_rejected_visited_cells += 1
-            _record_backward_rejection(state, "visited_cells")
-            _record_trace_child_rejection(trace, "visited_cells")
+            _record_rejected_third_cell_visit(state, label.direction)
+            _record_backward_rejection(state, "third_cell_visit")
+            _record_trace_child_rejection(trace, "third_cell_visit")
             log_child_generation(
                 state,
                 label,
                 edge=edge,
                 status="rejected",
-                reason="visited_cell",
+                reason="third_cell_visit",
             )
             return False
-        next_visited = label.visited_cells
-        if edge.kind == "inter" and next_cell != current_cell:
-            next_visited = frozenset(set(label.visited_cells) | {next_cell})
         new_metrics = edge.metrics.plus(label.metrics)
         if state.is_partially_hopeless(new_metrics, label.direction):
             if new_metrics.length > float(state.query.constraints.upper[0]):
@@ -3958,6 +4796,11 @@ def _enqueue_child_label_through_edge(
                 reason="metric_upper_bound",
             )
             return False
+        _record_second_cell_visits_allowed(
+            state,
+            label.direction,
+            cell_history.second_visits_added,
+        )
         next_last_road_id, next_road_changes = _extend_label_road_continuity(
             label,
             edge,
@@ -3967,7 +4810,8 @@ def _enqueue_child_label_through_edge(
             direction="bwd",
             metrics=new_metrics,
             priority=state.partial_priority(new_metrics),
-            visited_cells=next_visited,
+            visited_cells=cell_history.visited_cells,
+            revisited_cells=cell_history.revisited_cells,
             last_road_id=next_last_road_id,
             road_changes=next_road_changes,
             parent=label,
@@ -4019,7 +4863,18 @@ def _enqueue_child_label_through_edge(
         next_label.priority,
         _fmt_route_vector(next_label.metrics),
     )
-    state.enqueue(next_label)
+    if not state.enqueue(next_label):
+        if label.direction == "bwd":
+            _record_trace_child_rejection(trace, "length_completion_lower_bound")
+        log_child_generation(
+            state,
+            label,
+            child_label=next_label,
+            edge=edge,
+            status="rejected",
+            reason="length_completion_lower_bound",
+        )
+        return False
     log_child_generation(
         state,
         label,
@@ -4046,7 +4901,7 @@ def _has_usable_backward_cross_cell_edge(
     current_cell = state.trace_cell(label.portal)
     return any(
         state.trace_cell(edge.src) != current_cell
-        and state.trace_cell(edge.src) not in label.visited_cells
+        and not _edge_extension_would_exceed_cell_visit_limit(state, label, edge)
         for edge in state.overlay.in_edges.get(label.portal, [])
     )
 
@@ -4062,6 +4917,314 @@ def _crossing_exit_is_represented(
         edge.dst == node
         for edge in state.overlay.out_edges.get(pred, [])
     )
+
+
+def _forward_crossing_exit_is_represented(
+    state: AnytimeSearchState,
+    node: int,
+    dst: int,
+) -> bool:
+    if node not in state.active_portals or dst not in state.active_portals:
+        return False
+    return any(
+        edge.dst == dst
+        for edge in state.overlay.out_edges.get(node, [])
+    )
+
+
+def _find_forward_directional_repair_candidates(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> List[ForwardDirectionalRepairCandidate]:
+    cell_id = state.trace_cell(label.portal)
+    allowed_nodes = state.nodes_by_cell.get(cell_id, set())
+    if not allowed_nodes:
+        return []
+
+    frontier: List[tuple] = [
+        (
+            0.0,
+            0.0,
+            next(state.local_counter),
+            label.portal,
+            RouteAccumulator(),
+            (label.portal,),
+            None,
+            None,
+            0,
+        )
+    ]
+    best: Dict[int, Tuple[float, float]] = {label.portal: (0.0, 0.0)}
+    candidates: Dict[Tuple[int, int], ForwardDirectionalRepairCandidate] = {}
+    expanded = 0
+    scan_limit = max(0, state.config.forward_directional_repair_scan_limit)
+
+    while (
+        frontier
+        and expanded < scan_limit
+        and time.perf_counter() < state.deadline
+    ):
+        (
+            length,
+            elevation,
+            _,
+            node,
+            metrics,
+            path_nodes,
+            first_road_id,
+            last_road_id,
+            road_changes,
+        ) = heapq.heappop(frontier)
+        if best.get(node) != (length, elevation):
+            continue
+        expanded += 1
+
+        to, weights, _ = state.G.neighbors(node)
+        for idx, nxt_raw in enumerate(to):
+            nxt = int(nxt_raw)
+            nxt_cell = state.partition.get(nxt)
+            if nxt_cell is None:
+                continue
+            edge_metrics = RouteAccumulator.from_edge_weights(weights[idx])
+            edge_road_id = _road_id_from_neighbor(state.G, node, idx)
+            if nxt_cell != cell_id:
+                if nxt not in state.kept_nodes:
+                    continue
+                state.audit.forward_directional_repair_candidates_seen += 1
+                if _cell_visit_count(label, nxt_cell) >= _effective_max_cell_visits(state):
+                    continue
+                state.audit.forward_directional_repair_candidates_unvisited += 1
+                if _forward_crossing_exit_is_represented(state, node, nxt):
+                    continue
+
+                combined_metrics = metrics.plus(edge_metrics)
+                (
+                    combined_first_road_id,
+                    combined_last_road_id,
+                    combined_road_changes,
+                ) = _append_road_id(
+                    first_road_id,
+                    last_road_id,
+                    road_changes,
+                    edge_road_id,
+                )
+                candidate = ForwardDirectionalRepairCandidate(
+                    node=node,
+                    dst=nxt,
+                    dst_cell=nxt_cell,
+                    local_metrics=metrics,
+                    combined_metrics=combined_metrics,
+                    path_nodes=path_nodes + (nxt,),
+                    first_road_id=combined_first_road_id,
+                    last_road_id=combined_last_road_id,
+                    road_changes=combined_road_changes,
+                )
+                key = (nxt, nxt_cell)
+                existing = candidates.get(key)
+                if existing is None or (
+                    candidate.local_metrics.length,
+                    candidate.local_metrics.elevation,
+                    *_extension_road_continuity_sort_fields(
+                        label,
+                        candidate.first_road_id,
+                        candidate.last_road_id,
+                        candidate.road_changes,
+                    ),
+                    candidate.road_changes,
+                ) < (
+                    existing.local_metrics.length,
+                    existing.local_metrics.elevation,
+                    *_extension_road_continuity_sort_fields(
+                        label,
+                        existing.first_road_id,
+                        existing.last_road_id,
+                        existing.road_changes,
+                    ),
+                    existing.road_changes,
+                ):
+                    candidates[key] = candidate
+                continue
+
+            if nxt not in allowed_nodes:
+                continue
+            new_metrics = metrics.plus(edge_metrics)
+            new_key = (new_metrics.length, new_metrics.elevation)
+            if new_key >= best.get(nxt, (float("inf"), float("inf"))):
+                continue
+            best[nxt] = new_key
+            (
+                new_first_road_id,
+                new_last_road_id,
+                new_road_changes,
+            ) = _append_road_id(
+                first_road_id,
+                last_road_id,
+                road_changes,
+                edge_road_id,
+            )
+            heapq.heappush(
+                frontier,
+                (
+                    new_metrics.length,
+                    new_metrics.elevation,
+                    next(state.local_counter),
+                    nxt,
+                    new_metrics,
+                    path_nodes + (nxt,),
+                    new_first_road_id,
+                    new_last_road_id,
+                    new_road_changes,
+                ),
+            )
+
+    old_order = sorted(
+        candidates.values(),
+        key=lambda candidate: (
+            candidate.local_metrics.length,
+            candidate.local_metrics.elevation,
+            candidate.road_changes,
+            candidate.node,
+            candidate.dst,
+        ),
+    )
+    new_order = sorted(
+        candidates.values(),
+        key=lambda candidate: (
+            candidate.local_metrics.length,
+            candidate.local_metrics.elevation,
+            *_extension_road_continuity_sort_fields(
+                label,
+                candidate.first_road_id,
+                candidate.last_road_id,
+                candidate.road_changes,
+            ),
+            candidate.road_changes,
+            candidate.node,
+            candidate.dst,
+        ),
+    )
+    if [
+        (candidate.node, candidate.dst, candidate.path_nodes)
+        for candidate in old_order
+    ] != [
+        (candidate.node, candidate.dst, candidate.path_nodes)
+        for candidate in new_order
+    ]:
+        state.audit.forward_directional_repair_ordering_changed_by_road_continuity += 1
+    return new_order
+
+
+def refine_forward_directional_portals(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> List[OverlayEdge]:
+    if label.direction != "fwd":
+        return []
+    cell_id = state.trace_cell(label.portal)
+    attempt_key = (cell_id, label.portal)
+    if attempt_key in state.forward_directional_refinement_attempted_portals:
+        return []
+    if _has_usable_forward_cross_cell_edge(state, label):
+        return []
+
+    engine = state.local_engines.get((cell_id, label.portal, label.direction))
+    if engine is None or (bool(engine.frontier) and not engine.exhausted):
+        return []
+
+    cell_budget = max(0, state.config.max_forward_directional_repairs_per_cell)
+    cell_edges_used = state.forward_directional_repair_edges_by_cell.get(cell_id, 0)
+    remaining_cell_budget = max(0, cell_budget - cell_edges_used)
+    if remaining_cell_budget <= 0:
+        _increment_count(
+            state.audit.forward_directional_repair_budget_exhausted_by_cell,
+            cell_id,
+        )
+        logger.debug(
+            "Forward directional portal refinement skipped cell=%s portal=%s "
+            "reason=cell_budget_exhausted used=%s budget=%s",
+            cell_id,
+            label.portal,
+            cell_edges_used,
+            cell_budget,
+        )
+        return []
+
+    state.forward_directional_refinement_attempted_portals.add(attempt_key)
+    state.audit.forward_directional_portal_refinements_attempted += 1
+    _increment_count(state.audit.forward_directional_repair_attempted_cells, cell_id)
+    candidates = _find_forward_directional_repair_candidates(state, label)
+    limit = min(cell_budget, remaining_cell_budget)
+    inserted_edges: List[OverlayEdge] = []
+
+    for candidate in candidates[:limit]:
+        state.kept_nodes.add(candidate.dst)
+        state.active_portals.add(candidate.dst)
+        state.nodes_by_cell.setdefault(candidate.dst_cell, set()).add(candidate.dst)
+        edge = OverlayEdge(
+            src=label.portal,
+            dst=candidate.dst,
+            metrics=candidate.combined_metrics,
+            path_nodes=candidate.path_nodes,
+            first_road_id=candidate.first_road_id,
+            last_road_id=candidate.last_road_id,
+            road_changes=candidate.road_changes,
+            kind="inter",
+        )
+        if not state.add_overlay_edge(edge):
+            continue
+        inserted_edges.append(edge)
+        state.forward_directional_repair_edges_by_cell[cell_id] = (
+            state.forward_directional_repair_edges_by_cell.get(cell_id, 0) + 1
+        )
+        state.audit.forward_directional_portal_refinements_inserted += 1
+        logger.debug(
+            "Forward directional portal refinement cell=%s portal=%s "
+            "crossing_node=%s dst=%s dst_cell=%s local_length=%.1f "
+            "combined_route=%s path_len=%s",
+            cell_id,
+            label.portal,
+            candidate.node,
+            candidate.dst,
+            candidate.dst_cell,
+            candidate.local_metrics.length,
+            _fmt_route_vector(candidate.combined_metrics),
+            len(candidate.path_nodes),
+        )
+        _emit_trace_event(
+            state,
+            "directional_repair",
+            portals=(label.portal, candidate.node, candidate.dst),
+            cells=(cell_id, candidate.dst_cell),
+            direction="fwd",
+            portal=label.portal,
+            crossing_node=candidate.node,
+            repair_portal=candidate.dst,
+            repair_cell=candidate.dst_cell,
+            local_length=f"{candidate.local_metrics.length:.1f}",
+            edge=edge.compact_summary(
+                src_cell=cell_id,
+                dst_cell=candidate.dst_cell,
+            ),
+        )
+        if state.forward_directional_repair_edges_by_cell[cell_id] >= cell_budget:
+            break
+
+    if inserted_edges:
+        _increment_count(state.audit.forward_directional_repair_cells, cell_id)
+    logger.debug(
+        "Forward directional portal refinement result cell=%s portal=%s "
+        "budget_before=%s budget_after=%s candidates=%s inserted=%s",
+        cell_id,
+        label.portal,
+        remaining_cell_budget,
+        max(
+            0,
+            cell_budget - state.forward_directional_repair_edges_by_cell.get(cell_id, 0),
+        ),
+        len(candidates),
+        len(inserted_edges),
+    )
+    return inserted_edges
 
 
 def _find_backward_directional_repair_candidates(
@@ -4115,7 +5278,7 @@ def _find_backward_directional_repair_candidates(
             pred_cell = state.trace_cell(pred)
             if pred_cell != cell_id:
                 state.audit.backward_directional_repair_candidates_seen += 1
-                if pred_cell in label.visited_cells:
+                if _cell_visit_count(label, pred_cell) >= _effective_max_cell_visits(state):
                     continue
                 state.audit.backward_directional_repair_candidates_unvisited += 1
                 if _crossing_exit_is_represented(state, pred, node):
@@ -4148,10 +5311,22 @@ def _find_backward_directional_repair_candidates(
                 if existing is None or (
                     candidate.local_metrics.length,
                     candidate.local_metrics.elevation,
+                    *_extension_road_continuity_sort_fields(
+                        label,
+                        candidate.first_road_id,
+                        candidate.last_road_id,
+                        candidate.road_changes,
+                    ),
                     candidate.road_changes,
                 ) < (
                     existing.local_metrics.length,
                     existing.local_metrics.elevation,
+                    *_extension_road_continuity_sort_fields(
+                        label,
+                        existing.first_road_id,
+                        existing.last_road_id,
+                        existing.road_changes,
+                    ),
                     existing.road_changes,
                 ):
                     candidates[key] = candidate
@@ -4189,7 +5364,7 @@ def _find_backward_directional_repair_candidates(
                 ),
             )
 
-    return sorted(
+    old_order = sorted(
         candidates.values(),
         key=lambda candidate: (
             candidate.local_metrics.length,
@@ -4199,6 +5374,31 @@ def _find_backward_directional_repair_candidates(
             candidate.node,
         ),
     )
+    new_order = sorted(
+        candidates.values(),
+        key=lambda candidate: (
+            candidate.local_metrics.length,
+            candidate.local_metrics.elevation,
+            *_extension_road_continuity_sort_fields(
+                label,
+                candidate.first_road_id,
+                candidate.last_road_id,
+                candidate.road_changes,
+            ),
+            candidate.road_changes,
+            candidate.pred,
+            candidate.node,
+        ),
+    )
+    if [
+        (candidate.pred, candidate.node, candidate.path_nodes)
+        for candidate in old_order
+    ] != [
+        (candidate.pred, candidate.node, candidate.path_nodes)
+        for candidate in new_order
+    ]:
+        state.audit.backward_directional_repair_ordering_changed_by_road_continuity += 1
+    return new_order
 
 
 def refine_backward_directional_portals(
@@ -4208,15 +5408,35 @@ def refine_backward_directional_portals(
     if label.direction != "bwd" or len(label.visited_cells) <= 1:
         return []
     cell_id = state.trace_cell(label.portal)
-    if cell_id in state.backward_directional_refinement_attempted_cells:
+    attempt_key = (cell_id, label.portal)
+    if attempt_key in state.backward_directional_refinement_attempted_portals:
         return []
     if _has_usable_backward_cross_cell_edge(state, label):
         return []
 
-    state.backward_directional_refinement_attempted_cells.add(cell_id)
+    cell_budget = max(0, state.config.max_backward_directional_repairs_per_cell)
+    cell_edges_used = state.backward_directional_repair_edges_by_cell.get(cell_id, 0)
+    remaining_cell_budget = max(0, cell_budget - cell_edges_used)
+    if remaining_cell_budget <= 0:
+        _increment_count(
+            state.audit.backward_directional_repair_budget_exhausted_by_cell,
+            cell_id,
+        )
+        logger.debug(
+            "Backward directional portal refinement skipped cell=%s portal=%s "
+            "reason=cell_budget_exhausted used=%s budget=%s",
+            cell_id,
+            label.portal,
+            cell_edges_used,
+            cell_budget,
+        )
+        return []
+
+    state.backward_directional_refinement_attempted_portals.add(attempt_key)
     state.audit.backward_directional_portal_refinements_attempted += 1
+    _increment_count(state.audit.backward_directional_repair_attempted_cells, cell_id)
     candidates = _find_backward_directional_repair_candidates(state, label)
-    limit = max(0, state.config.max_backward_directional_repairs_per_cell)
+    limit = min(cell_budget, remaining_cell_budget)
     inserted_edges: List[OverlayEdge] = []
 
     for candidate in candidates[:limit]:
@@ -4236,6 +5456,9 @@ def refine_backward_directional_portals(
         if not state.add_overlay_edge(edge):
             continue
         inserted_edges.append(edge)
+        state.backward_directional_repair_edges_by_cell[cell_id] = (
+            state.backward_directional_repair_edges_by_cell.get(cell_id, 0) + 1
+        )
         state.audit.backward_directional_portal_refinements_inserted += 1
         logger.debug(
             "Backward directional portal refinement cell=%s portal=%s "
@@ -4266,9 +5489,24 @@ def refine_backward_directional_portals(
                 dst_cell=cell_id,
             ),
         )
+        if state.backward_directional_repair_edges_by_cell[cell_id] >= cell_budget:
+            break
 
     if inserted_edges:
         _increment_count(state.audit.backward_directional_repair_cells, cell_id)
+    logger.debug(
+        "Backward directional portal refinement result cell=%s portal=%s "
+        "budget_before=%s budget_after=%s candidates=%s inserted=%s",
+        cell_id,
+        label.portal,
+        remaining_cell_budget,
+        max(
+            0,
+            cell_budget - state.backward_directional_repair_edges_by_cell.get(cell_id, 0),
+        ),
+        len(candidates),
+        len(inserted_edges),
+    )
     return inserted_edges
 
 
@@ -4431,26 +5669,8 @@ def _bridge_crossings(
     state: AnytimeSearchState,
     src_cell: int,
     dst_cell: int,
-) -> List[Tuple[int, int, RouteAccumulator, int | None]]:
-    crossings: List[Tuple[int, int, RouteAccumulator, int | None]] = []
-    for node in sorted(state.nodes_by_cell.get(src_cell, set())):
-        to, weights, _ = state.G.neighbors(node)
-        for idx, nxt_raw in enumerate(to):
-            nxt = int(nxt_raw)
-            if (
-                nxt not in state.kept_nodes
-                or state.trace_cell(nxt) != dst_cell
-            ):
-                continue
-            crossings.append(
-                (
-                    node,
-                    nxt,
-                    RouteAccumulator.from_edge_weights(weights[idx]),
-                    _road_id_from_neighbor(state.G, node, idx),
-                )
-            )
-    return crossings
+) -> List[BridgeCrossing]:
+    return list(state.retained_crossings_by_cell_pair.get((src_cell, dst_cell), []))
 
 
 def _bridge_crossing_proximity(
@@ -4622,18 +5842,96 @@ def _cell_pair_has_one_edge_join_coverage(
     )
 
 
+def _covered_portals_by_cell(
+    state: AnytimeSearchState,
+    direction: Direction,
+) -> Dict[int, Set[int]]:
+    by_cell: Dict[int, Set[int]] = {}
+    for portal in _covered_portals(state, direction):
+        by_cell.setdefault(state.trace_cell(portal), set()).add(portal)
+    return by_cell
+
+
+def _bridge_cell_pair_is_eligible(
+    state: AnytimeSearchState,
+    cell_pair: Tuple[int, int],
+    fwd_portals: Set[int],
+    bwd_portals: Set[int],
+) -> bool:
+    fwd_cell, bwd_cell = cell_pair
+    if fwd_cell == bwd_cell:
+        return False
+    if cell_pair in state.bridge_refinement_attempted_cell_pairs:
+        return False
+
+    limit = max(0, state.config.max_bridge_edges_per_cell_pair)
+    selected_crossings = state.bridge_inserted_crossings_by_cell_pair.get(
+        cell_pair,
+        set(),
+    )
+    if len(selected_crossings) >= limit:
+        return False
+
+    direct_crossings = _bridge_crossings(state, fwd_cell, bwd_cell)
+    reverse_crossings = _bridge_crossings(state, bwd_cell, fwd_cell)
+    if not direct_crossings and not reverse_crossings:
+        return False
+
+    if (
+        not selected_crossings
+        and _cell_pair_has_one_edge_join_coverage(
+            state,
+            fwd_portals,
+            bwd_portals,
+        )
+    ):
+        return False
+
+    return True
+
+
+def _full_bridge_eligible_cell_pairs(
+    state: AnytimeSearchState,
+    fwd_by_cell: Dict[int, Set[int]] | None = None,
+    bwd_by_cell: Dict[int, Set[int]] | None = None,
+) -> Set[Tuple[int, int]]:
+    fwd_cells = fwd_by_cell if fwd_by_cell is not None else _covered_portals_by_cell(
+        state,
+        "fwd",
+    )
+    bwd_cells = bwd_by_cell if bwd_by_cell is not None else _covered_portals_by_cell(
+        state,
+        "bwd",
+    )
+    eligible: Set[Tuple[int, int]] = set()
+    for fwd_cell, fwd_portals in fwd_cells.items():
+        for bwd_cell, bwd_portals in bwd_cells.items():
+            cell_pair = (fwd_cell, bwd_cell)
+            if _bridge_cell_pair_is_eligible(
+                state,
+                cell_pair,
+                fwd_portals,
+                bwd_portals,
+            ):
+                eligible.add(cell_pair)
+    return eligible
+
+
 def _bridge_candidate_has_cell_conflict(
     state: AnytimeSearchState,
     candidate: BridgeRefinementCandidate,
     fwd_label: PortalLabel,
     bwd_label: PortalLabel,
 ) -> bool:
-    edge_cells = {
-        state.trace_cell(node)
-        for node in candidate.edge.path_nodes
-    }
-    shared_cells = set(fwd_label.visited_cells) & set(bwd_label.visited_cells)
-    return bool(shared_cells - edge_cells)
+    path_nodes = _reconstruct_one_edge_join_path(
+        fwd_label,
+        candidate.edge,
+        bwd_label,
+    )
+    if path_nodes is None:
+        return True
+    ok, _, _ = _path_cell_visit_limit_result(state, path_nodes)
+    return not ok
 
 
 def _bridge_path_overlap(
@@ -4672,6 +5970,302 @@ def _bridge_selection_key(
         candidate.edge.dst,
         candidate.crossing_src,
         candidate.crossing_dst,
+    )
+
+
+def _bridge_fallback_candidate_key(
+    candidate: BridgeRefinementCandidate,
+    selected_edges: Sequence[OverlayEdge],
+) -> tuple:
+    edge = candidate.edge
+    return (
+        candidate.connector_length,
+        edge.metrics.length,
+        edge.metrics.elevation,
+        edge.road_changes,
+        _bridge_path_overlap(candidate, selected_edges),
+        edge.src,
+        edge.dst,
+        candidate.crossing_src,
+        candidate.crossing_dst,
+    )
+
+
+def _connector_avg_popularity(metrics: RouteAccumulator) -> float:
+    if metrics.length <= 0.0:
+        return 0.0
+    return metrics.popularity_length / metrics.length
+
+
+def _connector_avg_width(metrics: RouteAccumulator) -> float:
+    if metrics.length <= 0.0:
+        return float("inf")
+    return metrics.street_width_length / metrics.length
+
+
+def _bridge_fallback_quality_candidate_key(
+    candidate: BridgeRefinementCandidate,
+    selected_edges: Sequence[OverlayEdge],
+) -> tuple:
+    edge = candidate.edge
+    return (
+        _connector_avg_width(edge.metrics),
+        -_connector_avg_popularity(edge.metrics),
+        edge.metrics.length,
+        edge.metrics.elevation,
+        edge.road_changes,
+        _bridge_path_overlap(candidate, selected_edges),
+        edge.src,
+        edge.dst,
+        candidate.crossing_src,
+        candidate.crossing_dst,
+    )
+
+
+def _bridge_candidate_path_key(
+    candidate: BridgeRefinementCandidate,
+) -> Tuple[int, int, int, int, Tuple[int, ...]]:
+    edge = candidate.edge
+    return (
+        edge.src,
+        edge.dst,
+        candidate.crossing_src,
+        candidate.crossing_dst,
+        edge.path_nodes,
+    )
+
+
+def _bridge_candidate_quality_summary(
+    candidate: BridgeRefinementCandidate,
+) -> Dict[str, float | int]:
+    edge = candidate.edge
+    return {
+        "length": edge.metrics.length,
+        "elevation": edge.metrics.elevation,
+        "avg_pop": _connector_avg_popularity(edge.metrics),
+        "avg_width": _connector_avg_width(edge.metrics),
+        "road_changes": edge.road_changes,
+    }
+
+
+def _select_complementary_bridge_fallback_candidates(
+    state: AnytimeSearchState,
+    cell_pair: Tuple[int, int],
+    primary_options: Dict[Tuple[int, int], BridgeRefinementCandidate],
+    quality_options: Dict[Tuple[int, int], BridgeRefinementCandidate],
+    selected_edges: Sequence[OverlayEdge],
+    remaining_slots: int,
+) -> List[Tuple[Tuple[int, int], BridgeRefinementCandidate, BridgeFallbackSelectionRole]]:
+    if remaining_slots <= 0 or not primary_options:
+        return []
+
+    primary_order = sorted(
+        primary_options.items(),
+        key=lambda item: _bridge_fallback_candidate_key(item[1], selected_edges),
+    )
+    if remaining_slots == 1:
+        return [
+            (corridor_id, candidate, "primary")
+            for corridor_id, candidate
+            in primary_order
+        ]
+
+    if len(primary_options) > remaining_slots:
+        state.audit.complementary_connector_sets_considered += 1
+
+    chosen: List[
+        Tuple[Tuple[int, int], BridgeRefinementCandidate, BridgeFallbackSelectionRole]
+    ] = []
+    chosen_corridors: Set[Tuple[int, int]] = set()
+    chosen_paths: Set[Tuple[int, int, int, int, Tuple[int, ...]]] = set()
+
+    def add_choice(
+        corridor_id: Tuple[int, int],
+        candidate: BridgeRefinementCandidate,
+        role: BridgeFallbackSelectionRole,
+    ) -> bool:
+        path_key = _bridge_candidate_path_key(candidate)
+        if corridor_id in chosen_corridors or path_key in chosen_paths:
+            return False
+        chosen.append((corridor_id, candidate, role))
+        chosen_corridors.add(corridor_id)
+        chosen_paths.add(path_key)
+        return True
+
+    primary_corridor, primary_candidate = primary_order[0]
+    add_choice(primary_corridor, primary_candidate, "primary")
+
+    quality_order = sorted(
+        quality_options.items(),
+        key=lambda item: _bridge_fallback_quality_candidate_key(item[1], selected_edges),
+    )
+    for corridor_id, candidate in quality_order:
+        if not add_choice(corridor_id, candidate, "quality"):
+            continue
+        state.audit.complementary_quality_candidate_distinct += 1
+        if len(state.audit.complementary_quality_candidate_examples) < 20:
+            state.audit.complementary_quality_candidate_examples.append(
+                {
+                    "cell_pair": cell_pair,
+                    "primary_crossing": (
+                        primary_candidate.crossing_src,
+                        primary_candidate.crossing_dst,
+                    ),
+                    "primary": _bridge_candidate_quality_summary(primary_candidate),
+                    "quality_crossing": (
+                        candidate.crossing_src,
+                        candidate.crossing_dst,
+                    ),
+                    "quality": _bridge_candidate_quality_summary(candidate),
+                }
+            )
+        logger.debug(
+            "Complementary bridge fallback selected cells=%s->%s "
+            "primary_crossing=%s->%s primary=%s "
+            "quality_crossing=%s->%s quality=%s",
+            cell_pair[0],
+            cell_pair[1],
+            primary_candidate.crossing_src,
+            primary_candidate.crossing_dst,
+            _bridge_candidate_quality_summary(primary_candidate),
+            candidate.crossing_src,
+            candidate.crossing_dst,
+            _bridge_candidate_quality_summary(candidate),
+        )
+        break
+
+    for corridor_id, candidate in primary_order:
+        add_choice(corridor_id, candidate, "structural_fill")
+
+    return chosen
+
+
+def _generic_overlay_edge_rejection_reason(
+    state: AnytimeSearchState,
+    edge: OverlayEdge,
+) -> str | None:
+    bucket = state.overlay.out_edges.get(edge.src, [])
+    same_pair = [e for e in bucket if e.dst == edge.dst and e.kind == edge.kind]
+    if any(existing.path_nodes == edge.path_nodes for existing in same_pair):
+        return "duplicate_path"
+    if len(same_pair) >= state.config.max_shortcuts_per_pair:
+        edge_key = _overlay_edge_capacity_key(edge)
+        worst = max(same_pair, key=_overlay_edge_capacity_key)
+        if edge_key >= _overlay_edge_capacity_key(worst):
+            return "pair_capacity"
+    return None
+
+
+def _path_edges_are_real_directed(
+    state: AnytimeSearchState,
+    path_nodes: Sequence[int],
+) -> bool:
+    if len(path_nodes) < 2:
+        return False
+    for u, v in zip(path_nodes, path_nodes[1:]):
+        to, _, _ = state.G.neighbors(int(u))
+        if not any(int(nxt) == int(v) for nxt in to):
+            return False
+    return True
+
+
+def _unique_csr_edge_index_for_pair(
+    G: CompactDiGraph,
+    u: int,
+    v: int,
+) -> int | None:
+    start = int(G.offsets[int(u)])
+    end = int(G.offsets[int(u) + 1])
+    matches = [idx for idx in range(start, end) if int(G.to[idx]) == int(v)]
+    if len(matches) != 1:
+        return None
+    return matches[0]
+
+
+def _recompute_unique_path_metrics(
+    state: AnytimeSearchState,
+    path_nodes: Sequence[int],
+) -> Tuple[RouteAccumulator, int | None, int | None, int] | None:
+    if len(path_nodes) < 2:
+        return None
+    metrics = RouteAccumulator()
+    first_road_id: int | None = None
+    last_road_id: int | None = None
+    road_changes = 0
+    for u, v in zip(path_nodes, path_nodes[1:]):
+        edge_idx = _unique_csr_edge_index_for_pair(state.G, int(u), int(v))
+        if edge_idx is None:
+            return None
+        metrics = metrics.plus(RouteAccumulator.from_edge_weights(state.G.w[edge_idx]))
+        (
+            first_road_id,
+            last_road_id,
+            road_changes,
+        ) = _append_road_id(
+            first_road_id,
+            last_road_id,
+            road_changes,
+            _road_id_from_csr_edge(state.G, edge_idx),
+        )
+    return metrics, first_road_id, last_road_id, road_changes
+
+
+def _route_accumulators_close(
+    left: RouteAccumulator,
+    right: RouteAccumulator,
+) -> bool:
+    return (
+        abs(left.length - right.length) <= 1e-6
+        and abs(left.elevation - right.elevation) <= 1e-6
+        and abs(left.popularity_length - right.popularity_length) <= 1e-6
+        and abs(left.street_width_length - right.street_width_length) <= 1e-6
+    )
+
+
+def _bridge_candidate_is_materializable(
+    state: AnytimeSearchState,
+    candidate: BridgeRefinementCandidate,
+) -> bool:
+    edge = candidate.edge
+    if edge.kind != "inter":
+        return False
+    if not edge.path_nodes:
+        return False
+    if edge.path_nodes[0] != edge.src or edge.path_nodes[-1] != edge.dst:
+        return False
+    if edge.bridge_cell_pair is None or edge.bridge_corridor is None:
+        return False
+    if edge.bridge_cell_pair != (
+        state.trace_cell(edge.src),
+        state.trace_cell(edge.dst),
+    ):
+        return False
+    if edge.bridge_corridor != (candidate.crossing_src, candidate.crossing_dst):
+        return False
+    retained_crossings = state.retained_crossings_by_cell_pair.get(
+        edge.bridge_cell_pair,
+        [],
+    )
+    if not any(
+        crossing_src == candidate.crossing_src
+        and crossing_dst == candidate.crossing_dst
+        for crossing_src, crossing_dst, _, _ in retained_crossings
+    ):
+        return False
+    if not _path_contains_segment(
+        edge.path_nodes,
+        (candidate.crossing_src, candidate.crossing_dst),
+    ):
+        return False
+    recomputed = _recompute_unique_path_metrics(state, edge.path_nodes)
+    if recomputed is None:
+        return False
+    metrics, first_road_id, last_road_id, road_changes = recomputed
+    return (
+        _route_accumulators_close(metrics, edge.metrics)
+        and first_road_id == edge.first_road_id
+        and last_road_id == edge.last_road_id
+        and road_changes == edge.road_changes
     )
 
 
@@ -4733,40 +6327,107 @@ def _best_feasible_bridge_join_selection(
 
 
 def detect_pending_bridge_cell_pairs(state: AnytimeSearchState) -> None:
-    fwd_by_cell: Dict[int, Set[int]] = {}
-    bwd_by_cell: Dict[int, Set[int]] = {}
-    for portal in _covered_portals(state, "fwd"):
-        fwd_by_cell.setdefault(state.trace_cell(portal), set()).add(portal)
-    for portal in _covered_portals(state, "bwd"):
-        bwd_by_cell.setdefault(state.trace_cell(portal), set()).add(portal)
+    state.pending_bridge_cell_pairs.update(_full_bridge_eligible_cell_pairs(state))
 
-    limit = max(0, state.config.max_bridge_edges_per_cell_pair)
-    for fwd_cell, fwd_portals in sorted(fwd_by_cell.items()):
-        for bwd_cell, bwd_portals in sorted(bwd_by_cell.items()):
-            if fwd_cell == bwd_cell:
+
+def _covered_cells_from_representatives(
+    state: AnytimeSearchState,
+    direction: Direction,
+) -> frozenset[int]:
+    return frozenset(
+        state.trace_cell(portal)
+        for portal, labels in state.labels[direction].items()
+        if labels
+    )
+
+
+def detect_bridge_pairs_if_coverage_changed(
+    state: AnytimeSearchState,
+) -> bool:
+    state.audit.bridge_detection_coverage_checks += 1
+    start = time.perf_counter()
+    current_fwd_cells = _covered_cells_from_representatives(state, "fwd")
+    current_bwd_cells = _covered_cells_from_representatives(state, "bwd")
+    new_fwd_cells = set(current_fwd_cells) - state.bridge_seen_fwd_cells
+    new_bwd_cells = set(current_bwd_cells) - state.bridge_seen_bwd_cells
+    if not new_fwd_cells and not new_bwd_cells:
+        state.audit.bridge_detection_skipped_unchanged_coverage += 1
+        elapsed = time.perf_counter() - start
+        state.audit.bridge_detection_total_time_s += elapsed
+        state.audit.bridge_incremental_detection_total_time_s += elapsed
+        return False
+
+    state.audit.bridge_detection_calls += 1
+    state.audit.bridge_incremental_detection_calls += 1
+    state.audit.bridge_incremental_new_fwd_cells += len(new_fwd_cells)
+    state.audit.bridge_incremental_new_bwd_cells += len(new_bwd_cells)
+    fwd_by_cell = _covered_portals_by_cell(state, "fwd")
+    bwd_by_cell = _covered_portals_by_cell(state, "bwd")
+    discovered: Set[Tuple[int, int]] = set()
+
+    for fwd_cell in sorted(new_fwd_cells):
+        for bwd_cell in sorted(state.retained_cell_neighbors.get(fwd_cell, set())):
+            state.audit.bridge_incremental_neighbor_lookups += 1
+            bwd_portals = bwd_by_cell.get(bwd_cell)
+            if not bwd_portals:
                 continue
-            selected_crossings = (
-                state.bridge_inserted_crossings_by_cell_pair.setdefault(
-                    (fwd_cell, bwd_cell),
-                    set(),
-                )
-            )
-            if len(selected_crossings) >= limit:
+            fwd_portals = fwd_by_cell.get(fwd_cell)
+            if not fwd_portals:
                 continue
-            direct_crossings = _bridge_crossings(state, fwd_cell, bwd_cell)
-            reverse_crossings = _bridge_crossings(state, bwd_cell, fwd_cell)
-            if not direct_crossings and not reverse_crossings:
-                continue
-            if (
-                not selected_crossings
-                and _cell_pair_has_one_edge_join_coverage(
-                    state,
-                    fwd_portals,
-                    bwd_portals,
-                )
+            cell_pair = (fwd_cell, bwd_cell)
+            if _bridge_cell_pair_is_eligible(
+                state,
+                cell_pair,
+                fwd_portals,
+                bwd_portals,
             ):
+                discovered.add(cell_pair)
+
+    for bwd_cell in sorted(new_bwd_cells):
+        for fwd_cell in sorted(state.retained_cell_neighbors.get(bwd_cell, set())):
+            state.audit.bridge_incremental_neighbor_lookups += 1
+            fwd_portals = fwd_by_cell.get(fwd_cell)
+            if not fwd_portals:
                 continue
-            state.pending_bridge_cell_pairs.add((fwd_cell, bwd_cell))
+            bwd_portals = bwd_by_cell.get(bwd_cell)
+            if not bwd_portals:
+                continue
+            cell_pair = (fwd_cell, bwd_cell)
+            if _bridge_cell_pair_is_eligible(
+                state,
+                cell_pair,
+                fwd_portals,
+                bwd_portals,
+            ):
+                discovered.add(cell_pair)
+
+    before_pending = set(state.pending_bridge_cell_pairs)
+    state.pending_bridge_cell_pairs.update(discovered)
+    state.audit.bridge_incremental_pending_pairs_discovered += len(
+        state.pending_bridge_cell_pairs - before_pending
+    )
+
+    if state.config.validate_incremental_bridge_detection:
+        full_pairs = _full_bridge_eligible_cell_pairs(state, fwd_by_cell, bwd_by_cell)
+        missing = full_pairs - discovered - before_pending
+        if missing:
+            state.audit.bridge_incremental_crosscheck_mismatches += len(missing)
+            logger.debug(
+                "Incremental bridge detection missed eligible pairs=%s "
+                "new_fwd_cells=%s new_bwd_cells=%s",
+                sorted(missing),
+                sorted(new_fwd_cells),
+                sorted(new_bwd_cells),
+            )
+
+    state.bridge_seen_fwd_cells.update(new_fwd_cells)
+    state.bridge_seen_bwd_cells.update(new_bwd_cells)
+    elapsed = time.perf_counter() - start
+    state.audit.bridge_detection_total_time_s += elapsed
+    state.audit.bridge_incremental_detection_total_time_s += elapsed
+    state.last_bridge_detection_fwd_cells = current_fwd_cells
+    state.last_bridge_detection_bwd_cells = current_bwd_cells
+    return bool(discovered)
 
 
 def _insert_bridge_selection(
@@ -4821,8 +6482,10 @@ def _insert_bridge_selection(
                 edge,
                 bwd_label,
                 trigger_dir="fwd",
+                bridge_join_context="immediate_bridge",
             ):
                 state.audit.bridge_join_successes += 1
+                state.audit.bridge_immediate_join_successes += 1
 
     if not bwd_labels:
         for fwd_label in fwd_labels:
@@ -4845,8 +6508,130 @@ def _insert_bridge_selection(
     return True
 
 
-def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayEdge]:
-    detect_pending_bridge_cell_pairs(state)
+def _insert_fallback_bridge_candidate(
+    state: AnytimeSearchState,
+    cell_pair: Tuple[int, int],
+    candidate: BridgeRefinementCandidate,
+    *,
+    selection_role: BridgeFallbackSelectionRole = "primary",
+) -> bool:
+    state.audit.bridge_fallback_edges_attempted += 1
+    edge = candidate.edge
+    crossing_key = (candidate.crossing_src, candidate.crossing_dst)
+    selected_crossings = state.bridge_inserted_crossings_by_cell_pair.setdefault(
+        cell_pair,
+        set(),
+    )
+    if crossing_key in selected_crossings:
+        logger.debug(
+            "Bridge fallback reject cells=%s->%s src=%s dst=%s reason=crossing_already_represented",
+            cell_pair[0],
+            cell_pair[1],
+            edge.src,
+            edge.dst,
+        )
+        return False
+    if not _bridge_candidate_is_materializable(state, candidate):
+        logger.debug(
+            "Bridge fallback reject cells=%s->%s src=%s dst=%s reason=invalid_reconstructible_path",
+            cell_pair[0],
+            cell_pair[1],
+            edge.src,
+            edge.dst,
+        )
+        return False
+    overlay_rejection_reason = _generic_overlay_edge_rejection_reason(state, edge)
+    if selection_role == "quality":
+        state.audit.complementary_quality_candidate_insert_attempted += 1
+    if not state.add_overlay_edge(edge):
+        if selection_role == "quality" and overlay_rejection_reason == "pair_capacity":
+            state.audit.complementary_quality_candidate_rejected_by_overlay_capacity += 1
+        logger.debug(
+            "Bridge fallback reject cells=%s->%s src=%s dst=%s "
+            "role=%s reason=overlay_insert_rejected overlay_reason=%s",
+            cell_pair[0],
+            cell_pair[1],
+            edge.src,
+            edge.dst,
+            selection_role,
+            overlay_rejection_reason,
+        )
+        return False
+    if selection_role == "quality":
+        state.audit.complementary_quality_candidate_inserted += 1
+
+    selected_crossings.add(crossing_key)
+    state.bridge_representatives_by_cell_pair.setdefault(cell_pair, []).append(edge)
+    state.audit.bridge_edges_inserted += 1
+    state.audit.bridge_fallback_edges_inserted += 1
+
+    fwd_labels = _bounded_representative_labels(
+        state,
+        state.labels["fwd"].get(edge.src, []),
+    )
+    bwd_labels = _bounded_representative_labels(
+        state,
+        state.labels["bwd"].get(edge.dst, []),
+    )
+
+    for fwd_label in fwd_labels:
+        for bwd_label in bwd_labels:
+            state.audit.bridge_join_attempts += 1
+            if _emit_one_edge_join_candidate(
+                state,
+                fwd_label,
+                edge,
+                bwd_label,
+                trigger_dir="fwd",
+            ):
+                state.audit.bridge_join_successes += 1
+
+    for fwd_label in fwd_labels:
+        state.audit.bridge_fallback_children_generated += 1
+        if _enqueue_child_label_through_edge(
+            state,
+            fwd_label,
+            edge,
+            child_source="bridge",
+        ):
+            state.audit.bridge_fallback_children_accepted += 1
+            state.audit.bridge_repair_children_generated += 1
+
+    for bwd_label in bwd_labels:
+        state.audit.bridge_fallback_children_generated += 1
+        if _enqueue_child_label_through_edge(
+            state,
+            bwd_label,
+            edge,
+            child_source="bridge",
+        ):
+            state.audit.bridge_fallback_children_accepted += 1
+            state.audit.bridge_repair_children_generated += 1
+
+    logger.debug(
+        "Bridge fallback inserted cells=%s->%s edge=%s->%s crossing=%s->%s "
+        "role=%s connector_quality=%s children_attempted=%s children_accepted=%s",
+        cell_pair[0],
+        cell_pair[1],
+        edge.src,
+        edge.dst,
+        candidate.crossing_src,
+        candidate.crossing_dst,
+        selection_role,
+        _bridge_candidate_quality_summary(candidate),
+        len(fwd_labels) + len(bwd_labels),
+        state.audit.bridge_fallback_children_accepted,
+    )
+    return True
+
+
+def refine_adjacent_coverage_bridges(
+    state: AnytimeSearchState,
+    *,
+    run_detection: bool = True,
+) -> List[OverlayEdge]:
+    if run_detection:
+        detect_pending_bridge_cell_pairs(state)
     limit = max(0, state.config.max_bridge_edges_per_cell_pair)
     if limit == 0 or not state.pending_bridge_cell_pairs:
         return []
@@ -4861,6 +6646,14 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
     options_by_pair: Dict[
         Tuple[int, int],
         Dict[Tuple[int, int], BridgeJoinSelection],
+    ] = {}
+    fallback_options_by_pair: Dict[
+        Tuple[int, int],
+        Dict[Tuple[int, int], BridgeRefinementCandidate],
+    ] = {}
+    fallback_quality_options_by_pair: Dict[
+        Tuple[int, int],
+        Dict[Tuple[int, int], BridgeRefinementCandidate],
     ] = {}
 
     for cell_pair in sorted(state.pending_bridge_cell_pairs):
@@ -4877,6 +6670,7 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
         }
         if not pair_fwd_portals or not pair_bwd_portals:
             continue
+        state.bridge_refinement_attempted_cell_pairs.add(cell_pair)
         state.audit.bridge_refinements_attempted += 1
         pair_key = f"{fwd_cell}->{bwd_cell}"
         state.audit.bridge_refinement_cell_pairs[pair_key] = (
@@ -4891,6 +6685,7 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
             forward_portals=pair_fwd_portals,
             backward_portals=pair_bwd_portals,
         )
+        state.audit.bridge_candidates_reconstructible += len(candidates)
         selected_crossings = (
             state.bridge_inserted_crossings_by_cell_pair.setdefault(
                 cell_pair,
@@ -4898,6 +6693,14 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
             )
         )
         corridor_options: Dict[Tuple[int, int], BridgeJoinSelection] = {}
+        fallback_corridor_options: Dict[
+            Tuple[int, int],
+            BridgeRefinementCandidate,
+        ] = {}
+        fallback_quality_corridor_options: Dict[
+            Tuple[int, int],
+            BridgeRefinementCandidate,
+        ] = {}
         for candidate in candidates:
             corridor_id = (candidate.crossing_src, candidate.crossing_dst)
             if corridor_id in selected_crossings:
@@ -4908,7 +6711,32 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
                 selected_edges,
             )
             if selection is None:
+                existing_candidate = fallback_corridor_options.get(corridor_id)
+                if existing_candidate is None or _bridge_fallback_candidate_key(
+                    candidate,
+                    selected_edges,
+                ) < _bridge_fallback_candidate_key(
+                    existing_candidate,
+                    selected_edges,
+                ):
+                    fallback_corridor_options[corridor_id] = candidate
+                existing_quality_candidate = fallback_quality_corridor_options.get(
+                    corridor_id
+                )
+                if (
+                    existing_quality_candidate is None
+                    or _bridge_fallback_quality_candidate_key(
+                        candidate,
+                        selected_edges,
+                    )
+                    < _bridge_fallback_quality_candidate_key(
+                        existing_quality_candidate,
+                        selected_edges,
+                    )
+                ):
+                    fallback_quality_corridor_options[corridor_id] = candidate
                 continue
+            state.audit.bridge_immediate_feasible_selections += 1
             existing = corridor_options.get(corridor_id)
             if existing is None or _bridge_selection_key(
                 selection,
@@ -4920,6 +6748,9 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
                 corridor_options[corridor_id] = selection
         if corridor_options:
             options_by_pair[cell_pair] = corridor_options
+        elif fallback_corridor_options:
+            fallback_options_by_pair[cell_pair] = fallback_corridor_options
+            fallback_quality_options_by_pair[cell_pair] = fallback_quality_corridor_options
 
     inserted_edges: List[OverlayEdge] = []
 
@@ -4976,6 +6807,35 @@ def refine_adjacent_coverage_bridges(state: AnytimeSearchState) -> List[OverlayE
             continue
         inserted_edges.append(selection.candidate.edge)
         selected_edges.append(selection.candidate.edge)
+
+    for cell_pair in sorted(fallback_options_by_pair):
+        selected = state.bridge_representatives_by_cell_pair.get(cell_pair, [])
+        remaining_slots = max(0, limit - len(selected))
+        if remaining_slots <= 0:
+            continue
+        ordered_fallback = _select_complementary_bridge_fallback_candidates(
+            state,
+            cell_pair,
+            fallback_options_by_pair[cell_pair],
+            fallback_quality_options_by_pair.get(cell_pair, {}),
+            selected_edges,
+            remaining_slots,
+        )
+        for corridor_id, candidate, selection_role in ordered_fallback:
+            if (
+                len(state.bridge_representatives_by_cell_pair.get(cell_pair, []))
+                >= limit
+            ):
+                break
+            if not _insert_fallback_bridge_candidate(
+                state,
+                cell_pair,
+                candidate,
+                selection_role=selection_role,
+            ):
+                continue
+            inserted_edges.append(candidate.edge)
+            selected_edges.append(candidate.edge)
 
     state.pending_bridge_cell_pairs.clear()
     return inserted_edges
@@ -5086,7 +6946,8 @@ def advance_overlay_and_learn_shortcuts(
         new_edges: List[OverlayEdge] = []
         repair_edges: List[OverlayEdge] = []
         directional_repair_edges: List[OverlayEdge] = []
-        detect_pending_bridge_cell_pairs(state)
+        forward_directional_repair_edges: List[OverlayEdge] = []
+        detect_bridge_pairs_if_coverage_changed(state)
         overlay_degree = _directional_overlay_degree(state, label)
         if overlay_degree <= 1:
             if backward_trace is not None:
@@ -5109,6 +6970,7 @@ def advance_overlay_and_learn_shortcuts(
                 label.direction,
                 trace=backward_trace,
             )
+            local_edges_to_enqueue = list(new_edges)
             log_local_discovery(
                 state,
                 label,
@@ -5116,14 +6978,12 @@ def advance_overlay_and_learn_shortcuts(
                 discovered_edges=len(new_edges),
             )
             while (
-                label.direction == "bwd"
-                and not new_edges
-                and _directional_overlay_degree(state, label) == 0
+                _directional_overlay_degree(state, label) <= 1
                 and _local_engine_has_pending_work(state, label)
                 and time.perf_counter() < state.deadline
             ):
                 logger.debug(
-                    "Backward local trigger resume portal=%s dir=%s directional_degree=%s",
+                    "Local trigger resume portal=%s dir=%s directional_degree=%s",
                     label.portal,
                     label.direction,
                     _directional_overlay_degree(state, label),
@@ -5141,19 +7001,46 @@ def advance_overlay_and_learn_shortcuts(
                     label.direction,
                     trace=backward_trace,
                 )
+                local_edges_to_enqueue.extend(new_edges)
                 log_local_discovery(
                     state,
                     label,
                     action="batch_complete",
                     discovered_edges=len(new_edges),
                 )
-            for edge in new_edges:
+            ordered_local_edges = sorted(
+                local_edges_to_enqueue,
+                key=lambda edge: _local_shortcut_candidate_order_key(label, edge),
+            )
+            if [
+                (edge.src, edge.dst, edge.path_nodes)
+                for edge in local_edges_to_enqueue
+            ] != [
+                (edge.src, edge.dst, edge.path_nodes)
+                for edge in ordered_local_edges
+            ]:
+                state.audit.local_shortcut_ordering_changed_by_road_continuity += 1
+            for edge in ordered_local_edges:
                 _enqueue_child_label_through_edge(
                     state,
                     label,
                     edge,
                     trace=backward_trace,
                 )
+        if label.direction == "fwd":
+            forward_directional_repair_edges = refine_forward_directional_portals(
+                state,
+                label,
+            )
+            for edge in forward_directional_repair_edges:
+                if _enqueue_child_label_through_edge(
+                    state,
+                    label,
+                    edge,
+                    trace=backward_trace,
+                    child_source="directional_repair",
+                ):
+                    state.audit.forward_directional_repair_children_generated += 1
         if label.direction == "bwd":
             directional_repair_edges = refine_backward_directional_portals(
                 state,
@@ -5207,6 +7094,7 @@ def advance_overlay_and_learn_shortcuts(
                     *new_edges,
                     *repair_edges,
                     *directional_repair_edges,
+                    *forward_directional_repair_edges,
                 ]
             },
             trace=backward_trace,
@@ -5440,6 +7328,61 @@ def anytime_sparse_portal_search(
     )
     logger.debug("Search active_portals=%s", len(active_portals))
 
+    reverse_adj = _build_reverse_adjacency(G, kept_node_set)
+    crossing_index_start = time.perf_counter()
+    (
+        retained_cell_neighbors,
+        retained_crossings_by_cell_pair,
+        retained_directed_inter_cell_crossings,
+        retained_undirected_cell_pair_count,
+    ) = _build_retained_cell_crossing_index(G, partition, kept_node_set)
+    retained_cell_crossing_index_time_s = time.perf_counter() - crossing_index_start
+    logger.debug(
+        "Retained cell crossing index time_s=%.6f directed_crossings=%s "
+        "directed_cell_pairs=%s undirected_cell_pairs=%s neighbor_entries=%s",
+        retained_cell_crossing_index_time_s,
+        retained_directed_inter_cell_crossings,
+        len(retained_crossings_by_cell_pair),
+        retained_undirected_cell_pair_count,
+        sum(len(neighbors) for neighbors in retained_cell_neighbors.values()),
+    )
+    dijkstra_source_start = time.perf_counter()
+    min_len_from_source = _dijkstra_forward_retained_length(
+        G,
+        kept_node_set,
+        query.source,
+    )
+    dijkstra_source_time_s = time.perf_counter() - dijkstra_source_start
+    dijkstra_target_start = time.perf_counter()
+    min_len_to_target = _dijkstra_reverse_retained_length(
+        reverse_adj,
+        G.n_nodes,
+        kept_node_set,
+        query.target,
+    )
+    dijkstra_target_time_s = time.perf_counter() - dijkstra_target_start
+    dijkstra_source_finite_count = int(np.isfinite(min_len_from_source).sum())
+    dijkstra_target_finite_count = int(np.isfinite(min_len_to_target).sum())
+    s_to_t = float(min_len_from_source[query.target])
+    t_from_s = float(min_len_to_target[query.source])
+    logger.debug(
+        "Retained length lower-bound Dijkstra source_time_s=%.6f "
+        "target_reverse_time_s=%.6f finite_from_source=%s finite_to_target=%s "
+        "min_len_from_source[target]=%s min_len_to_target[source]=%s "
+        "agree=%s",
+        dijkstra_source_time_s,
+        dijkstra_target_time_s,
+        dijkstra_source_finite_count,
+        dijkstra_target_finite_count,
+        f"{s_to_t:.3f}" if np.isfinite(s_to_t) else "inf",
+        f"{t_from_s:.3f}" if np.isfinite(t_from_s) else "inf",
+        bool(
+            np.isfinite(s_to_t)
+            and np.isfinite(t_from_s)
+            and abs(s_to_t - t_from_s) <= COMPLETION_LENGTH_LB_TOLERANCE_M
+        ),
+    )
+
     state = AnytimeSearchState(
         G=G,
         query=query,
@@ -5448,13 +7391,27 @@ def anytime_sparse_portal_search(
         kept_nodes=kept_node_set,
         active_portals=active_portals,
         nodes_by_cell=_build_nodes_by_cell(partition, kept_node_set),
-        reverse_adj=_build_reverse_adjacency(G, kept_node_set),
+        reverse_adj=reverse_adj,
+        retained_cell_neighbors=retained_cell_neighbors,
+        retained_crossings_by_cell_pair=retained_crossings_by_cell_pair,
+        retained_cell_crossing_index_time_s=retained_cell_crossing_index_time_s,
+        retained_directed_inter_cell_crossings=(
+            retained_directed_inter_cell_crossings
+        ),
+        retained_directed_cell_pair_count=len(retained_crossings_by_cell_pair),
+        retained_undirected_cell_pair_count=retained_undirected_cell_pair_count,
         overlay=OverlayGraph(),
         archive=SolutionArchive(max_size=query.archive_size),
         labels={"fwd": {}, "bwd": {}},
         frontier={"fwd": [], "bwd": []},
         local_engines={},
         deadline=time.perf_counter() + query.time_budget_s,
+        min_len_from_source=min_len_from_source,
+        min_len_to_target=min_len_to_target,
+        dijkstra_source_time_s=dijkstra_source_time_s,
+        dijkstra_target_time_s=dijkstra_target_time_s,
+        dijkstra_source_finite_count=dijkstra_source_finite_count,
+        dijkstra_target_finite_count=dijkstra_target_finite_count,
     )
 
     _build_initial_overlay(state)
@@ -5467,10 +7424,7 @@ def anytime_sparse_portal_search(
     target_usable_in_edges = sum(
         1
         for edge in target_in_edges
-        if not (
-            edge.kind == "inter"
-            and state.trace_cell(edge.src) in target_label.visited_cells
-        )
+        if _is_backward_edge_usable_for_label(state, target_label, edge)
     )
     logger.debug(
         "Target portal id=%s kept=%s active=%s cell=%s in_degree=%s out_degree=%s usable_in_edges=%s",
@@ -5495,8 +7449,14 @@ def anytime_sparse_portal_search(
 
     while time.perf_counter() < state.deadline:
         progressed = advance_overlay_and_learn_shortcuts(state)
+        if time.perf_counter() < state.deadline:
+            detect_bridge_pairs_if_coverage_changed(state)
+            if state.pending_bridge_cell_pairs:
+                refine_adjacent_coverage_bridges(state, run_detection=False)
         if progressed == 0 and not state.frontier["fwd"] and not state.frontier["bwd"]:
-            refine_adjacent_coverage_bridges(state)
+            detect_bridge_pairs_if_coverage_changed(state)
+            if state.pending_bridge_cell_pairs:
+                refine_adjacent_coverage_bridges(state, run_detection=False)
             if state.frontier["fwd"] or state.frontier["bwd"]:
                 continue
             break
@@ -5620,15 +7580,33 @@ def anytime_sparse_portal_search(
         dict(sorted(state.audit.backward_directional_repair_cells.items())),
     )
     logger.debug(
+        "Forward directional portal refinement counters attempted=%s "
+        "inserted=%s children_generated=%s candidates_seen=%s "
+        "candidates_unvisited=%s cells=%s",
+        state.audit.forward_directional_portal_refinements_attempted,
+        state.audit.forward_directional_portal_refinements_inserted,
+        state.audit.forward_directional_repair_children_generated,
+        state.audit.forward_directional_repair_candidates_seen,
+        state.audit.forward_directional_repair_candidates_unvisited,
+        dict(sorted(state.audit.forward_directional_repair_cells.items())),
+    )
+    logger.debug(
         "Bridge refinement counters attempted=%s edges_inserted=%s "
         "join_attempts=%s join_successes=%s cell_pairs=%s "
-        "children_generated=%s",
+        "children_generated=%s complementary_sets=%s "
+        "quality_distinct=%s quality_attempted=%s quality_inserted=%s "
+        "quality_rejected_overlay_capacity=%s",
         state.audit.bridge_refinements_attempted,
         state.audit.bridge_edges_inserted,
         state.audit.bridge_join_attempts,
         state.audit.bridge_join_successes,
         dict(sorted(state.audit.bridge_refinement_cell_pairs.items())),
         state.audit.bridge_repair_children_generated,
+        state.audit.complementary_connector_sets_considered,
+        state.audit.complementary_quality_candidate_distinct,
+        state.audit.complementary_quality_candidate_insert_attempted,
+        state.audit.complementary_quality_candidate_inserted,
+        state.audit.complementary_quality_candidate_rejected_by_overlay_capacity,
     )
     logger.debug(
         "Archive diversity counters rejected_exact=%s rejected_high_overlap=%s "
@@ -5698,7 +7676,11 @@ def anytime_sparse_portal_search(
         "one_edge_join_shared_only_p_cell=%s "
         "one_edge_join_shared_only_q_cell=%s "
         "one_edge_join_shared_only_edge_cells=%s "
-        "one_edge_join_shared_multiple_cells=%s",
+        "one_edge_join_shared_multiple_cells=%s "
+        "second_cell_visits_allowed=%s "
+        "second_cell_visits_allowed_by_direction=%s "
+        "rejected_third_cell_visit=%s "
+        "rejected_third_cell_visit_by_direction=%s",
         state.audit.feasibility_checked_on_combined_accumulator,
         state.audit.rejected_length,
         state.audit.rejected_elevation,
@@ -5729,6 +7711,10 @@ def anytime_sparse_portal_search(
         state.audit.one_edge_join_shared_only_q_cell,
         state.audit.one_edge_join_shared_only_edge_cells,
         state.audit.one_edge_join_shared_multiple_cells,
+        state.audit.second_cell_visits_allowed,
+        dict(sorted(state.audit.second_cell_visits_allowed_by_direction.items())),
+        state.audit.rejected_third_cell_visit,
+        dict(sorted(state.audit.rejected_third_cell_visit_by_direction.items())),
     )
     archive_road_changes = [entry.road_changes for entry in state.archive.entries]
     archive_avg_road_changes = (

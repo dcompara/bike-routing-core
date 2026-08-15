@@ -17,6 +17,8 @@ class XYGraph:
       header: nodes N edges M attributes K
       nodes:  v id lat_uDeg lon_uDeg elevation_m
       edges:  e u v length hg10 popularity street_width road_id32
+              where hg10 is stored as 10 x positive elevation gain in metres.
+              In-memory CSR weights store elevation gain in physical metres.
     """
 
     G: CompactDiGraph
@@ -89,14 +91,15 @@ def load_xy_graph(path: str | Path) -> XYGraph:
                 u = int(parts[1])
                 v = int(parts[2])
                 length = float(parts[3])
-                hg10 = float(parts[4])  # already 10x height_gain in the file
+                # The file stores 10 x positive height gain; routing uses metres.
+                height_gain_m = 0.1 * float(parts[4])
                 pop = float(parts[5])
                 width = float(parts[6])
                 road_id32 = int(parts[7])
 
                 U.append(u)
                 V.append(v)
-                W.append((length, hg10, pop, width))
+                W.append((length, height_gain_m, pop, width))
                 ROAD.append(road_id32)
                 continue
 
