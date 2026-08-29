@@ -1,0 +1,4667 @@
+{
+  "experiment": "same_scalar_via_node_feasibility",
+  "method": "For each scalar metric, compute one selected shortest-path tree from s and one selected shortest-path tree to t on the reversed directed graph, scan additive via profiles for all vertices, and reconstruct only profile-feasible concatenations.",
+  "road_id_mode": "normal vertex-state Dijkstra; road_id only breaks exact scalar ties",
+  "box_center_score": "ranking-only Chebyshev distance to L/H box centers and diagnostic Paris-style popularity/width pseudo-centers P in [Pmin,255], W in [5,Wmax]; never used for pruning",
+  "graph_mode": "all",
+  "scalar_set": "first-two",
+  "queries": [
+    {
+      "query": {
+        "name": "paris_bures",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 30000.0,
+        "Lmax": 35000.0,
+        "Hmin": 400.0,
+        "Hmax": 500.0,
+        "Pmin": 150.0,
+        "Wmax": 15.0,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "graph_comparison": {
+        "full": {
+          "nodes": 22244,
+          "edges": 45085
+        },
+        "certified_length_corridor": {
+          "nodes": 15915,
+          "edges": 32670,
+          "name": "certified_length_corridor",
+          "safe_edge_condition": "d_s(u)+l(u,v)+d_t(v) <= Lmax",
+          "shortest_length_s_to_t": 24973.0,
+          "shortest_length_t_reverse_to_s": 24973.0
+        },
+        "geometric": {
+          "kept_cells": 40,
+          "kept_nodes": 9010,
+          "incident_nodes": 9010,
+          "edges": 18356,
+          "corridor_slack_m": 1500,
+          "max_hops_from_boundary": 1
+        },
+        "set_differences": {
+          "certified_edges_not_geometric": 14564,
+          "geometric_edges_not_certified": 250,
+          "certified_nodes_not_geometric": 7093,
+          "geometric_nodes_not_certified": 188
+        }
+      }
+    }
+  ],
+  "runs": [
+    {
+      "scalar_name": "pop_width_reference",
+      "scalar_family": "hinge",
+      "scalar_parameters": {
+        "alpha_L": 1.0,
+        "alpha_w": 3.0,
+        "alpha_p": 2.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "full",
+      "reverse_adjacency_build_s": 0.01158959999884246,
+      "forward_tree_s": 0.1708135000008042,
+      "backward_tree_s": 0.16127859999687644,
+      "profile_scan_s": 0.03535250000277301,
+      "reconstruction_s": 1.1549325000014505,
+      "total_s": 1.5412486999994144,
+      "via_vertices_scanned": 21241,
+      "profile_feasible_count": 2163,
+      "reconstructed_count": 2163,
+      "rejected_non_elementary_count": 1267,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 896,
+      "time_to_first_feasible_s": 0.3869328000000678,
+      "forward_tree": {
+        "heap_pops": 23033,
+        "expanded_nodes": 21727,
+        "edge_scans": 44358,
+        "raw_edge_rows_checked": 44358,
+        "elapsed_s": 0.1708135000008042,
+        "settled_vertices": 21727,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 23017,
+        "expanded_nodes": 21715,
+        "edge_scans": 44348,
+        "raw_edge_rows_checked": 44348,
+        "elapsed_s": 0.16127859999687644,
+        "settled_vertices": 21715,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 4,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "backward": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 4,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "total_equal_cost_relaxations": 24,
+        "total_equal_cost_resource_distinct_relaxations": 7,
+        "total_parent_changes_due_to_road_tiebreak": 0
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 20254,
+            "passed": true,
+            "path_nodes": 52,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 13837,
+            "passed": true,
+            "path_nodes": 220,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 11453,
+            "passed": true,
+            "path_nodes": 83,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 22046,
+            "passed": true,
+            "path_nodes": 181,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21928,
+            "passed": true,
+            "path_nodes": 43,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2383,
+            "passed": true,
+            "path_nodes": 142,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1433,
+            "passed": true,
+            "path_nodes": 26,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1918,
+            "passed": true,
+            "path_nodes": 68,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 4881,
+            "passed": true,
+            "path_nodes": 165,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 949,
+            "passed": true,
+            "path_nodes": 225,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1174,
+            "passed": true,
+            "path_nodes": 265,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2156,
+            "passed": true,
+            "path_nodes": 44,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 267,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 39,
+        "metrics": {
+          "length": 33340.0,
+          "elevation": 422.40000128000975,
+          "popularity_length": 6647959.0,
+          "width_length": 463270.0,
+          "avg_pop": 199.3988902219556,
+          "avg_width": 13.895320935812837,
+          "road_changes": 104
+        },
+        "profile_metrics": {
+          "length": 33340.0,
+          "elevation": 422.40000128000975,
+          "popularity_length": 6647959.0,
+          "width_length": 463270.0,
+          "avg_pop": 199.3988902219556,
+          "avg_width": 13.895320935812837,
+          "road_changes": 104
+        },
+        "box_score": 0.7790641871625674,
+        "scalar_cost": 43859.600000000006,
+        "path_nodes": 313,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 19510,
+        "metrics": {
+          "length": 34078.0,
+          "elevation": 431.9000013023615,
+          "popularity_length": 6742773.0,
+          "width_length": 453140.0,
+          "avg_pop": 197.86293209695404,
+          "avg_width": 13.297141851047597,
+          "road_changes": 113
+        },
+        "profile_metrics": {
+          "length": 34078.0,
+          "elevation": 431.9000013023615,
+          "popularity_length": 6742773.0,
+          "width_length": 453140.0,
+          "avg_pop": 197.86293209695404,
+          "avg_width": 13.297141851047597,
+          "road_changes": 113
+        },
+        "box_score": 0.6594283702095194,
+        "scalar_cost": 45614.23999999999,
+        "path_nodes": 290,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 19510,
+          "metrics": {
+            "length": 34078.0,
+            "elevation": 431.9000013023615,
+            "popularity_length": 6742773.0,
+            "width_length": 453140.0,
+            "avg_pop": 197.86293209695404,
+            "avg_width": 13.297141851047597,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34078.0,
+            "elevation": 431.9000013023615,
+            "popularity_length": 6742773.0,
+            "width_length": 453140.0,
+            "avg_pop": 197.86293209695404,
+            "avg_width": 13.297141851047597,
+            "road_changes": 113
+          },
+          "box_score": 0.6594283702095194,
+          "scalar_cost": 45614.23999999999,
+          "path_nodes": 290,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15592,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15600,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15601,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15602,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 30217.0,
+        "elevation": 413.9000018313527,
+        "popularity_length": 5500940.0,
+        "width_length": 441930.0,
+        "avg_pop": 182.0478538571003,
+        "avg_width": 14.625210973955058,
+        "road_changes": 104
+      },
+      "previous_full_reference_target": {
+        "expected": {
+          "via_vertex": 13683,
+          "length": 30217.0,
+          "elevation": 413.9,
+          "avg_pop": 182.05,
+          "avg_width": 14.63
+        },
+        "reproduced": true,
+        "actual": {
+          "via_vertex": 13683,
+          "length": 30217.0,
+          "elevation": 413.9000018313527,
+          "avg_pop": 182.0478538571003,
+          "avg_width": 14.625210973955058
+        },
+        "deltas": {
+          "length": 0.0,
+          "elevation": 1.8313527334612445e-06,
+          "avg_pop": -0.002146142899704273,
+          "avg_width": -0.004789026044942801
+        },
+        "exact_candidate": {
+          "via_vertex": 13683,
+          "metrics": {
+            "length": 30217.0,
+            "elevation": 413.9000018313527,
+            "popularity_length": 5500940.0,
+            "width_length": 441930.0,
+            "avg_pop": 182.0478538571003,
+            "avg_width": 14.625210973955058,
+            "road_changes": 104
+          },
+          "profile_metrics": {
+            "length": 30217.0,
+            "elevation": 413.9000018313527,
+            "popularity_length": 5500940.0,
+            "width_length": 441930.0,
+            "avg_pop": 182.0478538571003,
+            "avg_width": 14.625210973955058,
+            "road_changes": 104
+          },
+          "box_score": 0.9250421947910116,
+          "scalar_cost": 47214.56,
+          "path_nodes": 326,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      }
+    },
+    {
+      "scalar_name": "slope_exp_beta_150_width",
+      "scalar_family": "nonlinear_high_elevation",
+      "scalar_parameters": {
+        "form": "exp",
+        "beta": 150.0,
+        "alpha_w": 1.0,
+        "alpha_p": 0.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "full",
+      "reverse_adjacency_build_s": 0.011895099996763747,
+      "forward_tree_s": 0.1953856000036467,
+      "backward_tree_s": 0.18456680000235792,
+      "profile_scan_s": 0.03815729999769246,
+      "reconstruction_s": 0.2124790000016219,
+      "total_s": 0.6515150999985053,
+      "via_vertices_scanned": 21241,
+      "profile_feasible_count": 394,
+      "reconstructed_count": 394,
+      "rejected_non_elementary_count": 261,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 133,
+      "time_to_first_feasible_s": 0.439586499996949,
+      "forward_tree": {
+        "heap_pops": 23429,
+        "expanded_nodes": 21727,
+        "edge_scans": 44358,
+        "raw_edge_rows_checked": 44358,
+        "elapsed_s": 0.1953856000036467,
+        "settled_vertices": 21727,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 23330,
+        "expanded_nodes": 21715,
+        "edge_scans": 44348,
+        "raw_edge_rows_checked": 44348,
+        "elapsed_s": 0.18456680000235792,
+        "settled_vertices": 21715,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        },
+        "backward": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "total_equal_cost_relaxations": 24,
+        "total_equal_cost_resource_distinct_relaxations": 6,
+        "total_parent_changes_due_to_road_tiebreak": 2
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 20254,
+            "passed": true,
+            "path_nodes": 45,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 13837,
+            "passed": true,
+            "path_nodes": 270,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 11453,
+            "passed": true,
+            "path_nodes": 65,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 22046,
+            "passed": true,
+            "path_nodes": 198,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21928,
+            "passed": true,
+            "path_nodes": 43,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2383,
+            "passed": true,
+            "path_nodes": 191,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1433,
+            "passed": true,
+            "path_nodes": 26,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1918,
+            "passed": true,
+            "path_nodes": 165,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 4881,
+            "passed": true,
+            "path_nodes": 214,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 949,
+            "passed": true,
+            "path_nodes": 227,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1174,
+            "passed": true,
+            "path_nodes": 339,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2156,
+            "passed": true,
+            "path_nodes": 54,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 296,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 2103,
+        "metrics": {
+          "length": 30505.0,
+          "elevation": 405.20000249147415,
+          "popularity_length": 4771796.0,
+          "width_length": 433265.0,
+          "avg_pop": 156.42668415013932,
+          "avg_width": 14.203081462055401,
+          "road_changes": 109
+        },
+        "profile_metrics": {
+          "length": 30505.0,
+          "elevation": 405.20000249147415,
+          "popularity_length": 4771796.0,
+          "width_length": 433265.0,
+          "avg_pop": 156.42668415013932,
+          "avg_width": 14.203081462055401,
+          "road_changes": 109
+        },
+        "box_score": 0.8959999501705169,
+        "scalar_cost": 17914.632460223238,
+        "path_nodes": 260,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 5807,
+        "metrics": {
+          "length": 32203.0,
+          "elevation": 488.39999951422215,
+          "popularity_length": 5120102.0,
+          "width_length": 466050.0,
+          "avg_pop": 158.99456572369033,
+          "avg_width": 14.472254137813247,
+          "road_changes": 122
+        },
+        "profile_metrics": {
+          "length": 32203.0,
+          "elevation": 488.39999951422215,
+          "popularity_length": 5120102.0,
+          "width_length": 466050.0,
+          "avg_pop": 158.99456572369033,
+          "avg_width": 14.472254137813247,
+          "road_changes": 122
+        },
+        "box_score": 0.8944508275626493,
+        "scalar_cost": 19713.090245351537,
+        "path_nodes": 286,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 5807,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5809,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5811,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 11373,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5808,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.09024535154,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 33057.0,
+        "elevation": 537.9000032618642,
+        "popularity_length": 4289424.0,
+        "width_length": 438375.0,
+        "avg_pop": 129.75841727924495,
+        "avg_width": 13.261185225519558,
+        "road_changes": 144
+      },
+      "previous_full_reference_target": null
+    },
+    {
+      "scalar_name": "pop_width_reference",
+      "scalar_family": "hinge",
+      "scalar_parameters": {
+        "alpha_L": 1.0,
+        "alpha_w": 3.0,
+        "alpha_p": 2.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "certified",
+      "reverse_adjacency_build_s": 0.010032600002887193,
+      "forward_tree_s": 0.12332040000183042,
+      "backward_tree_s": 0.24376350000238745,
+      "profile_scan_s": 0.08398019999731332,
+      "reconstruction_s": 3.2234752000003937,
+      "total_s": 3.7033751999988453,
+      "via_vertices_scanned": 15915,
+      "profile_feasible_count": 2163,
+      "reconstructed_count": 2163,
+      "rejected_non_elementary_count": 1267,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 896,
+      "time_to_first_feasible_s": 0.48204550000082236,
+      "forward_tree": {
+        "heap_pops": 16887,
+        "expanded_nodes": 15915,
+        "edge_scans": 32670,
+        "raw_edge_rows_checked": 33173,
+        "elapsed_s": 0.12332040000183042,
+        "settled_vertices": 15915,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 16887,
+        "expanded_nodes": 15915,
+        "edge_scans": 32670,
+        "raw_edge_rows_checked": 32670,
+        "elapsed_s": 0.24376350000238745,
+        "settled_vertices": 15915,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 10,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "backward": {
+          "equal_cost_relaxations": 10,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "total_equal_cost_relaxations": 23,
+        "total_equal_cost_resource_distinct_relaxations": 6,
+        "total_parent_changes_due_to_road_tiebreak": 0
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 13547,
+            "passed": true,
+            "path_nodes": 47,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 9084,
+            "passed": true,
+            "path_nodes": 171,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 7461,
+            "passed": true,
+            "path_nodes": 238,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21558,
+            "passed": true,
+            "path_nodes": 64,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 14798,
+            "passed": true,
+            "path_nodes": 218,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 14730,
+            "passed": true,
+            "path_nodes": 202,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21960,
+            "passed": true,
+            "path_nodes": 179,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1406,
+            "passed": true,
+            "path_nodes": 67,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 807,
+            "passed": true,
+            "path_nodes": 211,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21948,
+            "passed": true,
+            "path_nodes": 80,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1165,
+            "passed": true,
+            "path_nodes": 161,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2838,
+            "passed": true,
+            "path_nodes": 100,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 267,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 39,
+        "metrics": {
+          "length": 33340.0,
+          "elevation": 422.40000128000975,
+          "popularity_length": 6647959.0,
+          "width_length": 463270.0,
+          "avg_pop": 199.3988902219556,
+          "avg_width": 13.895320935812837,
+          "road_changes": 104
+        },
+        "profile_metrics": {
+          "length": 33340.0,
+          "elevation": 422.40000128000975,
+          "popularity_length": 6647959.0,
+          "width_length": 463270.0,
+          "avg_pop": 199.3988902219556,
+          "avg_width": 13.895320935812837,
+          "road_changes": 104
+        },
+        "box_score": 0.7790641871625674,
+        "scalar_cost": 43859.600000000006,
+        "path_nodes": 313,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 19510,
+        "metrics": {
+          "length": 34078.0,
+          "elevation": 431.9000013023615,
+          "popularity_length": 6742773.0,
+          "width_length": 453140.0,
+          "avg_pop": 197.86293209695404,
+          "avg_width": 13.297141851047597,
+          "road_changes": 113
+        },
+        "profile_metrics": {
+          "length": 34078.0,
+          "elevation": 431.9000013023615,
+          "popularity_length": 6742773.0,
+          "width_length": 453140.0,
+          "avg_pop": 197.86293209695404,
+          "avg_width": 13.297141851047597,
+          "road_changes": 113
+        },
+        "box_score": 0.6594283702095194,
+        "scalar_cost": 45614.23999999999,
+        "path_nodes": 290,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 19510,
+          "metrics": {
+            "length": 34078.0,
+            "elevation": 431.9000013023615,
+            "popularity_length": 6742773.0,
+            "width_length": 453140.0,
+            "avg_pop": 197.86293209695404,
+            "avg_width": 13.297141851047597,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34078.0,
+            "elevation": 431.9000013023615,
+            "popularity_length": 6742773.0,
+            "width_length": 453140.0,
+            "avg_pop": 197.86293209695404,
+            "avg_width": 13.297141851047597,
+            "road_changes": 113
+          },
+          "box_score": 0.6594283702095194,
+          "scalar_cost": 45614.23999999999,
+          "path_nodes": 290,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15592,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15600,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15601,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15602,
+          "metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "profile_metrics": {
+            "length": 34050.0,
+            "elevation": 431.8000013008714,
+            "popularity_length": 6736252.0,
+            "width_length": 452860.0,
+            "avg_pop": 197.8341262848752,
+            "avg_width": 13.299853157121879,
+            "road_changes": 113
+          },
+          "box_score": 0.6599706314243757,
+          "scalar_cost": 45586.23999999999,
+          "path_nodes": 289,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 30217.0,
+        "elevation": 413.9000018313527,
+        "popularity_length": 5500940.0,
+        "width_length": 441930.0,
+        "avg_pop": 182.0478538571003,
+        "avg_width": 14.625210973955058,
+        "road_changes": 104
+      },
+      "previous_full_reference_target": null
+    },
+    {
+      "scalar_name": "slope_exp_beta_150_width",
+      "scalar_family": "nonlinear_high_elevation",
+      "scalar_parameters": {
+        "form": "exp",
+        "beta": 150.0,
+        "alpha_w": 1.0,
+        "alpha_p": 0.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "certified",
+      "reverse_adjacency_build_s": 0.029593599996587727,
+      "forward_tree_s": 0.4826708000036888,
+      "backward_tree_s": 0.3836299000031431,
+      "profile_scan_s": 0.07301429999643005,
+      "reconstruction_s": 0.5418923000033828,
+      "total_s": 1.5280884000021615,
+      "via_vertices_scanned": 15915,
+      "profile_feasible_count": 394,
+      "reconstructed_count": 394,
+      "rejected_non_elementary_count": 261,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 133,
+      "time_to_first_feasible_s": 0.9876045000055456,
+      "forward_tree": {
+        "heap_pops": 17195,
+        "expanded_nodes": 15915,
+        "edge_scans": 32670,
+        "raw_edge_rows_checked": 33173,
+        "elapsed_s": 0.4826708000036888,
+        "settled_vertices": 15915,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 17121,
+        "expanded_nodes": 15915,
+        "edge_scans": 32670,
+        "raw_edge_rows_checked": 32670,
+        "elapsed_s": 0.3836299000031431,
+        "settled_vertices": 15915,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 13,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        },
+        "backward": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "total_equal_cost_relaxations": 24,
+        "total_equal_cost_resource_distinct_relaxations": 6,
+        "total_parent_changes_due_to_road_tiebreak": 2
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 13547,
+            "passed": true,
+            "path_nodes": 47,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 9084,
+            "passed": true,
+            "path_nodes": 219,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 7461,
+            "passed": true,
+            "path_nodes": 301,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21558,
+            "passed": true,
+            "path_nodes": 52,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 14798,
+            "passed": true,
+            "path_nodes": 305,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 14730,
+            "passed": true,
+            "path_nodes": 310,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21960,
+            "passed": true,
+            "path_nodes": 231,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1406,
+            "passed": true,
+            "path_nodes": 66,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 807,
+            "passed": true,
+            "path_nodes": 196,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 21948,
+            "passed": true,
+            "path_nodes": 92,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1165,
+            "passed": true,
+            "path_nodes": 144,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2838,
+            "passed": true,
+            "path_nodes": 143,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 296,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 2103,
+        "metrics": {
+          "length": 30505.0,
+          "elevation": 405.20000249147415,
+          "popularity_length": 4771796.0,
+          "width_length": 433265.0,
+          "avg_pop": 156.42668415013932,
+          "avg_width": 14.203081462055401,
+          "road_changes": 109
+        },
+        "profile_metrics": {
+          "length": 30505.0,
+          "elevation": 405.20000249147415,
+          "popularity_length": 4771796.0,
+          "width_length": 433265.0,
+          "avg_pop": 156.42668415013932,
+          "avg_width": 14.203081462055401,
+          "road_changes": 109
+        },
+        "box_score": 0.8959999501705169,
+        "scalar_cost": 17914.632460223238,
+        "path_nodes": 260,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 5807,
+        "metrics": {
+          "length": 32203.0,
+          "elevation": 488.39999951422215,
+          "popularity_length": 5120102.0,
+          "width_length": 466050.0,
+          "avg_pop": 158.99456572369033,
+          "avg_width": 14.472254137813247,
+          "road_changes": 122
+        },
+        "profile_metrics": {
+          "length": 32203.0,
+          "elevation": 488.39999951422215,
+          "popularity_length": 5120102.0,
+          "width_length": 466050.0,
+          "avg_pop": 158.99456572369033,
+          "avg_width": 14.472254137813247,
+          "road_changes": 122
+        },
+        "box_score": 0.8944508275626493,
+        "scalar_cost": 19713.090245351537,
+        "path_nodes": 286,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 5807,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5809,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5811,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 11373,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.090245351537,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 5808,
+          "metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "profile_metrics": {
+            "length": 32203.0,
+            "elevation": 488.39999951422215,
+            "popularity_length": 5120102.0,
+            "width_length": 466050.0,
+            "avg_pop": 158.99456572369033,
+            "avg_width": 14.472254137813247,
+            "road_changes": 122
+          },
+          "box_score": 0.8944508275626493,
+          "scalar_cost": 19713.09024535154,
+          "path_nodes": 286,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 33057.0,
+        "elevation": 537.9000032618642,
+        "popularity_length": 4289424.0,
+        "width_length": 438375.0,
+        "avg_pop": 129.75841727924495,
+        "avg_width": 13.261185225519558,
+        "road_changes": 144
+      },
+      "previous_full_reference_target": null
+    },
+    {
+      "scalar_name": "pop_width_reference",
+      "scalar_family": "hinge",
+      "scalar_parameters": {
+        "alpha_L": 1.0,
+        "alpha_w": 3.0,
+        "alpha_p": 2.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "geometric",
+      "reverse_adjacency_build_s": 0.04227659999742173,
+      "forward_tree_s": 0.2347964000000502,
+      "backward_tree_s": 0.22669049999967683,
+      "profile_scan_s": 0.04843399999663234,
+      "reconstruction_s": 9.330709899993963,
+      "total_s": 9.90061119999882,
+      "via_vertices_scanned": 8664,
+      "profile_feasible_count": 5915,
+      "reconstructed_count": 5915,
+      "rejected_non_elementary_count": 3151,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 2764,
+      "time_to_first_feasible_s": 0.5717659000001731,
+      "forward_tree": {
+        "heap_pops": 9541,
+        "expanded_nodes": 9010,
+        "edge_scans": 18356,
+        "raw_edge_rows_checked": 18553,
+        "elapsed_s": 0.2347964000000502,
+        "settled_vertices": 9010,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 2,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 9184,
+        "expanded_nodes": 8664,
+        "edge_scans": 17867,
+        "raw_edge_rows_checked": 17867,
+        "elapsed_s": 0.22669049999967683,
+        "settled_vertices": 8664,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 7,
+          "equal_cost_resource_distinct_relaxations": 1,
+          "parent_changes_due_to_road_tiebreak": 0
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 11,
+          "equal_cost_resource_distinct_relaxations": 2,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "backward": {
+          "equal_cost_relaxations": 7,
+          "equal_cost_resource_distinct_relaxations": 1,
+          "parent_changes_due_to_road_tiebreak": 0
+        },
+        "total_equal_cost_relaxations": 18,
+        "total_equal_cost_resource_distinct_relaxations": 3,
+        "total_parent_changes_due_to_road_tiebreak": 0
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 17148,
+            "passed": true,
+            "path_nodes": 203,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 13740,
+            "passed": true,
+            "path_nodes": 34,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2027,
+            "passed": true,
+            "path_nodes": 60,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1090,
+            "passed": true,
+            "path_nodes": 259,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1716,
+            "passed": true,
+            "path_nodes": 98,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 5735,
+            "passed": true,
+            "path_nodes": 272,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 631,
+            "passed": true,
+            "path_nodes": 292,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 808,
+            "passed": true,
+            "path_nodes": 183,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1909,
+            "passed": true,
+            "path_nodes": 80,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 7025,
+            "passed": true,
+            "path_nodes": 234,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 18409,
+            "passed": true,
+            "path_nodes": 256,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 5065,
+            "passed": true,
+            "path_nodes": 223,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 293,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 2,
+        "metrics": {
+          "length": 31818.0,
+          "elevation": 405.4000004827976,
+          "popularity_length": 6359484.0,
+          "width_length": 450700.0,
+          "avg_pop": 199.87063926079577,
+          "avg_width": 14.164938085360488,
+          "road_changes": 105
+        },
+        "profile_metrics": {
+          "length": 31818.0,
+          "elevation": 405.4000004827976,
+          "popularity_length": 6359484.0,
+          "width_length": 450700.0,
+          "avg_pop": 199.87063926079577,
+          "avg_width": 14.164938085360488,
+          "road_changes": 105
+        },
+        "box_score": 0.8919999903440475,
+        "scalar_cost": 43419.933333333334,
+        "path_nodes": 293,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 10762,
+        "metrics": {
+          "length": 33616.0,
+          "elevation": 423.80000131577253,
+          "popularity_length": 6196357.0,
+          "width_length": 443415.0,
+          "avg_pop": 184.32761185149928,
+          "avg_width": 13.190593764873869,
+          "road_changes": 116
+        },
+        "profile_metrics": {
+          "length": 33616.0,
+          "elevation": 423.80000131577253,
+          "popularity_length": 6196357.0,
+          "width_length": 443415.0,
+          "avg_pop": 184.32761185149928,
+          "avg_width": 13.190593764873869,
+          "road_changes": 116
+        },
+        "box_score": 0.6381187529747738,
+        "scalar_cost": 46749.453333333324,
+        "path_nodes": 319,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 10762,
+          "metrics": {
+            "length": 33616.0,
+            "elevation": 423.80000131577253,
+            "popularity_length": 6196357.0,
+            "width_length": 443415.0,
+            "avg_pop": 184.32761185149928,
+            "avg_width": 13.190593764873869,
+            "road_changes": 116
+          },
+          "profile_metrics": {
+            "length": 33616.0,
+            "elevation": 423.80000131577253,
+            "popularity_length": 6196357.0,
+            "width_length": 443415.0,
+            "avg_pop": 184.32761185149928,
+            "avg_width": 13.190593764873869,
+            "road_changes": 116
+          },
+          "box_score": 0.6381187529747738,
+          "scalar_cost": 46749.453333333324,
+          "path_nodes": 319,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 10763,
+          "metrics": {
+            "length": 33443.0,
+            "elevation": 419.6000015065074,
+            "popularity_length": 6210024.0,
+            "width_length": 441685.0,
+            "avg_pop": 185.6898005561702,
+            "avg_width": 13.207098645456448,
+            "road_changes": 116
+          },
+          "profile_metrics": {
+            "length": 33443.0,
+            "elevation": 419.6000015065074,
+            "popularity_length": 6210024.0,
+            "width_length": 441685.0,
+            "avg_pop": 185.6898005561702,
+            "avg_width": 13.207098645456448,
+            "road_changes": 116
+          },
+          "box_score": 0.6414197290912895,
+          "scalar_cost": 46094.626666666656,
+          "path_nodes": 320,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 10367,
+          "metrics": {
+            "length": 33826.0,
+            "elevation": 431.40000151097775,
+            "popularity_length": 6331381.0,
+            "width_length": 447400.0,
+            "avg_pop": 187.1749837403181,
+            "avg_width": 13.22651215041684,
+            "road_changes": 121
+          },
+          "profile_metrics": {
+            "length": 33826.0,
+            "elevation": 431.40000151097775,
+            "popularity_length": 6331381.0,
+            "width_length": 447400.0,
+            "avg_pop": 187.1749837403181,
+            "avg_width": 13.22651215041684,
+            "road_changes": 121
+          },
+          "box_score": 0.6453024300833679,
+          "scalar_cost": 46286.85333333332,
+          "path_nodes": 311,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 10366,
+          "metrics": {
+            "length": 33659.0,
+            "elevation": 428.40000151097775,
+            "popularity_length": 6326854.0,
+            "width_length": 445730.0,
+            "avg_pop": 187.9691612941561,
+            "avg_width": 13.242520573992097,
+            "road_changes": 118
+          },
+          "profile_metrics": {
+            "length": 33659.0,
+            "elevation": 428.40000151097775,
+            "popularity_length": 6326854.0,
+            "width_length": 445730.0,
+            "avg_pop": 187.9691612941561,
+            "avg_width": 13.242520573992097,
+            "road_changes": 118
+          },
+          "box_score": 0.6485041147984194,
+          "scalar_cost": 45846.21333333331,
+          "path_nodes": 310,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 4255,
+          "metrics": {
+            "length": 33659.0,
+            "elevation": 428.40000151097775,
+            "popularity_length": 6326854.0,
+            "width_length": 445730.0,
+            "avg_pop": 187.9691612941561,
+            "avg_width": 13.242520573992097,
+            "road_changes": 118
+          },
+          "profile_metrics": {
+            "length": 33659.0,
+            "elevation": 428.40000151097775,
+            "popularity_length": 6326854.0,
+            "width_length": 445730.0,
+            "avg_pop": 187.9691612941561,
+            "avg_width": 13.242520573992097,
+            "road_changes": 118
+          },
+          "box_score": 0.6485041147984194,
+          "scalar_cost": 45846.21333333332,
+          "path_nodes": 310,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 36627.0,
+        "elevation": 499.60000178962946,
+        "popularity_length": 6783518.0,
+        "width_length": 507540.0,
+        "avg_pop": 185.20539492723947,
+        "avg_width": 13.856990744532721,
+        "road_changes": 122
+      },
+      "previous_full_reference_target": null
+    },
+    {
+      "scalar_name": "slope_exp_beta_150_width",
+      "scalar_family": "nonlinear_high_elevation",
+      "scalar_parameters": {
+        "form": "exp",
+        "beta": 150.0,
+        "alpha_w": 1.0,
+        "alpha_p": 0.0,
+        "Wref": 15.0,
+        "Pref": 150.0
+      },
+      "graph_mode": "geometric",
+      "reverse_adjacency_build_s": 0.02602939999633236,
+      "forward_tree_s": 0.25241989999631187,
+      "backward_tree_s": 0.2217908000020543,
+      "profile_scan_s": 0.04125110000313725,
+      "reconstruction_s": 1.783677200000966,
+      "total_s": 2.3410912999970606,
+      "via_vertices_scanned": 8664,
+      "profile_feasible_count": 1238,
+      "reconstructed_count": 1238,
+      "rejected_non_elementary_count": 682,
+      "rejected_validation_count": 0,
+      "rejected_exact_box_count": 0,
+      "exact_feasible_count": 556,
+      "time_to_first_feasible_s": 0.5589747999983956,
+      "forward_tree": {
+        "heap_pops": 9730,
+        "expanded_nodes": 9010,
+        "edge_scans": 18356,
+        "raw_edge_rows_checked": 18553,
+        "elapsed_s": 0.25241989999631187,
+        "settled_vertices": 9010,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 12,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        }
+      },
+      "backward_tree": {
+        "heap_pops": 9340,
+        "expanded_nodes": 8664,
+        "edge_scans": 17867,
+        "raw_edge_rows_checked": 17867,
+        "elapsed_s": 0.2217908000020543,
+        "settled_vertices": 8664,
+        "tie_diagnostics": {
+          "equal_cost_relaxations": 10,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 1
+        }
+      },
+      "tie_diagnostics": {
+        "forward": {
+          "equal_cost_relaxations": 12,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 2
+        },
+        "backward": {
+          "equal_cost_relaxations": 10,
+          "equal_cost_resource_distinct_relaxations": 3,
+          "parent_changes_due_to_road_tiebreak": 1
+        },
+        "total_equal_cost_relaxations": 22,
+        "total_equal_cost_resource_distinct_relaxations": 6,
+        "total_parent_changes_due_to_road_tiebreak": 3
+      },
+      "backward_branch_validation": {
+        "sample_count": 13,
+        "passed_count": 13,
+        "all_passed": true,
+        "samples": [
+          {
+            "node": 17148,
+            "passed": true,
+            "path_nodes": 228,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 13740,
+            "passed": true,
+            "path_nodes": 34,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 2027,
+            "passed": true,
+            "path_nodes": 70,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1090,
+            "passed": true,
+            "path_nodes": 267,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1716,
+            "passed": true,
+            "path_nodes": 106,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 5735,
+            "passed": true,
+            "path_nodes": 297,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 631,
+            "passed": true,
+            "path_nodes": 298,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 808,
+            "passed": true,
+            "path_nodes": 185,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 1909,
+            "passed": true,
+            "path_nodes": 97,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 7025,
+            "passed": true,
+            "path_nodes": 258,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 18409,
+            "passed": true,
+            "path_nodes": 282,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 5065,
+            "passed": true,
+            "path_nodes": 235,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          },
+          {
+            "node": 127,
+            "passed": true,
+            "path_nodes": 297,
+            "validation": {
+              "directed_edges_ok": true,
+              "missing_edges": 0,
+              "metric_deltas": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "road_changes_delta": 0,
+              "passed": true
+            },
+            "tree_recompute_deltas": {
+              "length": 0.0,
+              "elevation": 0.0,
+              "popularity_length": 0.0,
+              "width_length": 0.0,
+              "avg_pop": 0.0,
+              "avg_width": 0.0,
+              "road_changes": 0.0
+            }
+          }
+        ]
+      },
+      "first_feasible_route": {
+        "via_vertex": 40,
+        "metrics": {
+          "length": 33030.0,
+          "elevation": 444.00000159442425,
+          "popularity_length": 5428954.0,
+          "width_length": 456190.0,
+          "avg_pop": 164.36433545261883,
+          "avg_width": 13.811383590675144,
+          "road_changes": 132
+        },
+        "profile_metrics": {
+          "length": 33030.0,
+          "elevation": 444.00000159442425,
+          "popularity_length": 5428954.0,
+          "width_length": 456190.0,
+          "avg_pop": 164.36433545261883,
+          "avg_width": 13.811383590675144,
+          "road_changes": 132
+        },
+        "box_score": 0.7622767181350287,
+        "scalar_cost": 21131.143507881014,
+        "path_nodes": 297,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_box_centered_feasible_route": {
+        "via_vertex": 10511,
+        "metrics": {
+          "length": 33763.0,
+          "elevation": 480.6000007838011,
+          "popularity_length": 5707030.0,
+          "width_length": 461285.0,
+          "avg_pop": 169.0320765334834,
+          "avg_width": 13.662441133785505,
+          "road_changes": 138
+        },
+        "profile_metrics": {
+          "length": 33763.0,
+          "elevation": 480.6000007838011,
+          "popularity_length": 5707030.0,
+          "width_length": 461285.0,
+          "avg_pop": 169.0320765334834,
+          "avg_width": 13.662441133785505,
+          "road_changes": 138
+        },
+        "box_score": 0.7324882267571009,
+        "scalar_cost": 21549.85214380551,
+        "path_nodes": 307,
+        "elementary": true,
+        "repeated_vertex_count": 0,
+        "validation": {
+          "directed_edges_ok": true,
+          "missing_edges": 0,
+          "metric_deltas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "road_changes_delta": 0,
+          "passed": true
+        },
+        "profile_exact_deltas": {
+          "length": 0.0,
+          "elevation": 0.0,
+          "popularity_length": 0.0,
+          "width_length": 0.0,
+          "avg_pop": 0.0,
+          "avg_width": 0.0,
+          "road_changes": 0.0
+        }
+      },
+      "best_5_exact_feasible_candidates": [
+        {
+          "via_vertex": 10511,
+          "metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "profile_metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "box_score": 0.7324882267571009,
+          "scalar_cost": 21549.85214380551,
+          "path_nodes": 307,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 10514,
+          "metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "profile_metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "box_score": 0.7324882267571009,
+          "scalar_cost": 21549.85214380551,
+          "path_nodes": 307,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 14879,
+          "metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "profile_metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "box_score": 0.7324882267571009,
+          "scalar_cost": 21549.85214380551,
+          "path_nodes": 307,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 14880,
+          "metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "profile_metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "box_score": 0.7324882267571009,
+          "scalar_cost": 21549.85214380551,
+          "path_nodes": 307,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        },
+        {
+          "via_vertex": 15423,
+          "metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "profile_metrics": {
+            "length": 33763.0,
+            "elevation": 480.6000007838011,
+            "popularity_length": 5707030.0,
+            "width_length": 461285.0,
+            "avg_pop": 169.0320765334834,
+            "avg_width": 13.662441133785505,
+            "road_changes": 138
+          },
+          "box_score": 0.7324882267571009,
+          "scalar_cost": 21549.85214380551,
+          "path_nodes": 307,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          },
+          "profile_exact_deltas": {
+            "length": 0.0,
+            "elevation": 0.0,
+            "popularity_length": 0.0,
+            "width_length": 0.0,
+            "avg_pop": 0.0,
+            "avg_width": 0.0,
+            "road_changes": 0.0
+          }
+        }
+      ],
+      "target_via_13683_profile": {
+        "length": 35566.0,
+        "elevation": 531.600000217557,
+        "popularity_length": 4907024.0,
+        "width_length": 484555.0,
+        "avg_pop": 137.96952145307316,
+        "avg_width": 13.62410729348254,
+        "road_changes": 150
+      },
+      "previous_full_reference_target": null
+    }
+  ],
+  "full_certified_comparison": [
+    {
+      "scalar_name": "pop_width_reference",
+      "full_exact_feasible_count": 896,
+      "certified_exact_feasible_count": 896,
+      "full_best_via": 19510,
+      "certified_best_via": 19510,
+      "best_via_differs": false,
+      "profile_count_diff": 0,
+      "exact_count_diff": 0
+    },
+    {
+      "scalar_name": "slope_exp_beta_150_width",
+      "full_exact_feasible_count": 133,
+      "certified_exact_feasible_count": 133,
+      "full_best_via": 5807,
+      "certified_best_via": 5807,
+      "best_via_differs": false,
+      "profile_count_diff": 0,
+      "exact_count_diff": 0
+    }
+  ]
+}

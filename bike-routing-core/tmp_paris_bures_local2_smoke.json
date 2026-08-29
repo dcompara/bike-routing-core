@@ -1,0 +1,2057 @@
+{
+  "query": {
+    "source": 127,
+    "target": 4433,
+    "kept_cells": 40,
+    "kept_nodes": 9010,
+    "constraints": {
+      "lower": [
+        30000.0,
+        400.0,
+        150.0,
+        5.0
+      ],
+      "upper": [
+        35000.0,
+        500.0,
+        255.0,
+        15.0
+      ]
+    }
+  },
+  "runs": [
+    {
+      "name": "LOCAL1",
+      "budget_s": 1.0,
+      "elapsed_wall_s": 1.0903502000001026,
+      "elapsed_cpu_s": 1.046875,
+      "cpu_wall_ratio": 0.9601273058875043,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 1881,
+        "fwd": 1881
+      },
+      "queue_sizes": {
+        "fwd": 18,
+        "bwd": 13
+      },
+      "retained_labels": {
+        "fwd": 228,
+        "bwd": 139
+      },
+      "portals_reached": {
+        "fwd": 57,
+        "bwd": 41
+      },
+      "covered_cells": {
+        "fwd": [
+          0,
+          4,
+          8,
+          12,
+          36,
+          40,
+          56,
+          75,
+          79,
+          83,
+          93,
+          97,
+          99
+        ],
+        "bwd": [
+          1,
+          2,
+          13,
+          14,
+          31,
+          37,
+          49,
+          57,
+          67,
+          94,
+          95
+        ]
+      },
+      "oracle_contact": {
+        "cell_87_reached": false,
+        "forward_oracle_cells": [
+          36,
+          40,
+          56,
+          79,
+          93,
+          97,
+          99
+        ],
+        "backward_oracle_cells": [
+          1,
+          13,
+          31,
+          37,
+          49
+        ],
+        "both_oracle_cells": [],
+        "missing_oracle_cells": [
+          30,
+          48,
+          54,
+          87
+        ]
+      },
+      "oracle_portal_summaries": {
+        "896": {
+          "fwd": {
+            "count": 4,
+            "low_width": {
+              "portal": 896,
+              "priority": 10.658000000000001,
+              "metrics": {
+                "length": 5855.0,
+                "elevation": 29.10000015795231,
+                "avg_pop": 196.73048676345005,
+                "avg_width": 17.74210076857387
+              },
+              "road_changes": 33,
+              "visited_cells": [
+                36,
+                93
+              ],
+              "revisited_cells": []
+            },
+            "high_pop": {
+              "portal": 896,
+              "priority": 10.2128,
+              "metrics": {
+                "length": 6968.0,
+                "elevation": 32.79999992996454,
+                "avg_pop": 211.74397244546498,
+                "avg_width": 18.72488518943743
+              },
+              "road_changes": 30,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                36
+              ]
+            },
+            "best_score": {
+              "portal": 896,
+              "priority": 8.8968,
+              "metrics": {
+                "length": 10258.0,
+                "elevation": 48.100000359117985,
+                "avg_pop": 209.1563657633067,
+                "avg_width": 18.426593877948918
+              },
+              "road_changes": 52,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                36
+              ]
+            }
+          },
+          "bwd": null
+        },
+        "4057": {
+          "fwd": null,
+          "bwd": null
+        }
+      },
+      "overlay_edges": 385,
+      "bridge_edges_inserted": 0,
+      "complete_join_tests": 0,
+      "completion_length_lb_rejects": 3310,
+      "best_complete_candidate": {
+        "complete_candidates": 0,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": null,
+        "min_avg_width": null,
+        "min_length": null,
+        "max_elevation": null,
+        "min_elevation": null,
+        "best_near_feasible": null
+      },
+      "local_audit": {
+        "local_states_generated": 15476,
+        "local_length_rep_updates": 8354,
+        "local_quality_rep_updates": 0,
+        "local_nodes_with_two_distinct_states": 0,
+        "quality_shortcuts_generated": 0,
+        "quality_shortcuts_insert_attempted": 0,
+        "quality_shortcuts_inserted": 0,
+        "quality_shortcuts_overlay_rejected": 0,
+        "quality_shortcut_children_generated": 0,
+        "quality_shortcut_children_accepted": 0,
+        "quality_shortcut_examples": []
+      },
+      "local_state_diagnostics": {
+        "engines": 97,
+        "total_expansions": 7677,
+        "max_engine_expansions": 256,
+        "frontier_states_remaining": 774,
+        "representative_slots": 8206,
+        "final_nodes_with_two_distinct_states": 0,
+        "delta_length": {
+          "count": 0,
+          "min": null,
+          "max": null,
+          "avg": null
+        },
+        "delta_elevation": {
+          "count": 0,
+          "min": null,
+          "max": null,
+          "avg": null
+        },
+        "delta_avg_pop": {
+          "count": 0,
+          "min": null,
+          "max": null,
+          "avg": null
+        },
+        "delta_avg_width": {
+          "count": 0,
+          "min": null,
+          "max": null,
+          "avg": null
+        },
+        "examples": []
+      },
+      "local_shortcut_pair_examples": [],
+      "config": {
+        "max_active_portals_per_cell": 4,
+        "max_labels_per_portal": 4,
+        "max_shortcuts_per_pair": 2,
+        "local_expand_limit": 64,
+        "advance_round_budget": 1,
+        "max_cell_visits_per_route": 2,
+        "max_bridge_edges_per_cell_pair": 2,
+        "max_local_states_per_node": 1
+      },
+      "audit_subset": {
+        "rejected_length": 0,
+        "rejected_elevation": 0,
+        "rejected_avg_popularity": 0,
+        "rejected_avg_width": 0,
+        "second_cell_visits_allowed": 930,
+        "rejected_third_cell_visit": 398
+      }
+    },
+    {
+      "name": "LOCAL2",
+      "budget_s": 1.0,
+      "elapsed_wall_s": 1.0963270000065677,
+      "elapsed_cpu_s": 1.078125,
+      "cpu_wall_ratio": 0.9833972893065129,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 1857,
+        "fwd": 1858
+      },
+      "queue_sizes": {
+        "fwd": 11,
+        "bwd": 16
+      },
+      "retained_labels": {
+        "fwd": 120,
+        "bwd": 151
+      },
+      "portals_reached": {
+        "fwd": 30,
+        "bwd": 41
+      },
+      "covered_cells": {
+        "fwd": [
+          4,
+          36,
+          40,
+          75,
+          79,
+          93
+        ],
+        "bwd": [
+          1,
+          2,
+          13,
+          14,
+          31,
+          32,
+          37,
+          49,
+          57,
+          67,
+          94,
+          95
+        ]
+      },
+      "oracle_contact": {
+        "cell_87_reached": false,
+        "forward_oracle_cells": [
+          36,
+          40,
+          79,
+          93
+        ],
+        "backward_oracle_cells": [
+          1,
+          13,
+          31,
+          37,
+          49
+        ],
+        "both_oracle_cells": [],
+        "missing_oracle_cells": [
+          30,
+          48,
+          54,
+          56,
+          87,
+          97,
+          99
+        ]
+      },
+      "oracle_portal_summaries": {
+        "896": {
+          "fwd": {
+            "count": 4,
+            "low_width": {
+              "portal": 896,
+              "priority": 8.9108,
+              "metrics": {
+                "length": 10223.0,
+                "elevation": 31.300000250339508,
+                "avg_pop": 123.77149564707034,
+                "avg_width": 13.370830480289543
+              },
+              "road_changes": 41,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                93
+              ]
+            },
+            "high_pop": {
+              "portal": 896,
+              "priority": 12.5092,
+              "metrics": {
+                "length": 1227.0,
+                "elevation": 5.200000010430813,
+                "avg_pop": 236.95273023634883,
+                "avg_width": 22.95843520782396
+              },
+              "road_changes": 3,
+              "visited_cells": [
+                36,
+                93
+              ],
+              "revisited_cells": []
+            },
+            "best_score": {
+              "portal": 896,
+              "priority": 8.9108,
+              "metrics": {
+                "length": 10223.0,
+                "elevation": 31.300000250339508,
+                "avg_pop": 123.77149564707034,
+                "avg_width": 13.370830480289543
+              },
+              "road_changes": 41,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                93
+              ]
+            }
+          },
+          "bwd": null
+        },
+        "4057": {
+          "fwd": null,
+          "bwd": null
+        }
+      },
+      "overlay_edges": 358,
+      "bridge_edges_inserted": 0,
+      "complete_join_tests": 0,
+      "completion_length_lb_rejects": 2964,
+      "best_complete_candidate": {
+        "complete_candidates": 0,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": null,
+        "min_avg_width": null,
+        "min_length": null,
+        "max_elevation": null,
+        "min_elevation": null,
+        "best_near_feasible": null
+      },
+      "local_audit": {
+        "local_states_generated": 11258,
+        "local_length_rep_updates": 4899,
+        "local_quality_rep_updates": 9966,
+        "local_nodes_with_two_distinct_states": 3014,
+        "quality_shortcuts_generated": 153,
+        "quality_shortcuts_insert_attempted": 153,
+        "quality_shortcuts_inserted": 150,
+        "quality_shortcuts_overlay_rejected": 3,
+        "quality_shortcut_children_generated": 150,
+        "quality_shortcut_children_accepted": 74,
+        "quality_shortcut_examples": [
+          {
+            "src": 127,
+            "dst": 20469,
+            "length": 769.0,
+            "elevation": 4.200000010430813,
+            "avg_pop": 251.16775032509753,
+            "avg_width": 25.0,
+            "road_changes": 2,
+            "path_nodes": 12,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 127,
+            "dst": 604,
+            "length": 1044.0,
+            "elevation": 3.400000035762787,
+            "avg_pop": 109.94252873563218,
+            "avg_width": 11.618773946360154,
+            "road_changes": 4,
+            "path_nodes": 17,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 6157,
+            "dst": 4433,
+            "length": 2854.0,
+            "elevation": 93.70000077784061,
+            "avg_pop": 120.14435879467415,
+            "avg_width": 13.994393833216538,
+            "road_changes": 12,
+            "path_nodes": 22,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 14285,
+            "dst": 4433,
+            "length": 2412.0,
+            "elevation": 76.9000007212162,
+            "avg_pop": 139.90630182421228,
+            "avg_width": 15.066334991708127,
+            "road_changes": 11,
+            "path_nodes": 26,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 604,
+            "dst": 6297,
+            "length": 281.0,
+            "elevation": 0.6000000238418579,
+            "avg_pop": 118.18505338078292,
+            "avg_width": 10.0,
+            "road_changes": 0,
+            "path_nodes": 6,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 604,
+            "dst": 127,
+            "length": 783.0,
+            "elevation": 2.9000000283122063,
+            "avg_pop": 96.0485312899106,
+            "avg_width": 12.458492975734355,
+            "road_changes": 1,
+            "path_nodes": 10,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 604,
+            "dst": 127,
+            "length": 932.0,
+            "elevation": 1.6000000461935997,
+            "avg_pop": 80.65557939914163,
+            "avg_width": 10.724248927038627,
+            "road_changes": 3,
+            "path_nodes": 11,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 4586,
+            "dst": 6157,
+            "length": 2841.0,
+            "elevation": 12.900000095367432,
+            "avg_pop": 233.5934530095037,
+            "avg_width": 16.7722632875748,
+            "road_changes": 9,
+            "path_nodes": 19,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 4586,
+            "dst": 6157,
+            "length": 2895.0,
+            "elevation": 14.700000047683716,
+            "avg_pop": 229.82003454231435,
+            "avg_width": 16.47495682210708,
+            "road_changes": 11,
+            "path_nodes": 22,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 4433,
+            "dst": 6157,
+            "length": 2863.0,
+            "elevation": 9.400000154972076,
+            "avg_pop": 109.29828850855746,
+            "avg_width": 13.884037722668529,
+            "road_changes": 12,
+            "path_nodes": 21,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 6157,
+            "dst": 4586,
+            "length": 2902.0,
+            "elevation": 31.20000008493662,
+            "avg_pop": 240.9841488628532,
+            "avg_width": 17.11750516884907,
+            "road_changes": 9,
+            "path_nodes": 26,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 11272,
+            "dst": 7426,
+            "length": 3070.0,
+            "elevation": 46.200000301003456,
+            "avg_pop": 187.5358306188925,
+            "avg_width": 12.226384364820847,
+            "road_changes": 9,
+            "path_nodes": 21,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 11272,
+            "dst": 7426,
+            "length": 3195.0,
+            "elevation": 40.800000578165054,
+            "avg_pop": 189.76557120500783,
+            "avg_width": 11.029733959311423,
+            "road_changes": 10,
+            "path_nodes": 24,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 21801,
+            "dst": 7426,
+            "length": 3143.0,
+            "elevation": 43.60000006854534,
+            "avg_pop": 227.282532612154,
+            "avg_width": 14.193445752465797,
+            "road_changes": 8,
+            "path_nodes": 26,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 21801,
+            "dst": 11272,
+            "length": 1033.0,
+            "elevation": 18.399999722838402,
+            "avg_pop": 158.71829622458858,
+            "avg_width": 10.338818973862537,
+            "road_changes": 5,
+            "path_nodes": 13,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 11272,
+            "dst": 21801,
+            "length": 396.0,
+            "elevation": 1.0,
+            "avg_pop": 123.20959595959596,
+            "avg_width": 10.0,
+            "road_changes": 0,
+            "path_nodes": 4,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 12661,
+            "dst": 21801,
+            "length": 2283.0,
+            "elevation": 25.799999490380287,
+            "avg_pop": 95.08848007008322,
+            "avg_width": 10.208059570740254,
+            "road_changes": 14,
+            "path_nodes": 25,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 2023,
+            "dst": 12661,
+            "length": 1238.0,
+            "elevation": 41.3999999538064,
+            "avg_pop": 116.17851373182552,
+            "avg_width": 15.258481421647819,
+            "road_changes": 8,
+            "path_nodes": 16,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 21801,
+            "dst": 12661,
+            "length": 1281.0,
+            "elevation": 48.79999968409538,
+            "avg_pop": 113.52146760343481,
+            "avg_width": 11.057767369242779,
+            "road_changes": 7,
+            "path_nodes": 15,
+            "inserted": true,
+            "rejection_reason": null
+          },
+          {
+            "src": 21801,
+            "dst": 12661,
+            "length": 1291.0,
+            "elevation": 48.69999987632036,
+            "avg_pop": 112.7714949651433,
+            "avg_width": 11.049573973663826,
+            "road_changes": 6,
+            "path_nodes": 16,
+            "inserted": true,
+            "rejection_reason": null
+          }
+        ]
+      },
+      "local_state_diagnostics": {
+        "engines": 70,
+        "total_expansions": 8745,
+        "max_engine_expansions": 576,
+        "frontier_states_remaining": 1400,
+        "representative_slots": 7837,
+        "final_nodes_with_two_distinct_states": 3012,
+        "delta_length": {
+          "count": 3012,
+          "min": 0.0,
+          "max": 2539.0,
+          "avg": 297.9369189907039
+        },
+        "delta_elevation": {
+          "count": 3012,
+          "min": -13.300000190734863,
+          "max": 48.29999981075525,
+          "avg": 4.25952855561171
+        },
+        "delta_avg_pop": {
+          "count": 3012,
+          "min": -183.82120207093197,
+          "max": 129.78347724712995,
+          "avg": -18.473618473389287
+        },
+        "delta_avg_width": {
+          "count": 3012,
+          "min": -15.0,
+          "max": 0.0,
+          "avg": -2.0057176000751773
+        },
+        "examples": [
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4419,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 54.32482845568783,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4419,
+              "metrics": {
+                "length": 756.0,
+                "elevation": 64.60000067949295,
+                "avg_pop": 15.16931216931217,
+                "avg_width": 10.0
+              },
+              "road_changes": 4,
+              "path_nodes": 7
+            },
+            "quality_rep": {
+              "node": 4419,
+              "metrics": {
+                "length": 1536.0,
+                "elevation": 84.40000063180923,
+                "avg_pop": 69.494140625,
+                "avg_width": 10.0
+              },
+              "road_changes": 7,
+              "path_nodes": 12
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4426,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 46.53982804197666,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4426,
+              "metrics": {
+                "length": 817.0,
+                "elevation": 52.800000727176666,
+                "avg_pop": 14.177478580171359,
+                "avg_width": 10.0
+              },
+              "road_changes": 5,
+              "path_nodes": 7
+            },
+            "quality_rep": {
+              "node": 4426,
+              "metrics": {
+                "length": 1797.0,
+                "elevation": 85.30000060796738,
+                "avg_pop": 60.71730662214802,
+                "avg_width": 10.0
+              },
+              "road_changes": 8,
+              "path_nodes": 14
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4420,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 48.618667595914346,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4420,
+              "metrics": {
+                "length": 856.0,
+                "elevation": 73.30000048875809,
+                "avg_pop": 20.172897196261683,
+                "avg_width": 10.0
+              },
+              "road_changes": 4,
+              "path_nodes": 8
+            },
+            "quality_rep": {
+              "node": 4420,
+              "metrics": {
+                "length": 1636.0,
+                "elevation": 93.10000044107437,
+                "avg_pop": 68.79156479217603,
+                "avg_width": 10.0
+              },
+              "road_changes": 8,
+              "path_nodes": 13
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 6130,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 49.53477743676362,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 6130,
+              "metrics": {
+                "length": 916.0,
+                "elevation": 65.50000065565109,
+                "avg_pop": 14.441048034934498,
+                "avg_width": 10.0
+              },
+              "road_changes": 5,
+              "path_nodes": 8
+            },
+            "quality_rep": {
+              "node": 6130,
+              "metrics": {
+                "length": 1696.0,
+                "elevation": 85.30000060796738,
+                "avg_pop": 63.975825471698116,
+                "avg_width": 10.0
+              },
+              "road_changes": 7,
+              "path_nodes": 13
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4432,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 44.21598845598845,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4432,
+              "metrics": {
+                "length": 945.0,
+                "elevation": 54.20000070333481,
+                "avg_pop": 12.663492063492063,
+                "avg_width": 10.0
+              },
+              "road_changes": 5,
+              "path_nodes": 8
+            },
+            "quality_rep": {
+              "node": 4432,
+              "metrics": {
+                "length": 1925.0,
+                "elevation": 86.70000058412552,
+                "avg_pop": 56.879480519480516,
+                "avg_width": 10.0
+              },
+              "road_changes": 9,
+              "path_nodes": 15
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 14420,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 34.148634798652445,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 14420,
+              "metrics": {
+                "length": 1039.0,
+                "elevation": 74.70000046491623,
+                "avg_pop": 42.51106833493744,
+                "avg_width": 10.0
+              },
+              "road_changes": 5,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 14420,
+              "metrics": {
+                "length": 1819.0,
+                "elevation": 94.50000041723251,
+                "avg_pop": 76.65970313358989,
+                "avg_width": 10.0
+              },
+              "road_changes": 9,
+              "path_nodes": 14
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4421,
+            "delta": {
+              "length": 403.0,
+              "elevation": 15.799999952316284,
+              "avg_pop": -0.6705079143537844,
+              "avg_width": -0.5503634475597092
+            },
+            "length_rep": {
+              "node": 4421,
+              "metrics": {
+                "length": 963.0,
+                "elevation": 68.60000067949295,
+                "avg_pop": 61.14122533748702,
+                "avg_width": 10.55036344755971
+              },
+              "road_changes": 6,
+              "path_nodes": 8
+            },
+            "quality_rep": {
+              "node": 4421,
+              "metrics": {
+                "length": 1366.0,
+                "elevation": 84.40000063180923,
+                "avg_pop": 60.47071742313324,
+                "avg_width": 10.0
+              },
+              "road_changes": 7,
+              "path_nodes": 11
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4423,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 46.496347964856284,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4423,
+              "metrics": {
+                "length": 1016.0,
+                "elevation": 70.40000075101852,
+                "avg_pop": 15.086614173228346,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 4423,
+              "metrics": {
+                "length": 1796.0,
+                "elevation": 90.20000070333481,
+                "avg_pop": 61.58296213808463,
+                "avg_width": 10.0
+              },
+              "road_changes": 8,
+              "path_nodes": 14
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4425,
+            "delta": {
+              "length": 809.0,
+              "elevation": 19.699999690055847,
+              "avg_pop": 47.332287927296946,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4425,
+              "metrics": {
+                "length": 1052.0,
+                "elevation": 66.50000089406967,
+                "avg_pop": 11.680608365019012,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 4425,
+              "metrics": {
+                "length": 1861.0,
+                "elevation": 86.20000058412552,
+                "avg_pop": 59.01289629231596,
+                "avg_width": 10.0
+              },
+              "road_changes": 7,
+              "path_nodes": 14
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 11769,
+            "delta": {
+              "length": 99.0,
+              "elevation": 7.1000001430511475,
+              "avg_pop": -16.73316498316499,
+              "avg_width": -0.7158708295071943
+            },
+            "length_rep": {
+              "node": 11769,
+              "metrics": {
+                "length": 1089.0,
+                "elevation": 69.30000060796738,
+                "avg_pop": 75.15151515151516,
+                "avg_width": 11.065197428833793
+              },
+              "road_changes": 6,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 11769,
+              "metrics": {
+                "length": 1188.0,
+                "elevation": 76.40000075101852,
+                "avg_pop": 58.418350168350166,
+                "avg_width": 10.349326599326599
+              },
+              "road_changes": 9,
+              "path_nodes": 11
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4427,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 41.20349348977546,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4427,
+              "metrics": {
+                "length": 1122.0,
+                "elevation": 54.20000070333481,
+                "avg_pop": 11.13903743315508,
+                "avg_width": 10.0
+              },
+              "road_changes": 5,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 4427,
+              "metrics": {
+                "length": 2102.0,
+                "elevation": 86.70000058412552,
+                "avg_pop": 52.34253092293054,
+                "avg_width": 10.0
+              },
+              "road_changes": 9,
+              "path_nodes": 16
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4431,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 42.8919465376715,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4431,
+              "metrics": {
+                "length": 1023.0,
+                "elevation": 54.20000070333481,
+                "avg_pop": 11.850439882697946,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 9
+            },
+            "quality_rep": {
+              "node": 4431,
+              "metrics": {
+                "length": 2003.0,
+                "elevation": 86.70000058412552,
+                "avg_pop": 54.74238642036945,
+                "avg_width": 10.0
+              },
+              "road_changes": 10,
+              "path_nodes": 16
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 7272,
+            "delta": {
+              "length": 17.0,
+              "elevation": 1.6000001430511475,
+              "avg_pop": -16.888213963321014,
+              "avg_width": -0.6647352462368179
+            },
+            "length_rep": {
+              "node": 7272,
+              "metrics": {
+                "length": 1130.0,
+                "elevation": 69.30000060796738,
+                "avg_pop": 74.9283185840708,
+                "avg_width": 11.026548672566372
+              },
+              "road_changes": 7,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 7272,
+              "metrics": {
+                "length": 1147.0,
+                "elevation": 70.90000075101852,
+                "avg_pop": 58.04010462074978,
+                "avg_width": 10.361813426329554
+              },
+              "road_changes": 8,
+              "path_nodes": 10
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 11700,
+            "delta": {
+              "length": 780.0,
+              "elevation": 19.799999952316284,
+              "avg_pop": 24.24419602037333,
+              "avg_width": -0.245874641245182
+            },
+            "length_rep": {
+              "node": 11700,
+              "metrics": {
+                "length": 1186.0,
+                "elevation": 79.60000056028366,
+                "avg_pop": 61.03962900505902,
+                "avg_width": 10.61973018549747
+              },
+              "road_changes": 6,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 11700,
+              "metrics": {
+                "length": 1966.0,
+                "elevation": 99.40000051259995,
+                "avg_pop": 85.28382502543235,
+                "avg_width": 10.373855544252288
+              },
+              "road_changes": 10,
+              "path_nodes": 15
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4424,
+            "delta": {
+              "length": 809.0,
+              "elevation": 19.699999690055847,
+              "avg_pop": 44.93646927194035,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4424,
+              "metrics": {
+                "length": 1159.0,
+                "elevation": 75.70000070333481,
+                "avg_pop": 11.24849007765315,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 4424,
+              "metrics": {
+                "length": 1968.0,
+                "elevation": 95.40000039339066,
+                "avg_pop": 56.1849593495935,
+                "avg_width": 10.0
+              },
+              "road_changes": 8,
+              "path_nodes": 15
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 7279,
+            "delta": {
+              "length": 99.0,
+              "elevation": 7.1000001430511475,
+              "avg_pop": -15.825408371918115,
+              "avg_width": -0.6172938162502639
+            },
+            "length_rep": {
+              "node": 7279,
+              "metrics": {
+                "length": 1256.0,
+                "elevation": 69.30000060796738,
+                "avg_pop": 90.95382165605096,
+                "avg_width": 10.92356687898089
+              },
+              "road_changes": 7,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 7279,
+              "metrics": {
+                "length": 1355.0,
+                "elevation": 76.40000075101852,
+                "avg_pop": 75.12841328413285,
+                "avg_width": 10.306273062730627
+              },
+              "road_changes": 10,
+              "path_nodes": 12
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 18992,
+            "delta": {
+              "length": 99.0,
+              "elevation": 7.1000001430511475,
+              "avg_pop": -13.761110198487756,
+              "avg_width": -0.6220871018159126
+            },
+            "length_rep": {
+              "node": 18992,
+              "metrics": {
+                "length": 1411.0,
+                "elevation": 71.70000070333481,
+                "avg_pop": 84.24521615875265,
+                "avg_width": 11.963146704464918
+              },
+              "road_changes": 7,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 18992,
+              "metrics": {
+                "length": 1510.0,
+                "elevation": 78.80000084638596,
+                "avg_pop": 70.4841059602649,
+                "avg_width": 11.341059602649006
+              },
+              "road_changes": 10,
+              "path_nodes": 12
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4428,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 40.30091023226616,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4428,
+              "metrics": {
+                "length": 1180.0,
+                "elevation": 54.20000070333481,
+                "avg_pop": 10.689830508474577,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 4428,
+              "metrics": {
+                "length": 2160.0,
+                "elevation": 86.70000058412552,
+                "avg_pop": 50.99074074074074,
+                "avg_width": 10.0
+              },
+              "road_changes": 10,
+              "path_nodes": 17
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 4429,
+            "delta": {
+              "length": 980.0,
+              "elevation": 32.49999988079071,
+              "avg_pop": 39.367723728894624,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 4429,
+              "metrics": {
+                "length": 1242.0,
+                "elevation": 66.70000070333481,
+                "avg_pop": 10.256038647342995,
+                "avg_width": 10.0
+              },
+              "road_changes": 6,
+              "path_nodes": 10
+            },
+            "quality_rep": {
+              "node": 4429,
+              "metrics": {
+                "length": 2222.0,
+                "elevation": 99.20000058412552,
+                "avg_pop": 49.62376237623762,
+                "avg_width": 10.0
+              },
+              "road_changes": 10,
+              "path_nodes": 17
+            }
+          },
+          {
+            "cell": 1,
+            "origin": 4433,
+            "direction": "bwd",
+            "node": 12000,
+            "delta": {
+              "length": 809.0,
+              "elevation": 19.699999690055847,
+              "avg_pop": 32.90174739666402,
+              "avg_width": 0.0
+            },
+            "length_rep": {
+              "node": 12000,
+              "metrics": {
+                "length": 1519.0,
+                "elevation": 82.60000079870224,
+                "avg_pop": 25.883475971033576,
+                "avg_width": 10.0
+              },
+              "road_changes": 7,
+              "path_nodes": 11
+            },
+            "quality_rep": {
+              "node": 12000,
+              "metrics": {
+                "length": 2328.0,
+                "elevation": 102.30000048875809,
+                "avg_pop": 58.7852233676976,
+                "avg_width": 10.0
+              },
+              "road_changes": 9,
+              "path_nodes": 16
+            }
+          }
+        ]
+      },
+      "local_shortcut_pair_examples": [
+        {
+          "src": 55,
+          "dst": 20348,
+          "count": 2,
+          "shortest": {
+            "src": 55,
+            "dst": 20348,
+            "metrics": {
+              "length": 1447.0,
+              "elevation": 10.200000070035458,
+              "avg_pop": 148.80511402902556,
+              "avg_width": 13.610919143054597
+            },
+            "road_changes": 12,
+            "path_nodes": 28,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 55,
+            "dst": 20348,
+            "metrics": {
+              "length": 1556.0,
+              "elevation": 10.200000070035458,
+              "avg_pop": 135.14203084832906,
+              "avg_width": 13.223007712082262
+            },
+            "road_changes": 13,
+            "path_nodes": 28,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 81,
+          "dst": 6511,
+          "count": 2,
+          "shortest": {
+            "src": 81,
+            "dst": 6511,
+            "metrics": {
+              "length": 1280.0,
+              "elevation": 18.299999624490738,
+              "avg_pop": 148.97421875,
+              "avg_width": 12.79296875
+            },
+            "road_changes": 7,
+            "path_nodes": 12,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 81,
+            "dst": 6511,
+            "metrics": {
+              "length": 1427.0,
+              "elevation": 18.49999962747097,
+              "avg_pop": 140.1583742116328,
+              "avg_width": 12.505255781359496
+            },
+            "road_changes": 8,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 81,
+          "dst": 13002,
+          "count": 2,
+          "shortest": {
+            "src": 81,
+            "dst": 13002,
+            "metrics": {
+              "length": 1245.0,
+              "elevation": 17.899999618530273,
+              "avg_pop": 146.04979919678715,
+              "avg_width": 12.449799196787149
+            },
+            "road_changes": 5,
+            "path_nodes": 10,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 81,
+            "dst": 13002,
+            "metrics": {
+              "length": 1392.0,
+              "elevation": 18.099999621510506,
+              "avg_pop": 137.32112068965517,
+              "avg_width": 12.191091954022989
+            },
+            "road_changes": 6,
+            "path_nodes": 14,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 81,
+          "dst": 20349,
+          "count": 2,
+          "shortest": {
+            "src": 81,
+            "dst": 20349,
+            "metrics": {
+              "length": 1664.0,
+              "elevation": 17.899999618530273,
+              "avg_pop": 172.98016826923077,
+              "avg_width": 15.609975961538462
+            },
+            "road_changes": 6,
+            "path_nodes": 18,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 81,
+            "dst": 20349,
+            "metrics": {
+              "length": 1811.0,
+              "elevation": 18.099999621510506,
+              "avg_pop": 164.0850358917725,
+              "avg_width": 15.154610712313639
+            },
+            "road_changes": 7,
+            "path_nodes": 22,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 523,
+          "dst": 455,
+          "count": 2,
+          "shortest": {
+            "src": 523,
+            "dst": 455,
+            "metrics": {
+              "length": 4238.0,
+              "elevation": 20.200000040233135,
+              "avg_pop": 88.32043416705993,
+              "avg_width": 26.033506370929683
+            },
+            "road_changes": 7,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 523,
+            "dst": 455,
+            "metrics": {
+              "length": 4345.0,
+              "elevation": 20.800000056624413,
+              "avg_pop": 92.47917146144994,
+              "avg_width": 25.72151898734177
+            },
+            "road_changes": 9,
+            "path_nodes": 19,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 523,
+          "dst": 754,
+          "count": 2,
+          "shortest": {
+            "src": 523,
+            "dst": 754,
+            "metrics": {
+              "length": 576.0,
+              "elevation": 9.600000254809856,
+              "avg_pop": 189.59548611111111,
+              "avg_width": 19.609375
+            },
+            "road_changes": 3,
+            "path_nodes": 11,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 523,
+            "dst": 754,
+            "metrics": {
+              "length": 631.0,
+              "elevation": 11.300000183284283,
+              "avg_pop": 209.99683042789223,
+              "avg_width": 17.781299524564183
+            },
+            "road_changes": 5,
+            "path_nodes": 12,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 523,
+          "dst": 758,
+          "count": 2,
+          "shortest": {
+            "src": 523,
+            "dst": 758,
+            "metrics": {
+              "length": 603.0,
+              "elevation": 12.200000159442425,
+              "avg_pop": 223.88225538971807,
+              "avg_width": 20.43117744610282
+            },
+            "road_changes": 4,
+            "path_nodes": 12,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 523,
+            "dst": 758,
+            "metrics": {
+              "length": 805.0,
+              "elevation": 12.90000020712614,
+              "avg_pop": 176.58260869565217,
+              "avg_width": 16.875776397515526
+            },
+            "road_changes": 5,
+            "path_nodes": 13,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 523,
+          "dst": 7551,
+          "count": 2,
+          "shortest": {
+            "src": 523,
+            "dst": 7551,
+            "metrics": {
+              "length": 697.0,
+              "elevation": 10.100000269711018,
+              "avg_pop": 181.80344332855094,
+              "avg_width": 17.941176470588236
+            },
+            "road_changes": 4,
+            "path_nodes": 13,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 523,
+            "dst": 7551,
+            "metrics": {
+              "length": 752.0,
+              "elevation": 11.800000198185444,
+              "avg_pop": 199.49202127659575,
+              "avg_width": 16.529255319148938
+            },
+            "road_changes": 6,
+            "path_nodes": 14,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 523,
+          "dst": 19812,
+          "count": 2,
+          "shortest": {
+            "src": 523,
+            "dst": 19812,
+            "metrics": {
+              "length": 3831.0,
+              "elevation": 10.300000183284283,
+              "avg_pop": 96.40642129992169,
+              "avg_width": 24.755938397285306
+            },
+            "road_changes": 8,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 523,
+            "dst": 19812,
+            "metrics": {
+              "length": 3861.0,
+              "elevation": 10.300000183284283,
+              "avg_pop": 97.6073556073556,
+              "avg_width": 24.536389536389535
+            },
+            "road_changes": 9,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 604,
+          "dst": 127,
+          "count": 2,
+          "shortest": {
+            "src": 604,
+            "dst": 127,
+            "metrics": {
+              "length": 783.0,
+              "elevation": 2.9000000283122063,
+              "avg_pop": 96.0485312899106,
+              "avg_width": 12.458492975734355
+            },
+            "road_changes": 1,
+            "path_nodes": 10,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 604,
+            "dst": 127,
+            "metrics": {
+              "length": 932.0,
+              "elevation": 1.6000000461935997,
+              "avg_pop": 80.65557939914163,
+              "avg_width": 10.724248927038627
+            },
+            "road_changes": 3,
+            "path_nodes": 11,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 690,
+          "dst": 689,
+          "count": 2,
+          "shortest": {
+            "src": 690,
+            "dst": 689,
+            "metrics": {
+              "length": 257.0,
+              "elevation": 1.600000023841858,
+              "avg_pop": 207.84824902723736,
+              "avg_width": 20.0
+            },
+            "road_changes": 0,
+            "path_nodes": 3,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 690,
+            "dst": 689,
+            "metrics": {
+              "length": 384.0,
+              "elevation": 2.299999952316284,
+              "avg_pop": 93.34635416666667,
+              "avg_width": 12.265625
+            },
+            "road_changes": 3,
+            "path_nodes": 5,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 754,
+          "dst": 455,
+          "count": 2,
+          "shortest": {
+            "src": 754,
+            "dst": 455,
+            "metrics": {
+              "length": 4408.0,
+              "elevation": 15.499999761581421,
+              "avg_pop": 91.96574410163339,
+              "avg_width": 25.195099818511796
+            },
+            "road_changes": 6,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 754,
+            "dst": 455,
+            "metrics": {
+              "length": 4438.0,
+              "elevation": 15.499999761581421,
+              "avg_pop": 93.0405588102749,
+              "avg_width": 25.001126633618746
+            },
+            "road_changes": 7,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 754,
+          "dst": 523,
+          "count": 2,
+          "shortest": {
+            "src": 754,
+            "dst": 523,
+            "metrics": {
+              "length": 979.0,
+              "elevation": 6.599999904632568,
+              "avg_pop": 175.30949948927477,
+              "avg_width": 15.80694586312564
+            },
+            "road_changes": 7,
+            "path_nodes": 15,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 754,
+            "dst": 523,
+            "metrics": {
+              "length": 1009.0,
+              "elevation": 6.599999904632568,
+              "avg_pop": 177.5589692765114,
+              "avg_width": 15.232903865213082
+            },
+            "road_changes": 8,
+            "path_nodes": 15,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 754,
+          "dst": 19812,
+          "count": 2,
+          "shortest": {
+            "src": 754,
+            "dst": 19812,
+            "metrics": {
+              "length": 4001.0,
+              "elevation": 5.599999904632568,
+              "avg_pop": 100.07898025493627,
+              "avg_width": 23.886528367908024
+            },
+            "road_changes": 7,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 754,
+            "dst": 19812,
+            "metrics": {
+              "length": 4031.0,
+              "elevation": 5.599999904632568,
+              "avg_pop": 101.20193500372116,
+              "avg_width": 23.682709005209624
+            },
+            "road_changes": 8,
+            "path_nodes": 16,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 1471,
+          "dst": 1375,
+          "count": 2,
+          "shortest": {
+            "src": 1471,
+            "dst": 1375,
+            "metrics": {
+              "length": 1797.0,
+              "elevation": 16.10000018030405,
+              "avg_pop": 138.7540345019477,
+              "avg_width": 13.327768503060657
+            },
+            "road_changes": 4,
+            "path_nodes": 23,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 1471,
+            "dst": 1375,
+            "metrics": {
+              "length": 1888.0,
+              "elevation": 13.299999989569187,
+              "avg_pop": 133.333156779661,
+              "avg_width": 12.86281779661017
+            },
+            "road_changes": 6,
+            "path_nodes": 21,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 2022,
+          "dst": 2130,
+          "count": 2,
+          "shortest": {
+            "src": 2022,
+            "dst": 2130,
+            "metrics": {
+              "length": 775.0,
+              "elevation": 0.10000000149011612,
+              "avg_pop": 64.88645161290323,
+              "avg_width": 10.0
+            },
+            "road_changes": 3,
+            "path_nodes": 7,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 2022,
+            "dst": 2130,
+            "metrics": {
+              "length": 1111.0,
+              "elevation": 2.100000001490116,
+              "avg_pop": 69.96219621962196,
+              "avg_width": 10.0
+            },
+            "road_changes": 5,
+            "path_nodes": 7,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 2022,
+          "dst": 2154,
+          "count": 2,
+          "shortest": {
+            "src": 2022,
+            "dst": 2154,
+            "metrics": {
+              "length": 240.0,
+              "elevation": 3.900000050663948,
+              "avg_pop": 78.39166666666667,
+              "avg_width": 10.354166666666666
+            },
+            "road_changes": 2,
+            "path_nodes": 4,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 2022,
+            "dst": 2154,
+            "metrics": {
+              "length": 664.0,
+              "elevation": 6.500000074505806,
+              "avg_pop": 76.95030120481928,
+              "avg_width": 10.12801204819277
+            },
+            "road_changes": 4,
+            "path_nodes": 6,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 2115,
+          "dst": 5710,
+          "count": 2,
+          "shortest": {
+            "src": 2115,
+            "dst": 5710,
+            "metrics": {
+              "length": 5554.0,
+              "elevation": 53.200000286102295,
+              "avg_pop": 49.87576521425999,
+              "avg_width": 30.0
+            },
+            "road_changes": 0,
+            "path_nodes": 8,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 2115,
+            "dst": 5710,
+            "metrics": {
+              "length": 5593.0,
+              "elevation": 53.60000029206276,
+              "avg_pop": 53.127123189701415,
+              "avg_width": 29.38494546754872
+            },
+            "road_changes": 2,
+            "path_nodes": 9,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 2130,
+          "dst": 2022,
+          "count": 2,
+          "shortest": {
+            "src": 2130,
+            "dst": 2022,
+            "metrics": {
+              "length": 775.0,
+              "elevation": 2.9000000059604645,
+              "avg_pop": 64.88645161290323,
+              "avg_width": 10.0
+            },
+            "road_changes": 3,
+            "path_nodes": 7,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 2130,
+            "dst": 2022,
+            "metrics": {
+              "length": 1111.0,
+              "elevation": 5.099999979138374,
+              "avg_pop": 69.96219621962196,
+              "avg_width": 10.0
+            },
+            "road_changes": 5,
+            "path_nodes": 7,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        },
+        {
+          "src": 2130,
+          "dst": 2154,
+          "count": 2,
+          "shortest": {
+            "src": 2130,
+            "dst": 2154,
+            "metrics": {
+              "length": 867.0,
+              "elevation": 6.60000005364418,
+              "avg_pop": 63.655132641291814,
+              "avg_width": 10.098039215686274
+            },
+            "road_changes": 5,
+            "path_nodes": 8,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          },
+          "quality": {
+            "src": 2130,
+            "dst": 2154,
+            "metrics": {
+              "length": 1438.0,
+              "elevation": 9.59999993443489,
+              "avg_pop": 56.947844228094574,
+              "avg_width": 10.059109874826147
+            },
+            "road_changes": 8,
+            "path_nodes": 11,
+            "bridge_cell_pair": null,
+            "bridge_corridor": null
+          }
+        }
+      ],
+      "config": {
+        "max_active_portals_per_cell": 4,
+        "max_labels_per_portal": 4,
+        "max_shortcuts_per_pair": 2,
+        "local_expand_limit": 64,
+        "advance_round_budget": 1,
+        "max_cell_visits_per_route": 2,
+        "max_bridge_edges_per_cell_pair": 2,
+        "max_local_states_per_node": 2
+      },
+      "audit_subset": {
+        "rejected_length": 0,
+        "rejected_elevation": 0,
+        "rejected_avg_popularity": 0,
+        "rejected_avg_width": 0,
+        "second_cell_visits_allowed": 1000,
+        "rejected_third_cell_visit": 412
+      }
+    }
+  ],
+  "long_run_triggered": false,
+  "interpretation": "C/D: LOCAL2 generates quality local states, but no material route-quality improvement appears at 300s."
+}

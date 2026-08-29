@@ -1,0 +1,486 @@
+{
+  "name": "LOCAL2-STRUCT",
+  "budget_s": 60.0,
+  "elapsed_wall_s": 60.19633859999885,
+  "elapsed_cpu_s": 57.03125,
+  "archive_size": 0,
+  "archive_routes": [],
+  "archive_jaccard": [],
+  "frontier_pops": {
+    "bwd": 118124,
+    "fwd": 478
+  },
+  "queue_sizes": {
+    "fwd": 0,
+    "bwd": 21
+  },
+  "retained_labels": {
+    "fwd": 80,
+    "bwd": 288
+  },
+  "portals_reached": {
+    "fwd": 22,
+    "bwd": 72
+  },
+  "covered_cells": {
+    "fwd": [
+      4,
+      36,
+      40,
+      75,
+      79,
+      93
+    ],
+    "bwd": [
+      1,
+      2,
+      8,
+      13,
+      14,
+      26,
+      31,
+      32,
+      37,
+      41,
+      49,
+      54,
+      57,
+      67,
+      73,
+      94,
+      95
+    ]
+  },
+  "adjacent_fwd_bwd_cell_pairs": [],
+  "reaches_cell_87_forward": false,
+  "overlay_edges": 400,
+  "bridges": {
+    "pending_pairs_discovered": 0,
+    "inserted": 0,
+    "join_successes": 0
+  },
+  "complete_join_tests": 0,
+  "same_portal_join_attempts": 0,
+  "one_edge_join_attempts": 0,
+  "best_complete_candidate": {
+    "complete_candidates": 0,
+    "feasible_complete_candidates": 0,
+    "max_avg_pop": null,
+    "min_avg_width": null,
+    "min_length": null,
+    "max_elevation": null,
+    "min_elevation": null,
+    "best_near_feasible": null
+  },
+  "structural_escape_audit": {
+    "raw_degree_resume_true": 392,
+    "structural_escape_forced_resume": 6,
+    "structural_escape_cells_found": 153333,
+    "structural_escape_helper_calls": 72752,
+    "structural_escape_helper_time_s": 0.39661610007169656,
+    "local_resume_stopped_with_escape": 36116,
+    "forced_resume_examples": [
+      {
+        "portal": 127,
+        "direction": "fwd",
+        "cell": 36,
+        "raw_degree": 2,
+        "escape_cells": []
+      },
+      {
+        "portal": 19845,
+        "direction": "bwd",
+        "cell": 95,
+        "raw_degree": 2,
+        "escape_cells": []
+      },
+      {
+        "portal": 19845,
+        "direction": "bwd",
+        "cell": 95,
+        "raw_degree": 2,
+        "escape_cells": []
+      },
+      {
+        "portal": 19845,
+        "direction": "bwd",
+        "cell": 95,
+        "raw_degree": 2,
+        "escape_cells": []
+      },
+      {
+        "portal": 19845,
+        "direction": "bwd",
+        "cell": 95,
+        "raw_degree": 2,
+        "escape_cells": []
+      },
+      {
+        "portal": 19845,
+        "direction": "bwd",
+        "cell": 95,
+        "raw_degree": 2,
+        "escape_cells": []
+      }
+    ]
+  },
+  "local_audit": {
+    "local_states_generated": 20907,
+    "local_length_rep_updates": 7780,
+    "local_quality_rep_updates": 18446,
+    "local_nodes_with_two_distinct_states": 5119,
+    "quality_shortcuts_generated": 194,
+    "quality_shortcuts_inserted": 190,
+    "quality_shortcut_children_generated": 190,
+    "quality_shortcut_children_accepted": 83
+  },
+  "source_chain": {
+    "portals": {
+      "127": {
+        "cell": 36,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 3,
+        "structural_escape_cells_fwd": [
+          79,
+          93
+        ],
+        "out_edges": [
+          {
+            "src": 127,
+            "dst": 20469,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 769.0,
+              "elevation": 4.200000010430813,
+              "avg_pop": 251.16775032509753,
+              "avg_width": 25.0
+            },
+            "road_changes": 2,
+            "path_nodes": 12,
+            "real_directed_path": true
+          },
+          {
+            "src": 127,
+            "dst": 604,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 1044.0,
+              "elevation": 3.400000035762787,
+              "avg_pop": 109.94252873563218,
+              "avg_width": 11.618773946360154
+            },
+            "road_changes": 4,
+            "path_nodes": 17,
+            "real_directed_path": true
+          },
+          {
+            "src": 127,
+            "dst": 55,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 1057.0,
+              "elevation": 4.400000013411045,
+              "avg_pop": 251.76915799432356,
+              "avg_width": 23.079470198675498
+            },
+            "road_changes": 2,
+            "path_nodes": 19,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 320,
+          "frontier": 77,
+          "exhausted": false,
+          "discovered_portals": [
+            55,
+            604,
+            20469
+          ]
+        }
+      },
+      "20469": {
+        "cell": 36,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 1,
+        "structural_escape_cells_fwd": [
+          93
+        ],
+        "out_edges": [
+          {
+            "src": 20469,
+            "dst": 896,
+            "src_cell": 36,
+            "dst_cell": 93,
+            "kind": "inter",
+            "quality": false,
+            "metrics": {
+              "length": 458.0,
+              "elevation": 1.0,
+              "avg_pop": 213.08515283842794,
+              "avg_width": 19.53056768558952
+            },
+            "road_changes": 1,
+            "path_nodes": 5,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 5,
+          "frontier": 0,
+          "exhausted": true,
+          "discovered_portals": []
+        }
+      },
+      "604": {
+        "cell": 36,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 3,
+        "structural_escape_cells_fwd": [
+          4
+        ],
+        "out_edges": [
+          {
+            "src": 604,
+            "dst": 6297,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 281.0,
+              "elevation": 0.6000000238418579,
+              "avg_pop": 118.18505338078292,
+              "avg_width": 10.0
+            },
+            "road_changes": 0,
+            "path_nodes": 6,
+            "real_directed_path": true
+          },
+          {
+            "src": 604,
+            "dst": 127,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 783.0,
+              "elevation": 2.9000000283122063,
+              "avg_pop": 96.0485312899106,
+              "avg_width": 12.458492975734355
+            },
+            "road_changes": 1,
+            "path_nodes": 10,
+            "real_directed_path": true
+          },
+          {
+            "src": 604,
+            "dst": 127,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 932.0,
+              "elevation": 1.6000000461935997,
+              "avg_pop": 80.65557939914163,
+              "avg_width": 10.724248927038627
+            },
+            "road_changes": 3,
+            "path_nodes": 11,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 64,
+          "frontier": 27,
+          "exhausted": false,
+          "discovered_portals": [
+            127,
+            6297
+          ]
+        }
+      },
+      "55": {
+        "cell": 36,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 2,
+        "structural_escape_cells_fwd": [
+          79,
+          93
+        ],
+        "out_edges": [
+          {
+            "src": 55,
+            "dst": 81,
+            "src_cell": 36,
+            "dst_cell": 79,
+            "kind": "inter",
+            "quality": false,
+            "metrics": {
+              "length": 173.0,
+              "elevation": 0.0,
+              "avg_pop": 253.0,
+              "avg_width": 20.0
+            },
+            "road_changes": 0,
+            "path_nodes": 2,
+            "real_directed_path": true
+          },
+          {
+            "src": 55,
+            "dst": 20469,
+            "src_cell": 36,
+            "dst_cell": 36,
+            "kind": "local",
+            "quality": true,
+            "metrics": {
+              "length": 1578.0,
+              "elevation": 10.000000067055225,
+              "avg_pop": 157.38656527249682,
+              "avg_width": 14.55640050697085
+            },
+            "road_changes": 13,
+            "path_nodes": 29,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 128,
+          "frontier": 19,
+          "exhausted": false,
+          "discovered_portals": [
+            20469
+          ]
+        }
+      },
+      "6297": {
+        "cell": 36,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 1,
+        "structural_escape_cells_fwd": [
+          4
+        ],
+        "out_edges": [
+          {
+            "src": 6297,
+            "dst": 1471,
+            "src_cell": 36,
+            "dst_cell": 4,
+            "kind": "inter",
+            "quality": false,
+            "metrics": {
+              "length": 147.0,
+              "elevation": 0.0,
+              "avg_pop": 179.0,
+              "avg_width": 10.0
+            },
+            "road_changes": 0,
+            "path_nodes": 2,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 2,
+          "frontier": 0,
+          "exhausted": true,
+          "discovered_portals": []
+        }
+      },
+      "896": {
+        "cell": 93,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 1,
+        "structural_escape_cells_fwd": [
+          79
+        ],
+        "out_edges": [
+          {
+            "src": 896,
+            "dst": 249,
+            "src_cell": 93,
+            "dst_cell": 79,
+            "kind": "inter",
+            "quality": false,
+            "metrics": {
+              "length": 167.0,
+              "elevation": 4.699999928474426,
+              "avg_pop": 166.5868263473054,
+              "avg_width": 10.0
+            },
+            "road_changes": 0,
+            "path_nodes": 3,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 3,
+          "frontier": 0,
+          "exhausted": true,
+          "discovered_portals": []
+        }
+      },
+      "249": {
+        "cell": 79,
+        "covered_fwd": true,
+        "fwd_labels": 4,
+        "raw_out_degree": 1,
+        "structural_escape_cells_fwd": [
+          93
+        ],
+        "out_edges": [
+          {
+            "src": 249,
+            "dst": 14,
+            "src_cell": 79,
+            "dst_cell": 93,
+            "kind": "inter",
+            "quality": false,
+            "metrics": {
+              "length": 437.0,
+              "elevation": 0.0,
+              "avg_pop": 253.0,
+              "avg_width": 25.0
+            },
+            "road_changes": 0,
+            "path_nodes": 2,
+            "real_directed_path": true
+          }
+        ],
+        "fwd_engine": {
+          "expansions": 1,
+          "frontier": 0,
+          "exhausted": true,
+          "discovered_portals": []
+        }
+      }
+    },
+    "has_127_to_55": true,
+    "has_55_to_81": true,
+    "forced_resume_examples_for_127": [
+      {
+        "portal": 127,
+        "direction": "fwd",
+        "cell": 36,
+        "raw_degree": 2,
+        "escape_cells": []
+      }
+    ]
+  }
+}

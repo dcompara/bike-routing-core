@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 trace_logger = logging.getLogger(f"{__name__}.trace")
 
 Direction = Literal["fwd", "bwd"]
+LocalStateRole = Literal["length", "quality"]
 CountKey = TypeVar("CountKey", int, str)
 CELL93_DIAGNOSTIC_CELL = 93
 CELL93_DIAGNOSTIC_PORTAL = 2515
@@ -180,6 +181,8 @@ class SparsePortalConfig:
     max_bridge_edges_per_cell_pair: int = 2
     bridge_refinement_scan_limit: int = 256
     validate_incremental_bridge_detection: bool = False
+    max_local_states_per_node: int = 1
+    use_structural_escape_resume: bool = False
 
 
 @dataclass(frozen=True)
@@ -250,6 +253,17 @@ class CellHistoryUpdate:
     second_visits_added: int
 
 
+@dataclass(frozen=True)
+class LocalSearchNodeState:
+    local_state_id: int
+    node: int
+    metrics: RouteAccumulator
+    path_nodes: Tuple[int, ...]
+    first_road_id: int | None
+    last_road_id: int | None
+    road_changes: int
+
+
 @dataclass
 class LocalCellEngineState:
     cell_id: int
@@ -257,6 +271,11 @@ class LocalCellEngineState:
     direction: Direction
     frontier: List[tuple] = field(default_factory=list)
     best_length: Dict[int, float] = field(default_factory=dict)
+    representatives: Dict[
+        int,
+        Dict[LocalStateRole, LocalSearchNodeState],
+    ] = field(default_factory=dict)
+    two_state_nodes_seen: Set[int] = field(default_factory=set)
     discovered_portals: Set[int] = field(default_factory=set)
     exhausted: bool = False
     expansions: int = 0
@@ -560,6 +579,26 @@ class SearchAuditCounters:
     )
     local_shortcuts_discovered_by_cell: Dict[int, int] = field(default_factory=dict)
     local_shortcut_ordering_changed_by_road_continuity: int = 0
+    local_states_generated: int = 0
+    local_length_rep_updates: int = 0
+    local_quality_rep_updates: int = 0
+    local_nodes_with_two_distinct_states: int = 0
+    quality_shortcuts_generated: int = 0
+    quality_shortcuts_insert_attempted: int = 0
+    quality_shortcuts_inserted: int = 0
+    quality_shortcuts_overlay_rejected: int = 0
+    quality_shortcut_children_generated: int = 0
+    quality_shortcut_children_accepted: int = 0
+    quality_shortcut_examples: List[Dict[str, object]] = field(default_factory=list)
+    raw_degree_resume_true: int = 0
+    structural_escape_forced_resume: int = 0
+    structural_escape_cells_found: int = 0
+    structural_escape_helper_calls: int = 0
+    structural_escape_helper_time_s: float = 0.0
+    structural_escape_forced_resume_examples: List[Dict[str, object]] = field(
+        default_factory=list
+    )
+    local_resume_stopped_with_escape: int = 0
     terminal_completion_attempts: int = 0
     terminal_completion_successes: int = 0
     terminal_leak_rejected_after_failed_completion: int = 0
@@ -759,6 +798,38 @@ class SearchAuditCounters:
             "local_shortcut_ordering_changed_by_road_continuity": (
                 self.local_shortcut_ordering_changed_by_road_continuity
             ),
+            "local_states_generated": self.local_states_generated,
+            "local_length_rep_updates": self.local_length_rep_updates,
+            "local_quality_rep_updates": self.local_quality_rep_updates,
+            "local_nodes_with_two_distinct_states": (
+                self.local_nodes_with_two_distinct_states
+            ),
+            "quality_shortcuts_generated": self.quality_shortcuts_generated,
+            "quality_shortcuts_insert_attempted": (
+                self.quality_shortcuts_insert_attempted
+            ),
+            "quality_shortcuts_inserted": self.quality_shortcuts_inserted,
+            "quality_shortcuts_overlay_rejected": (
+                self.quality_shortcuts_overlay_rejected
+            ),
+            "quality_shortcut_children_generated": (
+                self.quality_shortcut_children_generated
+            ),
+            "quality_shortcut_children_accepted": (
+                self.quality_shortcut_children_accepted
+            ),
+            "quality_shortcut_examples": self.quality_shortcut_examples,
+            "raw_degree_resume_true": self.raw_degree_resume_true,
+            "structural_escape_forced_resume": (
+                self.structural_escape_forced_resume
+            ),
+            "structural_escape_cells_found": self.structural_escape_cells_found,
+            "structural_escape_helper_calls": self.structural_escape_helper_calls,
+            "structural_escape_helper_time_s": self.structural_escape_helper_time_s,
+            "structural_escape_forced_resume_examples": (
+                self.structural_escape_forced_resume_examples
+            ),
+            "local_resume_stopped_with_escape": self.local_resume_stopped_with_escape,
             "terminal_completion_attempts": self.terminal_completion_attempts,
             "terminal_completion_successes": self.terminal_completion_successes,
             "terminal_leak_rejected_after_failed_completion": (
@@ -1063,6 +1134,7 @@ class AnytimeSearchState:
     bridge_representatives_by_cell_pair: Dict[
         Tuple[int, int], List[OverlayEdge]
     ] = field(default_factory=dict)
+    quality_local_shortcut_edge_ids: Set[int] = field(default_factory=set)
 
     def trace_cell(self, node: int) -> int:
         return self.partition.get(node, -(node + 1))
@@ -4086,6 +4158,189 @@ def _handle_terminal_cell_child(
     return True
 
 
+def _local_avg_popularity(metrics: RouteAccumulator) -> float:
+    if metrics.length <= 0.0:
+        return 0.0
+    return metrics.popularity_length / metrics.length
+
+
+def _local_avg_width(metrics: RouteAccumulator) -> float:
+    if metrics.length <= 0.0:
+        return float("inf")
+    return metrics.street_width_length / metrics.length
+
+
+def _make_local_search_state(
+    state: AnytimeSearchState,
+    *,
+    node: int,
+    metrics: RouteAccumulator,
+    path_nodes: Tuple[int, ...],
+    first_road_id: int | None,
+    last_road_id: int | None,
+    road_changes: int,
+) -> LocalSearchNodeState:
+    return LocalSearchNodeState(
+        local_state_id=next(state.local_counter),
+        node=node,
+        metrics=metrics,
+        path_nodes=path_nodes,
+        first_road_id=first_road_id,
+        last_road_id=last_road_id,
+        road_changes=road_changes,
+    )
+
+
+def _push_local_search_state(
+    state: AnytimeSearchState,
+    engine: LocalCellEngineState,
+    local_state: LocalSearchNodeState,
+) -> None:
+    heapq.heappush(
+        engine.frontier,
+        (
+            local_state.metrics.length,
+            next(state.local_counter),
+            local_state.local_state_id,
+            local_state,
+        ),
+    )
+
+
+def _local_length_key(local_state: LocalSearchNodeState) -> Tuple[float, float, int, Tuple[int, ...]]:
+    return (
+        local_state.metrics.length,
+        local_state.metrics.elevation,
+        local_state.road_changes,
+        local_state.path_nodes,
+    )
+
+
+def _local_quality_key(
+    local_state: LocalSearchNodeState,
+) -> Tuple[float, float, float, float, int, Tuple[int, ...]]:
+    metrics = local_state.metrics
+    return (
+        _local_avg_width(metrics),
+        -_local_avg_popularity(metrics),
+        metrics.length,
+        metrics.elevation,
+        local_state.road_changes,
+        local_state.path_nodes,
+    )
+
+
+def _local_state_is_current(
+    engine: LocalCellEngineState,
+    local_state: LocalSearchNodeState,
+) -> bool:
+    reps = engine.representatives.get(local_state.node, {})
+    return any(
+        representative.local_state_id == local_state.local_state_id
+        for representative in reps.values()
+    )
+
+
+def _record_local_two_state_if_distinct(
+    state: AnytimeSearchState,
+    engine: LocalCellEngineState,
+    node: int,
+) -> None:
+    reps = engine.representatives.get(node, {})
+    length_rep = reps.get("length")
+    quality_rep = reps.get("quality")
+    if (
+        length_rep is None
+        or quality_rep is None
+        or length_rep.local_state_id == quality_rep.local_state_id
+        or node in engine.two_state_nodes_seen
+    ):
+        return
+    engine.two_state_nodes_seen.add(node)
+    state.audit.local_nodes_with_two_distinct_states += 1
+
+
+def _accept_local_search_state(
+    state: AnytimeSearchState,
+    engine: LocalCellEngineState,
+    local_state: LocalSearchNodeState,
+) -> Set[LocalStateRole]:
+    state.audit.local_states_generated += 1
+    node = local_state.node
+    max_states = max(1, state.config.max_local_states_per_node)
+
+    if max_states <= 1:
+        best_len = engine.best_length.get(node)
+        if best_len is not None and local_state.metrics.length >= best_len:
+            return set()
+        engine.best_length[node] = local_state.metrics.length
+        engine.representatives.setdefault(node, {})["length"] = local_state
+        state.audit.local_length_rep_updates += 1
+        return {"length"}
+
+    reps = engine.representatives.setdefault(node, {})
+    updated_roles: Set[LocalStateRole] = set()
+
+    length_rep = reps.get("length")
+    if length_rep is None or local_state.metrics.length < length_rep.metrics.length:
+        reps["length"] = local_state
+        engine.best_length[node] = local_state.metrics.length
+        state.audit.local_length_rep_updates += 1
+        updated_roles.add("length")
+
+    quality_rep = reps.get("quality")
+    if quality_rep is None or _local_quality_key(local_state) < _local_quality_key(
+        quality_rep
+    ):
+        reps["quality"] = local_state
+        state.audit.local_quality_rep_updates += 1
+        updated_roles.add("quality")
+
+    if updated_roles:
+        _record_local_two_state_if_distinct(state, engine, node)
+    return updated_roles
+
+
+def _local_shortcut_metrics_dict(edge: OverlayEdge) -> Dict[str, object]:
+    x = edge.metrics.route_vector()
+    return {
+        "src": edge.src,
+        "dst": edge.dst,
+        "length": float(x[0]),
+        "elevation": float(x[1]),
+        "avg_pop": float(x[2]),
+        "avg_width": float(x[3]),
+        "road_changes": edge.road_changes,
+        "path_nodes": len(edge.path_nodes),
+    }
+
+
+def _record_quality_shortcut_example(
+    state: AnytimeSearchState,
+    edge: OverlayEdge,
+    *,
+    inserted: bool,
+    rejection_reason: str | None,
+) -> None:
+    examples = state.audit.quality_shortcut_examples
+    if len(examples) >= 20:
+        return
+    examples.append(
+        {
+            **_local_shortcut_metrics_dict(edge),
+            "inserted": inserted,
+            "rejection_reason": rejection_reason,
+        }
+    )
+
+
+def _local_shortcut_is_quality(
+    state: AnytimeSearchState,
+    edge: OverlayEdge,
+) -> bool:
+    return id(edge) in state.quality_local_shortcut_edge_ids
+
+
 def grow_portal_shortcuts_in_cell(
     state: AnytimeSearchState,
     portal: int,
@@ -4101,20 +4356,21 @@ def grow_portal_shortcuts_in_cell(
     engine = state.local_engines.get(key)
     if engine is None:
         engine = LocalCellEngineState(cell_id=cell_id, origin_portal=portal, direction=direction)
-        engine.best_length[portal] = 0.0
-        heapq.heappush(
-            engine.frontier,
-            (
-                0.0,
-                next(state.local_counter),
-                portal,
-                RouteAccumulator(),
-                (portal,),
-                None,
-                None,
-                0,
-            ),
+        root_state = _make_local_search_state(
+            state,
+            node=portal,
+            metrics=RouteAccumulator(),
+            path_nodes=(portal,),
+            first_road_id=None,
+            last_road_id=None,
+            road_changes=0,
         )
+        engine.best_length[portal] = 0.0
+        root_reps = engine.representatives.setdefault(portal, {})
+        root_reps["length"] = root_state
+        if state.config.max_local_states_per_node > 1:
+            root_reps["quality"] = root_state
+        _push_local_search_state(state, engine, root_state)
         state.local_engines[key] = engine
         logger.debug(
             "Local engine init cell=%s portal=%s dir=%s",
@@ -4163,18 +4419,20 @@ def grow_portal_shortcuts_in_cell(
 
     expanded = 0
     while engine.frontier and expanded < state.config.local_expand_limit:
-        (
-            _,
-            _,
-            node,
-            metrics,
-            path_nodes,
-            first_road_id,
-            last_road_id,
-            road_changes,
-        ) = heapq.heappop(engine.frontier)
+        _, _, _, local_state = heapq.heappop(engine.frontier)
         expanded += 1
         engine.expansions += 1
+        if (
+            state.config.max_local_states_per_node > 1
+            and not _local_state_is_current(engine, local_state)
+        ):
+            continue
+        node = local_state.node
+        metrics = local_state.metrics
+        path_nodes = local_state.path_nodes
+        first_road_id = local_state.first_road_id
+        last_road_id = local_state.last_road_id
+        road_changes = local_state.road_changes
         if cell93_local_diag is not None:
             cell93_local_diag["local_states_popped"] = int(
                 cell93_local_diag["local_states_popped"]
@@ -4186,12 +4444,18 @@ def grow_portal_shortcuts_in_cell(
                 vv = int(nxt)
                 if vv not in allowed_nodes:
                     continue
+                if (
+                    state.config.max_local_states_per_node > 1
+                    and vv in path_nodes
+                ):
+                    continue
                 edge_metrics = RouteAccumulator.from_edge_weights(weights[idx])
                 new_metrics = metrics.plus(edge_metrics)
-                best_len = engine.best_length.get(vv)
-                if best_len is not None and new_metrics.length >= best_len:
+                if (
+                    state.config.max_local_states_per_node > 1
+                    and state.is_partially_hopeless(new_metrics, direction)
+                ):
                     continue
-                engine.best_length[vv] = new_metrics.length
                 new_path = tuple(list(path_nodes) + [vv])
                 edge_road_id = _road_id_from_neighbor(state.G, node, idx)
                 (
@@ -4204,6 +4468,22 @@ def grow_portal_shortcuts_in_cell(
                     road_changes,
                     edge_road_id,
                 )
+                candidate_state = _make_local_search_state(
+                    state,
+                    node=vv,
+                    metrics=new_metrics,
+                    path_nodes=new_path,
+                    first_road_id=new_first_road_id,
+                    last_road_id=new_last_road_id,
+                    road_changes=new_road_changes,
+                )
+                updated_roles = _accept_local_search_state(
+                    state,
+                    engine,
+                    candidate_state,
+                )
+                if not updated_roles:
+                    continue
                 if vv in state.active_portals and vv != portal:
                     engine.discovered_portals.add(vv)
                     if direction == "bwd":
@@ -4212,6 +4492,10 @@ def grow_portal_shortcuts_in_cell(
                         trace_for_count = None
                     if trace_for_count is not None:
                         trace_for_count.local_shortcuts_discovered += 1
+                    quality_shortcut = (
+                        state.config.max_local_states_per_node > 1
+                        and "quality" in updated_roles
+                    )
                     edge = OverlayEdge(
                         src=portal,
                         dst=vv,
@@ -4222,8 +4506,24 @@ def grow_portal_shortcuts_in_cell(
                         road_changes=new_road_changes,
                         kind="local",
                     )
+                    if quality_shortcut:
+                        state.audit.quality_shortcuts_generated += 1
+                        state.audit.quality_shortcuts_insert_attempted += 1
+                    overlay_rejection_reason = _generic_overlay_edge_rejection_reason(
+                        state,
+                        edge,
+                    )
                     if state.add_overlay_edge(edge):
                         inserted_edges.append(edge)
+                        if quality_shortcut:
+                            state.audit.quality_shortcuts_inserted += 1
+                            state.quality_local_shortcut_edge_ids.add(id(edge))
+                            _record_quality_shortcut_example(
+                                state,
+                                edge,
+                                inserted=True,
+                                rejection_reason=None,
+                            )
                         if trace_for_count is not None:
                             trace_for_count.local_edges_inserted += 1
                         _increment_count(
@@ -4240,23 +4540,20 @@ def grow_portal_shortcuts_in_cell(
                             len(new_path),
                         )
                     else:
+                        if quality_shortcut:
+                            state.audit.quality_shortcuts_overlay_rejected += 1
+                            _record_quality_shortcut_example(
+                                state,
+                                edge,
+                                inserted=False,
+                                rejection_reason=overlay_rejection_reason
+                                or "duplicate_or_capacity",
+                            )
                         _record_trace_child_rejection(
                             trace_for_count,
                             "duplicate_or_capacity",
                         )
-                heapq.heappush(
-                    engine.frontier,
-                    (
-                        new_metrics.length,
-                        next(state.local_counter),
-                        vv,
-                        new_metrics,
-                        new_path,
-                        new_first_road_id,
-                        new_last_road_id,
-                        new_road_changes,
-                    ),
-                )
+                _push_local_search_state(state, engine, candidate_state)
             continue
 
         for pred, edge_metrics, edge_road_id in state.reverse_adj.get(node, []):
@@ -4270,13 +4567,48 @@ def grow_portal_shortcuts_in_cell(
                         cell93_local_diag["skipped_by_cell_boundary"]
                     ) + 1
                 continue
+            if (
+                state.config.max_local_states_per_node > 1
+                and pred in path_nodes
+            ):
+                continue
             if cell93_local_diag is not None:
                 cell93_local_diag["internal_neighbors_considered"] = int(
                     cell93_local_diag["internal_neighbors_considered"]
                 ) + 1
             new_metrics = edge_metrics.plus(metrics)
+            if (
+                state.config.max_local_states_per_node > 1
+                and state.is_partially_hopeless(new_metrics, direction)
+            ):
+                continue
+            new_path = tuple([pred] + list(path_nodes))
+            (
+                new_first_road_id,
+                new_last_road_id,
+                new_road_changes,
+            ) = _prepend_road_id(
+                first_road_id,
+                last_road_id,
+                road_changes,
+                edge_road_id,
+            )
+            candidate_state = _make_local_search_state(
+                state,
+                node=pred,
+                metrics=new_metrics,
+                path_nodes=new_path,
+                first_road_id=new_first_road_id,
+                last_road_id=new_last_road_id,
+                road_changes=new_road_changes,
+            )
             best_len = engine.best_length.get(pred)
-            if best_len is not None and new_metrics.length >= best_len:
+            updated_roles = _accept_local_search_state(
+                state,
+                engine,
+                candidate_state,
+            )
+            if not updated_roles:
                 if direction == "bwd":
                     _record_trace_child_rejection(trace, "already_seen")
                 if cell93_local_diag is not None:
@@ -4296,26 +4628,22 @@ def grow_portal_shortcuts_in_cell(
                                 "from_node": node,
                                 "reason": "not_inserted_local_dominance",
                                 "candidate_length": new_metrics.length,
-                                "best_length": best_len,
+                                "best_length": (
+                                    float(best_len)
+                                    if best_len is not None
+                                    else float("inf")
+                                ),
                             }
                         )
                 continue
-            engine.best_length[pred] = new_metrics.length
-            new_path = tuple([pred] + list(path_nodes))
-            (
-                new_first_road_id,
-                new_last_road_id,
-                new_road_changes,
-            ) = _prepend_road_id(
-                first_road_id,
-                last_road_id,
-                road_changes,
-                edge_road_id,
-            )
             if pred in state.active_portals and pred != portal:
                 engine.discovered_portals.add(pred)
                 if direction == "bwd" and trace is not None:
                     trace.local_shortcuts_discovered += 1
+                quality_shortcut = (
+                    state.config.max_local_states_per_node > 1
+                    and "quality" in updated_roles
+                )
                 if cell93_local_diag is not None:
                     reaching = cell93_local_diag["reaching_active_portals"]
                     assert isinstance(reaching, list)
@@ -4335,11 +4663,27 @@ def grow_portal_shortcuts_in_cell(
                     path_nodes=new_path,
                     first_road_id=new_first_road_id,
                     last_road_id=new_last_road_id,
-                    road_changes=new_road_changes,
-                    kind="local",
+                        road_changes=new_road_changes,
+                        kind="local",
+                    )
+                if quality_shortcut:
+                    state.audit.quality_shortcuts_generated += 1
+                    state.audit.quality_shortcuts_insert_attempted += 1
+                overlay_rejection_reason = _generic_overlay_edge_rejection_reason(
+                    state,
+                    edge,
                 )
                 if state.add_overlay_edge(edge):
                     inserted_edges.append(edge)
+                    if quality_shortcut:
+                        state.audit.quality_shortcuts_inserted += 1
+                        state.quality_local_shortcut_edge_ids.add(id(edge))
+                        _record_quality_shortcut_example(
+                            state,
+                            edge,
+                            inserted=True,
+                            rejection_reason=None,
+                        )
                     if direction == "bwd" and trace is not None:
                         trace.local_edges_inserted += 1
                     if cell93_local_diag is not None:
@@ -4360,6 +4704,15 @@ def grow_portal_shortcuts_in_cell(
                         len(new_path),
                     )
                 else:
+                    if quality_shortcut:
+                        state.audit.quality_shortcuts_overlay_rejected += 1
+                        _record_quality_shortcut_example(
+                            state,
+                            edge,
+                            inserted=False,
+                            rejection_reason=overlay_rejection_reason
+                            or "duplicate_or_capacity",
+                        )
                     _record_trace_child_rejection(trace, "duplicate_or_capacity")
                     if cell93_local_diag is not None:
                         reaching = cell93_local_diag["reaching_active_portals"]
@@ -4373,19 +4726,7 @@ def grow_portal_shortcuts_in_cell(
                         _fmt_route_vector(new_metrics),
                         len(new_path),
                     )
-            heapq.heappush(
-                engine.frontier,
-                (
-                    new_metrics.length,
-                    next(state.local_counter),
-                    pred,
-                    new_metrics,
-                    new_path,
-                    new_first_road_id,
-                    new_last_road_id,
-                    new_road_changes,
-                ),
-            )
+            _push_local_search_state(state, engine, candidate_state)
 
     if not engine.frontier:
         engine.exhausted = True
@@ -4681,6 +5022,93 @@ def _directional_overlay_degree(state: AnytimeSearchState, label: PortalLabel) -
     return len(state.overlay.in_edges.get(label.portal, []))
 
 
+def _structural_escape_cells(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> Set[int]:
+    start = time.perf_counter()
+    cells: Set[int] = set()
+    try:
+        current_cell = state.trace_cell(label.portal)
+        if label.direction == "fwd":
+            for edge in state.overlay.out_edges.get(label.portal, []):
+                dst_cell = state.trace_cell(edge.dst)
+                if dst_cell != current_cell:
+                    cells.add(dst_cell)
+                    continue
+                for next_edge in state.overlay.out_edges.get(edge.dst, []):
+                    next_cell = state.trace_cell(next_edge.dst)
+                    if next_cell != current_cell:
+                        cells.add(next_cell)
+            return cells
+
+        for edge in state.overlay.in_edges.get(label.portal, []):
+            src_cell = state.trace_cell(edge.src)
+            if src_cell != current_cell:
+                cells.add(src_cell)
+                continue
+            for prev_edge in state.overlay.in_edges.get(edge.src, []):
+                prev_cell = state.trace_cell(prev_edge.src)
+                if prev_cell != current_cell:
+                    cells.add(prev_cell)
+        return cells
+    finally:
+        state.audit.structural_escape_helper_calls += 1
+        state.audit.structural_escape_helper_time_s += time.perf_counter() - start
+
+
+def _local_resume_decision(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> Tuple[bool, int, Set[int]]:
+    raw_degree = _directional_overlay_degree(state, label)
+    raw_resume = raw_degree <= 1
+    if raw_resume:
+        state.audit.raw_degree_resume_true += 1
+
+    if not state.config.use_structural_escape_resume:
+        return raw_resume, raw_degree, set()
+
+    escape_cells = _structural_escape_cells(state, label)
+    state.audit.structural_escape_cells_found += len(escape_cells)
+    structural_resume = not escape_cells
+    if structural_resume and not raw_resume:
+        state.audit.structural_escape_forced_resume += 1
+        examples = state.audit.structural_escape_forced_resume_examples
+        if len(examples) < 20:
+            examples.append(
+                {
+                    "portal": label.portal,
+                    "direction": label.direction,
+                    "cell": state.trace_cell(label.portal),
+                    "raw_degree": raw_degree,
+                    "escape_cells": sorted(escape_cells),
+                }
+            )
+    return raw_resume or structural_resume, raw_degree, escape_cells
+
+
+def _record_resume_stopped_with_escape(
+    state: AnytimeSearchState,
+    label: PortalLabel,
+) -> None:
+    if not state.config.use_structural_escape_resume:
+        return
+    if not _local_engine_has_pending_work(state, label):
+        return
+    resume_needed, raw_degree, escape_cells = _local_resume_decision(state, label)
+    if not resume_needed and escape_cells:
+        state.audit.local_resume_stopped_with_escape += 1
+        logger.debug(
+            "Local resume stopped with structural escape portal=%s dir=%s "
+            "raw_degree=%s escape_cells=%s",
+            label.portal,
+            label.direction,
+            raw_degree,
+            sorted(escape_cells),
+        )
+
+
 def _local_engine_has_pending_work(
     state: AnytimeSearchState,
     label: PortalLabel,
@@ -4718,6 +5146,12 @@ def _enqueue_child_label_through_edge(
 ) -> bool:
     current_cell = state.trace_cell(label.portal)
     backward_culdesac_entry = False
+    quality_local_shortcut = (
+        child_source == "local_shortcut"
+        and _local_shortcut_is_quality(state, edge)
+    )
+    if quality_local_shortcut:
+        state.audit.quality_shortcut_children_generated += 1
     if label.direction == "fwd":
         if edge.src != label.portal:
             return False
@@ -4875,6 +5309,8 @@ def _enqueue_child_label_through_edge(
             reason="length_completion_lower_bound",
         )
         return False
+    if quality_local_shortcut:
+        state.audit.quality_shortcut_children_accepted += 1
     log_child_generation(
         state,
         label,
@@ -6948,16 +7384,22 @@ def advance_overlay_and_learn_shortcuts(
         directional_repair_edges: List[OverlayEdge] = []
         forward_directional_repair_edges: List[OverlayEdge] = []
         detect_bridge_pairs_if_coverage_changed(state)
-        overlay_degree = _directional_overlay_degree(state, label)
-        if overlay_degree <= 1:
+        resume_needed, overlay_degree, escape_cells = _local_resume_decision(
+            state,
+            label,
+        )
+        if resume_needed:
             if backward_trace is not None:
                 backward_trace.local_triggered = True
                 backward_trace.local_cell_id = state.partition.get(label.portal)
             logger.debug(
-                "Local trigger activation portal=%s dir=%s directional_degree=%s",
+                "Local trigger activation portal=%s dir=%s directional_degree=%s "
+                "structural_escape_cells=%s use_structural_escape=%s",
                 label.portal,
                 label.direction,
                 overlay_degree,
+                sorted(escape_cells),
+                state.config.use_structural_escape_resume,
             )
             log_local_discovery(
                 state,
@@ -6978,15 +7420,23 @@ def advance_overlay_and_learn_shortcuts(
                 discovered_edges=len(new_edges),
             )
             while (
-                _directional_overlay_degree(state, label) <= 1
-                and _local_engine_has_pending_work(state, label)
+                _local_engine_has_pending_work(state, label)
                 and time.perf_counter() < state.deadline
             ):
+                resume_needed, overlay_degree, escape_cells = _local_resume_decision(
+                    state,
+                    label,
+                )
+                if not resume_needed:
+                    break
                 logger.debug(
-                    "Local trigger resume portal=%s dir=%s directional_degree=%s",
+                    "Local trigger resume portal=%s dir=%s directional_degree=%s "
+                    "structural_escape_cells=%s use_structural_escape=%s",
                     label.portal,
                     label.direction,
-                    _directional_overlay_degree(state, label),
+                    overlay_degree,
+                    sorted(escape_cells),
+                    state.config.use_structural_escape_resume,
                 )
                 log_local_discovery(
                     state,
@@ -7027,6 +7477,7 @@ def advance_overlay_and_learn_shortcuts(
                     edge,
                     trace=backward_trace,
                 )
+        _record_resume_stopped_with_escape(state, label)
         if label.direction == "fwd":
             forward_directional_repair_edges = refine_forward_directional_portals(
                 state,

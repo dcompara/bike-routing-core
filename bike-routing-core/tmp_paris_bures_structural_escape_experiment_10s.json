@@ -1,0 +1,2596 @@
+{
+  "query": {
+    "source": 127,
+    "target": 4433,
+    "kept_cells": 40,
+    "kept_nodes": 9010
+  },
+  "runs": [
+    {
+      "name": "LOCAL1-OLD",
+      "budget_s": 10.0,
+      "elapsed_wall_s": 10.106456900000921,
+      "elapsed_cpu_s": 10.03125,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 4933,
+        "fwd": 4934
+      },
+      "queue_sizes": {
+        "fwd": 71,
+        "bwd": 42
+      },
+      "retained_labels": {
+        "fwd": 351,
+        "bwd": 353
+      },
+      "portals_reached": {
+        "fwd": 98,
+        "bwd": 97
+      },
+      "covered_cells": {
+        "fwd": [
+          0,
+          2,
+          4,
+          8,
+          12,
+          13,
+          31,
+          32,
+          36,
+          40,
+          44,
+          48,
+          49,
+          54,
+          55,
+          56,
+          61,
+          73,
+          75,
+          76,
+          79,
+          83,
+          93,
+          94,
+          97,
+          99
+        ],
+        "bwd": [
+          0,
+          1,
+          2,
+          4,
+          7,
+          8,
+          13,
+          14,
+          30,
+          31,
+          32,
+          37,
+          48,
+          49,
+          54,
+          57,
+          67,
+          73,
+          79,
+          83,
+          90,
+          93,
+          94,
+          95
+        ]
+      },
+      "adjacent_fwd_bwd_cell_pairs": [
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          32
+        ],
+        [
+          0,
+          83
+        ],
+        [
+          2,
+          32
+        ],
+        [
+          2,
+          48
+        ],
+        [
+          2,
+          49
+        ],
+        [
+          2,
+          90
+        ],
+        [
+          2,
+          94
+        ],
+        [
+          4,
+          93
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          32
+        ],
+        [
+          8,
+          83
+        ],
+        [
+          12,
+          8
+        ],
+        [
+          12,
+          83
+        ],
+        [
+          13,
+          49
+        ],
+        [
+          13,
+          54
+        ],
+        [
+          13,
+          73
+        ],
+        [
+          13,
+          94
+        ],
+        [
+          31,
+          37
+        ],
+        [
+          31,
+          94
+        ],
+        [
+          31,
+          95
+        ],
+        [
+          32,
+          0
+        ],
+        [
+          32,
+          2
+        ],
+        [
+          32,
+          8
+        ],
+        [
+          36,
+          4
+        ],
+        [
+          36,
+          79
+        ],
+        [
+          36,
+          93
+        ],
+        [
+          40,
+          79
+        ],
+        [
+          40,
+          93
+        ],
+        [
+          44,
+          0
+        ],
+        [
+          44,
+          4
+        ],
+        [
+          44,
+          93
+        ],
+        [
+          48,
+          2
+        ],
+        [
+          48,
+          7
+        ],
+        [
+          48,
+          30
+        ],
+        [
+          48,
+          54
+        ],
+        [
+          48,
+          90
+        ],
+        [
+          49,
+          2
+        ],
+        [
+          49,
+          13
+        ],
+        [
+          49,
+          94
+        ],
+        [
+          54,
+          13
+        ],
+        [
+          54,
+          30
+        ],
+        [
+          54,
+          48
+        ],
+        [
+          54,
+          73
+        ],
+        [
+          55,
+          0
+        ],
+        [
+          56,
+          7
+        ],
+        [
+          56,
+          8
+        ],
+        [
+          56,
+          48
+        ],
+        [
+          56,
+          90
+        ],
+        [
+          73,
+          13
+        ],
+        [
+          73,
+          30
+        ],
+        [
+          73,
+          54
+        ],
+        [
+          75,
+          83
+        ],
+        [
+          75,
+          93
+        ],
+        [
+          76,
+          0
+        ],
+        [
+          76,
+          83
+        ],
+        [
+          76,
+          93
+        ],
+        [
+          79,
+          93
+        ],
+        [
+          83,
+          0
+        ],
+        [
+          83,
+          8
+        ],
+        [
+          83,
+          93
+        ],
+        [
+          93,
+          4
+        ],
+        [
+          93,
+          79
+        ],
+        [
+          93,
+          83
+        ],
+        [
+          94,
+          2
+        ],
+        [
+          94,
+          13
+        ],
+        [
+          94,
+          31
+        ],
+        [
+          94,
+          49
+        ]
+      ],
+      "reaches_cell_87_forward": false,
+      "overlay_edges": 617,
+      "bridges": {
+        "pending_pairs_discovered": 58,
+        "inserted": 67,
+        "join_successes": 0
+      },
+      "complete_join_tests": 17764,
+      "same_portal_join_attempts": 4760,
+      "one_edge_join_attempts": 17349,
+      "best_complete_candidate": {
+        "complete_candidates": 17764,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": 168.1632231789188,
+        "min_avg_width": 15.860707348829267,
+        "min_length": 35040.0,
+        "max_elevation": 721.7000015974045,
+        "min_elevation": 462.3000007867813,
+        "best_near_feasible": {
+          "metrics": {
+            "length": 35040.0,
+            "elevation": 462.60000086575747,
+            "avg_pop": 136.3144406392694,
+            "avg_width": 18.012271689497716
+          },
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 40.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 13.685559360730593,
+            "width_high": 3.012271689497716
+          },
+          "key": [
+            0.4395658295281582,
+            0.3012271689497716,
+            3.0,
+            0.0,
+            0.008,
+            0.0,
+            0.0,
+            0.1303386605783866,
+            0.3012271689497716,
+            35040.0,
+            462.60000086575747,
+            -136.3144406392694,
+            18.012271689497716
+          ]
+        }
+      },
+      "structural_escape_audit": {
+        "raw_degree_resume_true": 725,
+        "structural_escape_forced_resume": 0,
+        "structural_escape_cells_found": 0,
+        "structural_escape_helper_calls": 0,
+        "structural_escape_helper_time_s": 0.0,
+        "local_resume_stopped_with_escape": 0,
+        "forced_resume_examples": []
+      },
+      "local_audit": {
+        "local_states_generated": 28541,
+        "local_length_rep_updates": 15072,
+        "local_quality_rep_updates": 0,
+        "local_nodes_with_two_distinct_states": 0,
+        "quality_shortcuts_generated": 0,
+        "quality_shortcuts_inserted": 0,
+        "quality_shortcut_children_generated": 0,
+        "quality_shortcut_children_accepted": 0
+      },
+      "source_chain": {
+        "portals": {
+          "127": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 3,
+            "structural_escape_cells_fwd": [
+              4,
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 127,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 769.0,
+                  "elevation": 4.200000010430813,
+                  "avg_pop": 251.16775032509753,
+                  "avg_width": 25.0
+                },
+                "road_changes": 2,
+                "path_nodes": 12,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 604,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1044.0,
+                  "elevation": 3.400000035762787,
+                  "avg_pop": 109.94252873563218,
+                  "avg_width": 11.618773946360154
+                },
+                "road_changes": 4,
+                "path_nodes": 17,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 55,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1057.0,
+                  "elevation": 4.400000013411045,
+                  "avg_pop": 251.76915799432356,
+                  "avg_width": 23.079470198675498
+                },
+                "road_changes": 2,
+                "path_nodes": 19,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 192,
+              "frontier": 30,
+              "exhausted": false,
+              "discovered_portals": [
+                55,
+                604,
+                20469
+              ]
+            }
+          },
+          "20469": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 20469,
+                "dst": 896,
+                "src_cell": 36,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 458.0,
+                  "elevation": 1.0,
+                  "avg_pop": 213.08515283842794,
+                  "avg_width": 19.53056768558952
+                },
+                "road_changes": 1,
+                "path_nodes": 5,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 5,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "604": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 4,
+            "structural_escape_cells_fwd": [
+              4,
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 604,
+                "dst": 6297,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 281.0,
+                  "elevation": 0.6000000238418579,
+                  "avg_pop": 118.18505338078292,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 6,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 783.0,
+                  "elevation": 2.9000000283122063,
+                  "avg_pop": 96.0485312899106,
+                  "avg_width": 12.458492975734355
+                },
+                "road_changes": 1,
+                "path_nodes": 10,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 249,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 3966.0,
+                  "elevation": 24.199999697506428,
+                  "avg_pop": 145.90393343419063,
+                  "avg_width": 14.049420070600101
+                },
+                "road_changes": 19,
+                "path_nodes": 38,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 969,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 595.0,
+                  "elevation": 1.8000000715255737,
+                  "avg_pop": 190.03697478991597,
+                  "avg_width": 12.890756302521009
+                },
+                "road_changes": 1,
+                "path_nodes": 7,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 64,
+              "frontier": 16,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                6297
+              ]
+            }
+          },
+          "55": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 4,
+            "structural_escape_cells_fwd": [
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 55,
+                "dst": 81,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 173.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 20.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1578.0,
+                  "elevation": 10.000000067055225,
+                  "avg_pop": 157.38656527249682,
+                  "avg_width": 14.55640050697085
+                },
+                "road_changes": 13,
+                "path_nodes": 29,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1705.0,
+                  "elevation": 9.300000064074993,
+                  "avg_pop": 160.5090909090909,
+                  "avg_width": 13.592375366568914
+                },
+                "road_changes": 13,
+                "path_nodes": 28,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 249,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 1399.0,
+                  "elevation": 8.000000111758709,
+                  "avg_pop": 179.37526804860616,
+                  "avg_width": 16.88348820586133
+                },
+                "road_changes": 5,
+                "path_nodes": 19,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 128,
+              "frontier": 22,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                20469
+              ]
+            }
+          },
+          "6297": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 6297,
+                "dst": 1471,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 147.0,
+                  "elevation": 0.0,
+                  "avg_pop": 179.0,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 2,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "896": {
+            "cell": 93,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 896,
+                "dst": 249,
+                "src_cell": 93,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 167.0,
+                  "elevation": 4.699999928474426,
+                  "avg_pop": 166.5868263473054,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 3,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 3,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "249": {
+            "cell": 79,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 2,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 249,
+                "dst": 14,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 437.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 25.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 249,
+                "dst": 2515,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 1805.0,
+                  "elevation": 8.59999993443489,
+                  "avg_pop": 226.05817174515235,
+                  "avg_width": 22.29639889196676
+                },
+                "road_changes": 6,
+                "path_nodes": 15,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 1,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          }
+        },
+        "has_127_to_55": true,
+        "has_55_to_81": true,
+        "forced_resume_examples_for_127": []
+      }
+    },
+    {
+      "name": "LOCAL1-STRUCT",
+      "budget_s": 10.0,
+      "elapsed_wall_s": 10.256117400000221,
+      "elapsed_cpu_s": 9.984375,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 4772,
+        "fwd": 4773
+      },
+      "queue_sizes": {
+        "fwd": 60,
+        "bwd": 49
+      },
+      "retained_labels": {
+        "fwd": 299,
+        "bwd": 310
+      },
+      "portals_reached": {
+        "fwd": 84,
+        "bwd": 87
+      },
+      "covered_cells": {
+        "fwd": [
+          0,
+          2,
+          4,
+          8,
+          12,
+          31,
+          32,
+          36,
+          40,
+          44,
+          49,
+          55,
+          56,
+          61,
+          75,
+          76,
+          79,
+          83,
+          93,
+          94,
+          97,
+          99
+        ],
+        "bwd": [
+          0,
+          1,
+          2,
+          4,
+          7,
+          13,
+          14,
+          30,
+          31,
+          32,
+          37,
+          48,
+          49,
+          54,
+          57,
+          67,
+          73,
+          79,
+          83,
+          90,
+          93,
+          94,
+          95
+        ]
+      },
+      "adjacent_fwd_bwd_cell_pairs": [
+        [
+          0,
+          32
+        ],
+        [
+          0,
+          83
+        ],
+        [
+          2,
+          32
+        ],
+        [
+          2,
+          48
+        ],
+        [
+          2,
+          49
+        ],
+        [
+          2,
+          90
+        ],
+        [
+          2,
+          94
+        ],
+        [
+          4,
+          93
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          32
+        ],
+        [
+          8,
+          83
+        ],
+        [
+          12,
+          83
+        ],
+        [
+          31,
+          37
+        ],
+        [
+          31,
+          94
+        ],
+        [
+          31,
+          95
+        ],
+        [
+          32,
+          0
+        ],
+        [
+          32,
+          2
+        ],
+        [
+          36,
+          4
+        ],
+        [
+          36,
+          79
+        ],
+        [
+          36,
+          93
+        ],
+        [
+          40,
+          79
+        ],
+        [
+          40,
+          93
+        ],
+        [
+          44,
+          0
+        ],
+        [
+          44,
+          4
+        ],
+        [
+          44,
+          93
+        ],
+        [
+          49,
+          2
+        ],
+        [
+          49,
+          13
+        ],
+        [
+          49,
+          94
+        ],
+        [
+          55,
+          0
+        ],
+        [
+          56,
+          7
+        ],
+        [
+          56,
+          48
+        ],
+        [
+          56,
+          90
+        ],
+        [
+          75,
+          83
+        ],
+        [
+          75,
+          93
+        ],
+        [
+          76,
+          0
+        ],
+        [
+          76,
+          83
+        ],
+        [
+          76,
+          93
+        ],
+        [
+          79,
+          93
+        ],
+        [
+          83,
+          0
+        ],
+        [
+          83,
+          93
+        ],
+        [
+          93,
+          4
+        ],
+        [
+          93,
+          79
+        ],
+        [
+          93,
+          83
+        ],
+        [
+          94,
+          2
+        ],
+        [
+          94,
+          13
+        ],
+        [
+          94,
+          31
+        ],
+        [
+          94,
+          49
+        ]
+      ],
+      "reaches_cell_87_forward": false,
+      "overlay_edges": 571,
+      "bridges": {
+        "pending_pairs_discovered": 42,
+        "inserted": 49,
+        "join_successes": 0
+      },
+      "complete_join_tests": 6736,
+      "same_portal_join_attempts": 1708,
+      "one_edge_join_attempts": 5787,
+      "best_complete_candidate": {
+        "complete_candidates": 6736,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": 168.1632231789188,
+        "min_avg_width": 16.08646575342466,
+        "min_length": 35040.0,
+        "max_elevation": 717.2000015974045,
+        "min_elevation": 462.3000007867813,
+        "best_near_feasible": {
+          "metrics": {
+            "length": 35040.0,
+            "elevation": 462.60000086575747,
+            "avg_pop": 136.3144406392694,
+            "avg_width": 18.012271689497716
+          },
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 40.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 13.685559360730593,
+            "width_high": 3.012271689497716
+          },
+          "key": [
+            0.4395658295281582,
+            0.3012271689497716,
+            3.0,
+            0.0,
+            0.008,
+            0.0,
+            0.0,
+            0.1303386605783866,
+            0.3012271689497716,
+            35040.0,
+            462.60000086575747,
+            -136.3144406392694,
+            18.012271689497716
+          ]
+        }
+      },
+      "structural_escape_audit": {
+        "raw_degree_resume_true": 631,
+        "structural_escape_forced_resume": 10,
+        "structural_escape_cells_found": 23923,
+        "structural_escape_helper_calls": 10416,
+        "structural_escape_helper_time_s": 0.04603540031530429,
+        "local_resume_stopped_with_escape": 4395,
+        "forced_resume_examples": [
+          {
+            "portal": 18402,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 18402,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 18719,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 18719,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 2614,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 2614,
+            "direction": "fwd",
+            "cell": 12,
+            "raw_degree": 3,
+            "escape_cells": []
+          },
+          {
+            "portal": 6267,
+            "direction": "fwd",
+            "cell": 36,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 1040,
+            "direction": "fwd",
+            "cell": 36,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          }
+        ]
+      },
+      "local_audit": {
+        "local_states_generated": 27361,
+        "local_length_rep_updates": 14490,
+        "local_quality_rep_updates": 0,
+        "local_nodes_with_two_distinct_states": 0,
+        "quality_shortcuts_generated": 0,
+        "quality_shortcuts_inserted": 0,
+        "quality_shortcut_children_generated": 0,
+        "quality_shortcut_children_accepted": 0
+      },
+      "source_chain": {
+        "portals": {
+          "127": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 3,
+            "structural_escape_cells_fwd": [
+              4,
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 127,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 769.0,
+                  "elevation": 4.200000010430813,
+                  "avg_pop": 251.16775032509753,
+                  "avg_width": 25.0
+                },
+                "road_changes": 2,
+                "path_nodes": 12,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 604,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1044.0,
+                  "elevation": 3.400000035762787,
+                  "avg_pop": 109.94252873563218,
+                  "avg_width": 11.618773946360154
+                },
+                "road_changes": 4,
+                "path_nodes": 17,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 55,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1057.0,
+                  "elevation": 4.400000013411045,
+                  "avg_pop": 251.76915799432356,
+                  "avg_width": 23.079470198675498
+                },
+                "road_changes": 2,
+                "path_nodes": 19,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 192,
+              "frontier": 30,
+              "exhausted": false,
+              "discovered_portals": [
+                55,
+                604,
+                20469
+              ]
+            }
+          },
+          "20469": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 20469,
+                "dst": 896,
+                "src_cell": 36,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 458.0,
+                  "elevation": 1.0,
+                  "avg_pop": 213.08515283842794,
+                  "avg_width": 19.53056768558952
+                },
+                "road_changes": 1,
+                "path_nodes": 5,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 5,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "604": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 4,
+            "structural_escape_cells_fwd": [
+              4,
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 604,
+                "dst": 6297,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 281.0,
+                  "elevation": 0.6000000238418579,
+                  "avg_pop": 118.18505338078292,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 6,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 783.0,
+                  "elevation": 2.9000000283122063,
+                  "avg_pop": 96.0485312899106,
+                  "avg_width": 12.458492975734355
+                },
+                "road_changes": 1,
+                "path_nodes": 10,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 249,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 3966.0,
+                  "elevation": 24.199999697506428,
+                  "avg_pop": 145.90393343419063,
+                  "avg_width": 14.049420070600101
+                },
+                "road_changes": 19,
+                "path_nodes": 38,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 969,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 595.0,
+                  "elevation": 1.8000000715255737,
+                  "avg_pop": 190.03697478991597,
+                  "avg_width": 12.890756302521009
+                },
+                "road_changes": 1,
+                "path_nodes": 7,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 64,
+              "frontier": 16,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                6297
+              ]
+            }
+          },
+          "55": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 4,
+            "structural_escape_cells_fwd": [
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 55,
+                "dst": 81,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 173.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 20.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1578.0,
+                  "elevation": 10.000000067055225,
+                  "avg_pop": 157.38656527249682,
+                  "avg_width": 14.55640050697085
+                },
+                "road_changes": 13,
+                "path_nodes": 29,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": false,
+                "metrics": {
+                  "length": 1705.0,
+                  "elevation": 9.300000064074993,
+                  "avg_pop": 160.5090909090909,
+                  "avg_width": 13.592375366568914
+                },
+                "road_changes": 13,
+                "path_nodes": 28,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 249,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 1399.0,
+                  "elevation": 8.000000111758709,
+                  "avg_pop": 179.37526804860616,
+                  "avg_width": 16.88348820586133
+                },
+                "road_changes": 5,
+                "path_nodes": 19,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 128,
+              "frontier": 22,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                20469
+              ]
+            }
+          },
+          "6297": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 6297,
+                "dst": 1471,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 147.0,
+                  "elevation": 0.0,
+                  "avg_pop": 179.0,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 2,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "896": {
+            "cell": 93,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 896,
+                "dst": 249,
+                "src_cell": 93,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 167.0,
+                  "elevation": 4.699999928474426,
+                  "avg_pop": 166.5868263473054,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 3,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 3,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "249": {
+            "cell": 79,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 2,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 249,
+                "dst": 14,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 437.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 25.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 249,
+                "dst": 2515,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 1805.0,
+                  "elevation": 8.59999993443489,
+                  "avg_pop": 226.05817174515235,
+                  "avg_width": 22.29639889196676
+                },
+                "road_changes": 6,
+                "path_nodes": 15,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 1,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          }
+        },
+        "has_127_to_55": true,
+        "has_55_to_81": true,
+        "forced_resume_examples_for_127": []
+      }
+    },
+    {
+      "name": "LOCAL2-OLD",
+      "budget_s": 10.0,
+      "elapsed_wall_s": 10.268551299988758,
+      "elapsed_cpu_s": 10.03125,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 14007,
+        "fwd": 2242
+      },
+      "queue_sizes": {
+        "fwd": 0,
+        "bwd": 21
+      },
+      "retained_labels": {
+        "fwd": 120,
+        "bwd": 254
+      },
+      "portals_reached": {
+        "fwd": 30,
+        "bwd": 64
+      },
+      "covered_cells": {
+        "fwd": [
+          4,
+          36,
+          40,
+          75,
+          79,
+          93
+        ],
+        "bwd": [
+          1,
+          2,
+          13,
+          14,
+          31,
+          32,
+          37,
+          49,
+          54,
+          57,
+          67,
+          73,
+          94,
+          95
+        ]
+      },
+      "adjacent_fwd_bwd_cell_pairs": [],
+      "reaches_cell_87_forward": false,
+      "overlay_edges": 411,
+      "bridges": {
+        "pending_pairs_discovered": 0,
+        "inserted": 0,
+        "join_successes": 0
+      },
+      "complete_join_tests": 0,
+      "same_portal_join_attempts": 0,
+      "one_edge_join_attempts": 0,
+      "best_complete_candidate": {
+        "complete_candidates": 0,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": null,
+        "min_avg_width": null,
+        "min_length": null,
+        "max_elevation": null,
+        "min_elevation": null,
+        "best_near_feasible": null
+      },
+      "structural_escape_audit": {
+        "raw_degree_resume_true": 619,
+        "structural_escape_forced_resume": 0,
+        "structural_escape_cells_found": 0,
+        "structural_escape_helper_calls": 0,
+        "structural_escape_helper_time_s": 0.0,
+        "local_resume_stopped_with_escape": 0,
+        "forced_resume_examples": []
+      },
+      "local_audit": {
+        "local_states_generated": 18226,
+        "local_length_rep_updates": 7261,
+        "local_quality_rep_updates": 16135,
+        "local_nodes_with_two_distinct_states": 4570,
+        "quality_shortcuts_generated": 200,
+        "quality_shortcuts_inserted": 197,
+        "quality_shortcut_children_generated": 197,
+        "quality_shortcut_children_accepted": 88
+      },
+      "source_chain": {
+        "portals": {
+          "127": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 2,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 127,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 769.0,
+                  "elevation": 4.200000010430813,
+                  "avg_pop": 251.16775032509753,
+                  "avg_width": 25.0
+                },
+                "road_changes": 2,
+                "path_nodes": 12,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 604,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1044.0,
+                  "elevation": 3.400000035762787,
+                  "avg_pop": 109.94252873563218,
+                  "avg_width": 11.618773946360154
+                },
+                "road_changes": 4,
+                "path_nodes": 17,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 256,
+              "frontier": 79,
+              "exhausted": false,
+              "discovered_portals": [
+                604,
+                20469
+              ]
+            }
+          },
+          "20469": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 20469,
+                "dst": 896,
+                "src_cell": 36,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 458.0,
+                  "elevation": 1.0,
+                  "avg_pop": 213.08515283842794,
+                  "avg_width": 19.53056768558952
+                },
+                "road_changes": 1,
+                "path_nodes": 5,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 5,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "604": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 3,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 604,
+                "dst": 6297,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 281.0,
+                  "elevation": 0.6000000238418579,
+                  "avg_pop": 118.18505338078292,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 6,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 783.0,
+                  "elevation": 2.9000000283122063,
+                  "avg_pop": 96.0485312899106,
+                  "avg_width": 12.458492975734355
+                },
+                "road_changes": 1,
+                "path_nodes": 10,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 932.0,
+                  "elevation": 1.6000000461935997,
+                  "avg_pop": 80.65557939914163,
+                  "avg_width": 10.724248927038627
+                },
+                "road_changes": 3,
+                "path_nodes": 11,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 64,
+              "frontier": 27,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                6297
+              ]
+            }
+          },
+          "55": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 4,
+            "structural_escape_cells_fwd": [
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 55,
+                "dst": 81,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 173.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 20.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20348,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1447.0,
+                  "elevation": 10.200000070035458,
+                  "avg_pop": 148.80511402902556,
+                  "avg_width": 13.610919143054597
+                },
+                "road_changes": 12,
+                "path_nodes": 28,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20348,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1556.0,
+                  "elevation": 10.200000070035458,
+                  "avg_pop": 135.14203084832906,
+                  "avg_width": 13.223007712082262
+                },
+                "road_changes": 13,
+                "path_nodes": 28,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1578.0,
+                  "elevation": 10.000000067055225,
+                  "avg_pop": 157.38656527249682,
+                  "avg_width": 14.55640050697085
+                },
+                "road_changes": 13,
+                "path_nodes": 29,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 128,
+              "frontier": 19,
+              "exhausted": false,
+              "discovered_portals": [
+                20348,
+                20469
+              ]
+            }
+          },
+          "6297": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 6297,
+                "dst": 1471,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 147.0,
+                  "elevation": 0.0,
+                  "avg_pop": 179.0,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 2,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "896": {
+            "cell": 93,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 896,
+                "dst": 249,
+                "src_cell": 93,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 167.0,
+                  "elevation": 4.699999928474426,
+                  "avg_pop": 166.5868263473054,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 3,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 3,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "249": {
+            "cell": 79,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 249,
+                "dst": 14,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 437.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 25.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 1,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          }
+        },
+        "has_127_to_55": false,
+        "has_55_to_81": true,
+        "forced_resume_examples_for_127": []
+      }
+    },
+    {
+      "name": "LOCAL2-STRUCT",
+      "budget_s": 10.0,
+      "elapsed_wall_s": 10.253065999990213,
+      "elapsed_cpu_s": 10.046875,
+      "archive_size": 0,
+      "archive_routes": [],
+      "archive_jaccard": [],
+      "frontier_pops": {
+        "bwd": 14084,
+        "fwd": 478
+      },
+      "queue_sizes": {
+        "fwd": 0,
+        "bwd": 28
+      },
+      "retained_labels": {
+        "fwd": 80,
+        "bwd": 257
+      },
+      "portals_reached": {
+        "fwd": 22,
+        "bwd": 66
+      },
+      "covered_cells": {
+        "fwd": [
+          4,
+          36,
+          40,
+          75,
+          79,
+          93
+        ],
+        "bwd": [
+          1,
+          2,
+          13,
+          14,
+          26,
+          31,
+          32,
+          37,
+          49,
+          54,
+          57,
+          67,
+          73,
+          94,
+          95
+        ]
+      },
+      "adjacent_fwd_bwd_cell_pairs": [],
+      "reaches_cell_87_forward": false,
+      "overlay_edges": 389,
+      "bridges": {
+        "pending_pairs_discovered": 0,
+        "inserted": 0,
+        "join_successes": 0
+      },
+      "complete_join_tests": 0,
+      "same_portal_join_attempts": 0,
+      "one_edge_join_attempts": 0,
+      "best_complete_candidate": {
+        "complete_candidates": 0,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": null,
+        "min_avg_width": null,
+        "min_length": null,
+        "max_elevation": null,
+        "min_elevation": null,
+        "best_near_feasible": null
+      },
+      "structural_escape_audit": {
+        "raw_degree_resume_true": 323,
+        "structural_escape_forced_resume": 6,
+        "structural_escape_cells_found": 30835,
+        "structural_escape_helper_calls": 14207,
+        "structural_escape_helper_time_s": 0.06473160101450048,
+        "local_resume_stopped_with_escape": 6915,
+        "forced_resume_examples": [
+          {
+            "portal": 127,
+            "direction": "fwd",
+            "cell": 36,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          },
+          {
+            "portal": 19845,
+            "direction": "bwd",
+            "cell": 95,
+            "raw_degree": 2,
+            "escape_cells": []
+          }
+        ]
+      },
+      "local_audit": {
+        "local_states_generated": 18720,
+        "local_length_rep_updates": 7245,
+        "local_quality_rep_updates": 16552,
+        "local_nodes_with_two_distinct_states": 4732,
+        "quality_shortcuts_generated": 183,
+        "quality_shortcuts_inserted": 179,
+        "quality_shortcut_children_generated": 179,
+        "quality_shortcut_children_accepted": 83
+      },
+      "source_chain": {
+        "portals": {
+          "127": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 3,
+            "structural_escape_cells_fwd": [
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 127,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 769.0,
+                  "elevation": 4.200000010430813,
+                  "avg_pop": 251.16775032509753,
+                  "avg_width": 25.0
+                },
+                "road_changes": 2,
+                "path_nodes": 12,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 604,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1044.0,
+                  "elevation": 3.400000035762787,
+                  "avg_pop": 109.94252873563218,
+                  "avg_width": 11.618773946360154
+                },
+                "road_changes": 4,
+                "path_nodes": 17,
+                "real_directed_path": true
+              },
+              {
+                "src": 127,
+                "dst": 55,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1057.0,
+                  "elevation": 4.400000013411045,
+                  "avg_pop": 251.76915799432356,
+                  "avg_width": 23.079470198675498
+                },
+                "road_changes": 2,
+                "path_nodes": 19,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 320,
+              "frontier": 77,
+              "exhausted": false,
+              "discovered_portals": [
+                55,
+                604,
+                20469
+              ]
+            }
+          },
+          "20469": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 20469,
+                "dst": 896,
+                "src_cell": 36,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 458.0,
+                  "elevation": 1.0,
+                  "avg_pop": 213.08515283842794,
+                  "avg_width": 19.53056768558952
+                },
+                "road_changes": 1,
+                "path_nodes": 5,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 5,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "604": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 3,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 604,
+                "dst": 6297,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 281.0,
+                  "elevation": 0.6000000238418579,
+                  "avg_pop": 118.18505338078292,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 6,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 783.0,
+                  "elevation": 2.9000000283122063,
+                  "avg_pop": 96.0485312899106,
+                  "avg_width": 12.458492975734355
+                },
+                "road_changes": 1,
+                "path_nodes": 10,
+                "real_directed_path": true
+              },
+              {
+                "src": 604,
+                "dst": 127,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 932.0,
+                  "elevation": 1.6000000461935997,
+                  "avg_pop": 80.65557939914163,
+                  "avg_width": 10.724248927038627
+                },
+                "road_changes": 3,
+                "path_nodes": 11,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 64,
+              "frontier": 27,
+              "exhausted": false,
+              "discovered_portals": [
+                127,
+                6297
+              ]
+            }
+          },
+          "55": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 2,
+            "structural_escape_cells_fwd": [
+              79,
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 55,
+                "dst": 81,
+                "src_cell": 36,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 173.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 20.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              },
+              {
+                "src": 55,
+                "dst": 20469,
+                "src_cell": 36,
+                "dst_cell": 36,
+                "kind": "local",
+                "quality": true,
+                "metrics": {
+                  "length": 1578.0,
+                  "elevation": 10.000000067055225,
+                  "avg_pop": 157.38656527249682,
+                  "avg_width": 14.55640050697085
+                },
+                "road_changes": 13,
+                "path_nodes": 29,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 128,
+              "frontier": 19,
+              "exhausted": false,
+              "discovered_portals": [
+                20469
+              ]
+            }
+          },
+          "6297": {
+            "cell": 36,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              4
+            ],
+            "out_edges": [
+              {
+                "src": 6297,
+                "dst": 1471,
+                "src_cell": 36,
+                "dst_cell": 4,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 147.0,
+                  "elevation": 0.0,
+                  "avg_pop": 179.0,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 2,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "896": {
+            "cell": 93,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              79
+            ],
+            "out_edges": [
+              {
+                "src": 896,
+                "dst": 249,
+                "src_cell": 93,
+                "dst_cell": 79,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 167.0,
+                  "elevation": 4.699999928474426,
+                  "avg_pop": 166.5868263473054,
+                  "avg_width": 10.0
+                },
+                "road_changes": 0,
+                "path_nodes": 3,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 3,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          },
+          "249": {
+            "cell": 79,
+            "covered_fwd": true,
+            "fwd_labels": 4,
+            "raw_out_degree": 1,
+            "structural_escape_cells_fwd": [
+              93
+            ],
+            "out_edges": [
+              {
+                "src": 249,
+                "dst": 14,
+                "src_cell": 79,
+                "dst_cell": 93,
+                "kind": "inter",
+                "quality": false,
+                "metrics": {
+                  "length": 437.0,
+                  "elevation": 0.0,
+                  "avg_pop": 253.0,
+                  "avg_width": 25.0
+                },
+                "road_changes": 0,
+                "path_nodes": 2,
+                "real_directed_path": true
+              }
+            ],
+            "fwd_engine": {
+              "expansions": 1,
+              "frontier": 0,
+              "exhausted": true,
+              "discovered_portals": []
+            }
+          }
+        },
+        "has_127_to_55": true,
+        "has_55_to_81": true,
+        "forced_resume_examples_for_127": [
+          {
+            "portal": 127,
+            "direction": "fwd",
+            "cell": 36,
+            "raw_degree": 2,
+            "escape_cells": []
+          }
+        ]
+      }
+    }
+  ]
+}

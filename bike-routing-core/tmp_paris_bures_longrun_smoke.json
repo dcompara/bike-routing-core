@@ -1,0 +1,314 @@
+{
+  "status": "complete",
+  "query": {
+    "source": 127,
+    "target": 4433,
+    "constraints": {
+      "lower": [
+        30000.0,
+        400.0,
+        150.0,
+        5.0
+      ],
+      "upper": [
+        35000.0,
+        500.0,
+        255.0,
+        15.0
+      ]
+    },
+    "corridor_slack_m": 1500,
+    "max_hops_from_boundary": 1,
+    "oracle_metrics": {
+      "length": 31818.0,
+      "elevation": 405.4,
+      "avg_pop": 199.87,
+      "avg_width": 14.16
+    },
+    "oracle_cells": [
+      36,
+      93,
+      79,
+      40,
+      99,
+      97,
+      56,
+      48,
+      30,
+      54,
+      13,
+      49,
+      87,
+      31,
+      37,
+      1
+    ]
+  },
+  "first_route_time_s": null,
+  "route_events": [],
+  "snapshots": [
+    {
+      "checkpoint_target_s": null,
+      "elapsed_wall_s": 2.093309700001555,
+      "elapsed_cpu_s": 2.078125,
+      "cpu_wall_ratio": 0.992742428834746,
+      "archive_size": 0,
+      "archive_valid": [],
+      "archive_routes": [],
+      "frontier_pops": {
+        "bwd": 4017,
+        "fwd": 4017
+      },
+      "queue_sizes": {
+        "fwd": 20,
+        "bwd": 27
+      },
+      "retained_labels": {
+        "fwd": 272,
+        "bwd": 223
+      },
+      "distinct_representative_portals": {
+        "fwd": 72,
+        "bwd": 57
+      },
+      "covered_cells": {
+        "fwd": [
+          0,
+          4,
+          8,
+          12,
+          36,
+          40,
+          44,
+          55,
+          56,
+          61,
+          75,
+          76,
+          79,
+          83,
+          93,
+          97,
+          99
+        ],
+        "bwd": [
+          1,
+          2,
+          13,
+          14,
+          31,
+          32,
+          37,
+          49,
+          54,
+          57,
+          67,
+          90,
+          94,
+          95
+        ]
+      },
+      "oracle_contact": {
+        "cell_87_reached": false,
+        "forward_oracle_cells": [
+          36,
+          40,
+          56,
+          79,
+          93,
+          97,
+          99
+        ],
+        "backward_oracle_cells": [
+          1,
+          13,
+          31,
+          37,
+          49,
+          54
+        ],
+        "both_oracle_cells": [],
+        "missing_oracle_cells": [
+          30,
+          48,
+          87
+        ]
+      },
+      "oracle_portal_summaries": {
+        "896": {
+          "fwd": {
+            "count": 4,
+            "low_width": {
+              "portal": 896,
+              "priority": 10.256400000000001,
+              "metrics": {
+                "length": 6859.0,
+                "elevation": 27.600000105798244,
+                "avg_pop": 172.93453856247265,
+                "avg_width": 15.325120279924187
+              },
+              "road_changes": 33,
+              "visited_cells": [
+                4,
+                36,
+                93
+              ],
+              "revisited_cells": []
+            },
+            "high_pop": {
+              "portal": 896,
+              "priority": 8.936,
+              "metrics": {
+                "length": 10160.0,
+                "elevation": 56.40000054985285,
+                "avg_pop": 215.31377952755906,
+                "avg_width": 20.456200787401574
+              },
+              "road_changes": 58,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                36
+              ]
+            },
+            "best_score": {
+              "portal": 896,
+              "priority": 8.8968,
+              "metrics": {
+                "length": 10258.0,
+                "elevation": 48.100000359117985,
+                "avg_pop": 209.1563657633067,
+                "avg_width": 18.426593877948918
+              },
+              "road_changes": 52,
+              "visited_cells": [
+                36,
+                79,
+                93
+              ],
+              "revisited_cells": [
+                36
+              ]
+            }
+          },
+          "bwd": null
+        },
+        "4057": {
+          "fwd": null,
+          "bwd": {
+            "count": 4,
+            "low_width": {
+              "portal": 4057,
+              "priority": 4.0096,
+              "metrics": {
+                "length": 22476.0,
+                "elevation": 298.100001193583,
+                "avg_pop": 139.71636412172984,
+                "avg_width": 17.81655988610073
+              },
+              "road_changes": 72,
+              "visited_cells": [
+                1,
+                2,
+                13,
+                31,
+                37,
+                49,
+                54,
+                94
+              ],
+              "revisited_cells": [
+                13,
+                49
+              ]
+            },
+            "high_pop": {
+              "portal": 4057,
+              "priority": 4.0124,
+              "metrics": {
+                "length": 22469.0,
+                "elevation": 298.100001193583,
+                "avg_pop": 139.73185277493437,
+                "avg_width": 17.85459967065735
+              },
+              "road_changes": 69,
+              "visited_cells": [
+                1,
+                13,
+                31,
+                37,
+                49,
+                54,
+                94
+              ],
+              "revisited_cells": [
+                13
+              ]
+            },
+            "best_score": {
+              "portal": 4057,
+              "priority": 4.0096,
+              "metrics": {
+                "length": 22476.0,
+                "elevation": 298.100001193583,
+                "avg_pop": 139.71636412172984,
+                "avg_width": 17.81655988610073
+              },
+              "road_changes": 72,
+              "visited_cells": [
+                1,
+                2,
+                13,
+                31,
+                37,
+                49,
+                54,
+                94
+              ],
+              "revisited_cells": [
+                13,
+                49
+              ]
+            }
+          }
+        }
+      },
+      "completion_length_lb_rejects": 5659,
+      "second_cell_visits_allowed": 2005,
+      "third_cell_visit_rejects": 686,
+      "bridges": {
+        "pairs_attempted": 3,
+        "edges_inserted": 0,
+        "children_accepted": 0,
+        "repair_children_generated": 0,
+        "complementary_sets": 0,
+        "complementary_quality_distinct": 0,
+        "complementary_quality_inserted": 0
+      },
+      "joins": {
+        "same_portal_attempts": 0,
+        "same_portal_successes": 0,
+        "one_edge_attempts": 0,
+        "one_edge_successes": 0,
+        "complete_join_tests": 0,
+        "feasible_complete_joins": 0
+      },
+      "complete_candidate_quality": {
+        "complete_candidates": 0,
+        "feasible_complete_candidates": 0,
+        "max_avg_pop": null,
+        "min_avg_width": null,
+        "min_length": null,
+        "max_elevation": null,
+        "min_elevation": null,
+        "best_near_feasible": null
+      },
+      "overlay_edges": 454,
+      "active_portals": 320,
+      "local_engines": 127
+    }
+  ]
+}

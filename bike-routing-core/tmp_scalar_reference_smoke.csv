@@ -1,0 +1,4 @@
+query,portfolio_mode,index,scalar_name,scalar_family,graph_mode,elapsed_s,heap_pops,expanded_nodes,edge_scans,route_found,L,H,avg_pop,avg_width,road_changes,elementary,repeated_vertex_count,feasible,normalized_violation_score
+paris_bures,reference,1,pop_width_reference,hinge,full,0.09930780000286177,17521,16532,33754,True,30157.0,358.9000013694167,212.90343867095532,14.247106807706336,87,True,0,False,0.41099998630583284
+paris_bures,reference,1,pop_width_reference,hinge,certified,0.08956970000144793,15657,14749,30373,True,30157.0,358.9000013694167,212.90343867095532,14.247106807706336,87,True,0,False,0.41099998630583284
+paris_bures,reference,1,pop_width_reference,hinge,geometric,0.05137280000053579,8872,8380,17102,True,31818.0,405.4000004827976,199.87063926079577,14.164938085360488,105,True,0,True,0.0

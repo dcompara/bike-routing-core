@@ -1,0 +1,596 @@
+{
+  "experiment": "scalar_feasibility_baseline",
+  "formulas": {
+    "route_metrics": {
+      "length": "sum l(e)",
+      "elevation": "sum g(e)",
+      "avg_pop": "sum l(e)*p(e) / sum l(e)",
+      "avg_width": "sum l(e)*w(e) / sum l(e)"
+    },
+    "certified_length_corridor": "d_s(u)+l(u,v)+d_t(v) <= Lmax",
+    "hinge": "alpha_L*l + l*(alpha_w*max(0,w-Wref)/Wscale + alpha_p*max(0,Pref-p)/Pscale)",
+    "low_elevation": "alpha_L*l + alpha_h*g + optional hinge penalties",
+    "high_elevation": "alpha_L*l + alpha_H*max(0,rho_H*l-g) + optional hinge penalties",
+    "pop_complement": "alpha_L*l + alpha_pop*l*max(0,p_star-p)/max(p_star,1) + optional width hinge",
+    "width_linear": "alpha_L*l + alpha_w*l*w/Wscale + optional hinge penalties",
+    "nonlinear_high_elevation": "l/(1+beta*g/l) or l*exp(-beta*g/l), plus optional hinge penalties"
+  },
+  "violation_score_scales": "length/elevation use box widths; popularity and width use their thresholds, with a lower bound of 1.",
+  "road_id_mode": "normal vertex-state Dijkstra; road_id only breaks exact scalar ties",
+  "graph_path": "data/graph_Paris_south_4_objectives.xy",
+  "portfolio_mode": "reference",
+  "graph_mode": "all",
+  "queries": [
+    {
+      "query": {
+        "name": "paris_bures",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 30000.0,
+        "Lmax": 35000.0,
+        "Hmin": 400.0,
+        "Hmax": 500.0,
+        "Pmin": 150.0,
+        "Wmax": 15.0,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "graph_comparison": {
+        "full": {
+          "nodes": 22244,
+          "edges": 45085
+        },
+        "certified_length_corridor": {
+          "nodes": 15915,
+          "edges": 32670,
+          "name": "certified_length_corridor",
+          "safe_edge_condition": "d_s(u)+l(u,v)+d_t(v) <= Lmax",
+          "shortest_length_s_to_t": 24973.0,
+          "shortest_length_t_reverse_to_s": 24973.0
+        },
+        "geometric": {
+          "kept_cells": 40,
+          "kept_nodes": 9010,
+          "incident_nodes": 9010,
+          "edges": 18356,
+          "corridor_slack_m": 1500,
+          "max_hops_from_boundary": 1
+        },
+        "set_differences": {
+          "certified_edges_not_geometric": 14564,
+          "geometric_edges_not_certified": 250,
+          "certified_nodes_not_geometric": 7093,
+          "geometric_nodes_not_certified": 188
+        }
+      }
+    }
+  ],
+  "runs": [
+    {
+      "query": {
+        "name": "paris_bures",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 30000.0,
+        "Lmax": 35000.0,
+        "Hmin": 400.0,
+        "Hmax": 500.0,
+        "Pmin": 150.0,
+        "Wmax": 15.0,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "graph": {
+        "mode": "full",
+        "node_count": 22244,
+        "edge_count": 45085,
+        "metric_constants": {
+          "rho_H": 0.40000000596046453,
+          "p_star": 255.0,
+          "max_slope": 0.4000000059604645,
+          "zero_length_positive_gain_edges": 0,
+          "usable_edges": 45085
+        },
+        "metadata": {}
+      },
+      "portfolio_mode": "reference",
+      "road_id_mode": "vertex_state_tie_break_only",
+      "summary": {
+        "feasible": false,
+        "time_to_first_feasible_route_s": null,
+        "first_feasible_index": null,
+        "first_feasible_scalar_name": null,
+        "searches_to_first_feasible": null,
+        "total_scalar_shortest_path_searches": 1,
+        "unique_routes": 1,
+        "total_heap_pops": 17521,
+        "total_expanded_nodes": 16532,
+        "total_edge_scans": 33754,
+        "total_elapsed_s": 0.09930780000286177,
+        "heap_pops_to_first": 17521,
+        "expanded_nodes_to_first": 16532,
+        "edge_scans_to_first": 33754,
+        "best_near_feasible": {
+          "scalar_name": "pop_width_reference",
+          "normalized_violation_score": 0.41099998630583284,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 41.099998630583286,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 30157.0,
+            "elevation": 358.9000013694167,
+            "popularity_length": 6420529.0,
+            "width_length": 429650.0,
+            "avg_pop": 212.90343867095532,
+            "avg_width": 14.247106807706336,
+            "road_changes": 87
+          }
+        },
+        "first_feasible_route": null
+      },
+      "searches": [
+        {
+          "index": 1,
+          "scalar_name": "pop_width_reference",
+          "scalar_family": "hinge",
+          "scalar_parameters": {
+            "alpha_L": 1.0,
+            "alpha_w": 3.0,
+            "alpha_p": 2.0,
+            "Wref": 15.0,
+            "Pref": 150.0
+          },
+          "graph_mode": "full",
+          "elapsed_s": 0.09930780000286177,
+          "heap_pops": 17521,
+          "expanded_nodes": 16532,
+          "edge_scans": 33754,
+          "raw_edge_rows_checked": 33754,
+          "route_found": true,
+          "scalar_cost": 38748.48,
+          "L": 30157.0,
+          "H": 358.9000013694167,
+          "avg_pop": 212.90343867095532,
+          "avg_width": 14.247106807706336,
+          "road_changes": 87,
+          "path_nodes": 267,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "feasible": false,
+          "normalized_violation_score": 0.41099998630583284,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 41.099998630583286,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          }
+        }
+      ]
+    },
+    {
+      "query": {
+        "name": "paris_bures",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 30000.0,
+        "Lmax": 35000.0,
+        "Hmin": 400.0,
+        "Hmax": 500.0,
+        "Pmin": 150.0,
+        "Wmax": 15.0,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "graph": {
+        "mode": "certified",
+        "node_count": 15915,
+        "edge_count": 32670,
+        "metric_constants": {
+          "rho_H": 0.38181816447864886,
+          "p_star": 255.0,
+          "max_slope": 0.3818181644786488,
+          "zero_length_positive_gain_edges": 0,
+          "usable_edges": 32670
+        },
+        "metadata": {
+          "name": "certified_length_corridor",
+          "safe_edge_condition": "d_s(u)+l(u,v)+d_t(v) <= Lmax",
+          "shortest_length_s_to_t": 24973.0,
+          "shortest_length_t_reverse_to_s": 24973.0
+        }
+      },
+      "portfolio_mode": "reference",
+      "road_id_mode": "vertex_state_tie_break_only",
+      "summary": {
+        "feasible": false,
+        "time_to_first_feasible_route_s": null,
+        "first_feasible_index": null,
+        "first_feasible_scalar_name": null,
+        "searches_to_first_feasible": null,
+        "total_scalar_shortest_path_searches": 1,
+        "unique_routes": 1,
+        "total_heap_pops": 15657,
+        "total_expanded_nodes": 14749,
+        "total_edge_scans": 30373,
+        "total_elapsed_s": 0.08956970000144793,
+        "heap_pops_to_first": 15657,
+        "expanded_nodes_to_first": 14749,
+        "edge_scans_to_first": 30373,
+        "best_near_feasible": {
+          "scalar_name": "pop_width_reference",
+          "normalized_violation_score": 0.41099998630583284,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 41.099998630583286,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 30157.0,
+            "elevation": 358.9000013694167,
+            "popularity_length": 6420529.0,
+            "width_length": 429650.0,
+            "avg_pop": 212.90343867095532,
+            "avg_width": 14.247106807706336,
+            "road_changes": 87
+          }
+        },
+        "first_feasible_route": null
+      },
+      "searches": [
+        {
+          "index": 1,
+          "scalar_name": "pop_width_reference",
+          "scalar_family": "hinge",
+          "scalar_parameters": {
+            "alpha_L": 1.0,
+            "alpha_w": 3.0,
+            "alpha_p": 2.0,
+            "Wref": 15.0,
+            "Pref": 150.0
+          },
+          "graph_mode": "certified",
+          "elapsed_s": 0.08956970000144793,
+          "heap_pops": 15657,
+          "expanded_nodes": 14749,
+          "edge_scans": 30373,
+          "raw_edge_rows_checked": 30825,
+          "route_found": true,
+          "scalar_cost": 38748.48,
+          "L": 30157.0,
+          "H": 358.9000013694167,
+          "avg_pop": 212.90343867095532,
+          "avg_width": 14.247106807706336,
+          "road_changes": 87,
+          "path_nodes": 267,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "feasible": false,
+          "normalized_violation_score": 0.41099998630583284,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 41.099998630583286,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          }
+        }
+      ]
+    },
+    {
+      "query": {
+        "name": "paris_bures",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 30000.0,
+        "Lmax": 35000.0,
+        "Hmin": 400.0,
+        "Hmax": 500.0,
+        "Pmin": 150.0,
+        "Wmax": 15.0,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "graph": {
+        "mode": "geometric",
+        "node_count": 9010,
+        "edge_count": 18356,
+        "metric_constants": {
+          "rho_H": 0.38181816447864886,
+          "p_star": 255.0,
+          "max_slope": 0.3818181644786488,
+          "zero_length_positive_gain_edges": 0,
+          "usable_edges": 18356
+        },
+        "metadata": {
+          "kept_cells": 40,
+          "kept_nodes": 9010,
+          "incident_nodes": 9010,
+          "corridor_slack_m": 1500,
+          "max_hops_from_boundary": 1
+        }
+      },
+      "portfolio_mode": "reference",
+      "road_id_mode": "vertex_state_tie_break_only",
+      "summary": {
+        "feasible": true,
+        "time_to_first_feasible_route_s": 0.05137280000053579,
+        "first_feasible_index": 1,
+        "first_feasible_scalar_name": "pop_width_reference",
+        "searches_to_first_feasible": 1,
+        "total_scalar_shortest_path_searches": 1,
+        "unique_routes": 1,
+        "total_heap_pops": 8872,
+        "total_expanded_nodes": 8380,
+        "total_edge_scans": 17102,
+        "total_elapsed_s": 0.05137280000053579,
+        "heap_pops_to_first": 8872,
+        "expanded_nodes_to_first": 8380,
+        "edge_scans_to_first": 17102,
+        "best_near_feasible": {
+          "scalar_name": "pop_width_reference",
+          "normalized_violation_score": 0.0,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 31818.0,
+            "elevation": 405.4000004827976,
+            "popularity_length": 6359484.0,
+            "width_length": 450700.0,
+            "avg_pop": 199.87063926079577,
+            "avg_width": 14.164938085360488,
+            "road_changes": 105
+          }
+        },
+        "first_feasible_route": {
+          "scalar_name": "pop_width_reference",
+          "metrics": {
+            "length": 31818.0,
+            "elevation": 405.4000004827976,
+            "popularity_length": 6359484.0,
+            "width_length": 450700.0,
+            "avg_pop": 199.87063926079577,
+            "avg_width": 14.164938085360488,
+            "road_changes": 105
+          },
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "path_nodes": 293
+        }
+      },
+      "searches": [
+        {
+          "index": 1,
+          "scalar_name": "pop_width_reference",
+          "scalar_family": "hinge",
+          "scalar_parameters": {
+            "alpha_L": 1.0,
+            "alpha_w": 3.0,
+            "alpha_p": 2.0,
+            "Wref": 15.0,
+            "Pref": 150.0
+          },
+          "graph_mode": "geometric",
+          "elapsed_s": 0.05137280000053579,
+          "heap_pops": 8872,
+          "expanded_nodes": 8380,
+          "edge_scans": 17102,
+          "raw_edge_rows_checked": 17256,
+          "route_found": true,
+          "scalar_cost": 43419.93333333334,
+          "L": 31818.0,
+          "H": 405.4000004827976,
+          "avg_pop": 199.87063926079577,
+          "avg_width": 14.164938085360488,
+          "road_changes": 105,
+          "path_nodes": 293,
+          "elementary": true,
+          "repeated_vertex_count": 0,
+          "feasible": true,
+          "normalized_violation_score": 0.0,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "validation": {
+            "directed_edges_ok": true,
+            "missing_edges": 0,
+            "metric_deltas": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "road_changes_delta": 0,
+            "passed": true
+          }
+        }
+      ]
+    }
+  ],
+  "regressions": [
+    {
+      "name": "retained_shortest_physical_length_metrics",
+      "passed": true,
+      "expected": {
+        "length": 25592.0,
+        "elevation": 327.2,
+        "avg_pop": 172.45,
+        "avg_width": 20.97
+      },
+      "actual": {
+        "length": 25592.0,
+        "elevation": 327.20000004023314,
+        "avg_pop": 172.451430134417,
+        "avg_width": 20.966903719912473
+      },
+      "deltas": {
+        "length": 0.0,
+        "elevation": 4.0233146592072444e-08,
+        "avg_pop": 0.0014301344170064567,
+        "avg_width": -0.0030962800875258267
+      },
+      "validation": {
+        "directed_edges_ok": true,
+        "missing_edges": 0,
+        "metric_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "road_changes_delta": 0,
+        "passed": true
+      }
+    },
+    {
+      "name": "retained_reference_scalarization_metrics",
+      "passed": true,
+      "expected": {
+        "length": 31818.0,
+        "elevation": 405.4,
+        "avg_pop": 199.87,
+        "avg_width": 14.16
+      },
+      "actual": {
+        "length": 31818.0,
+        "elevation": 405.4000004827976,
+        "avg_pop": 199.87063926079577,
+        "avg_width": 14.164938085360488
+      },
+      "deltas": {
+        "length": 0.0,
+        "elevation": 4.827976454180316e-07,
+        "avg_pop": 0.0006392607957650398,
+        "avg_width": 0.004938085360487676
+      },
+      "feasible": true,
+      "validation": {
+        "directed_edges_ok": true,
+        "missing_edges": 0,
+        "metric_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "road_changes_delta": 0,
+        "passed": true
+      }
+    },
+    {
+      "name": "full_reference_scalarization_metrics",
+      "passed": true,
+      "expected": {
+        "length": 30157.0,
+        "elevation": 358.9,
+        "avg_pop": 212.9,
+        "avg_width": 14.25
+      },
+      "actual": {
+        "length": 30157.0,
+        "elevation": 358.9000013694167,
+        "avg_pop": 212.90343867095532,
+        "avg_width": 14.247106807706336
+      },
+      "deltas": {
+        "length": 0.0,
+        "elevation": 1.3694167364519672e-06,
+        "avg_pop": 0.003438670955318912,
+        "avg_width": -0.0028931922936639154
+      },
+      "feasible": false,
+      "validation": {
+        "directed_edges_ok": true,
+        "missing_edges": 0,
+        "metric_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "road_changes_delta": 0,
+        "passed": true
+      }
+    },
+    {
+      "name": "certified_corridor_preserves_known_routes_with_L_le_Lmax",
+      "passed": true,
+      "routes": [
+        {
+          "route": "retained_shortest",
+          "length": 25592.0,
+          "preserved": true
+        },
+        {
+          "route": "retained_reference",
+          "length": 31818.0,
+          "preserved": true
+        },
+        {
+          "route": "full_reference",
+          "length": 30157.0,
+          "preserved": true
+        }
+      ]
+    },
+    {
+      "name": "known_routes_validate_edge_by_edge_on_directed_csr",
+      "passed": true
+    },
+    {
+      "name": "forward_reverse_full_length_distances_agree_for_query",
+      "passed": true,
+      "s_to_t": 24973.0,
+      "reverse_t_to_s": 24973.0
+    },
+    {
+      "name": "reverse_distance_respects_edge_direction_tiny_graph",
+      "passed": true
+    }
+  ]
+}
