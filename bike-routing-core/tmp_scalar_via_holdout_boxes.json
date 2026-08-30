@@ -6,7 +6,7 @@
     "phase_b": "evaluation script reloads this frozen JSON from disk",
     "do_not_modify_after_evaluation": true
   },
-  "created_at_utc": "2026-08-29T18:20:41+00:00",
+  "created_at_utc": "2026-08-29T21:38:30+00:00",
   "holdout_items_attempted": 1225,
   "holdout_items_accepted": 12,
   "holdout_items_rejected": 1213,
@@ -63,27 +63,24 @@
       "count": 4
     },
     "tight": {
-      "count": 20
+      "count": 24
     },
     "MULTI_TIGHT": {
-      "count": 4
+      "count": 6
     },
     "POP_ACTIVE": {
-      "count": 7
+      "count": 8
     },
     "WIDTH_ACTIVE": {
-      "count": 7
+      "count": 8
+    },
+    "L_HIGH_ACTIVE": {
+      "count": 2
     },
     "H_HIGH_ACTIVE": {
       "count": 2
     },
     "QUALITY_CONFLICT": {
-      "count": 2
-    },
-    "loose": {
-      "count": 4
-    },
-    "LOOSE_CONTROL": {
       "count": 2
     }
   },
@@ -178,161 +175,161 @@
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_strong",
-            "elapsed_s": 0.09296660000109114,
+            "elapsed_s": 0.11388560000341386,
             "accepted_so_far": 1
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_very_strong",
-            "elapsed_s": 0.09318760000314796,
+            "elapsed_s": 0.11519259999477072,
             "accepted_so_far": 2
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_strong",
-            "elapsed_s": 0.09671700000035344,
+            "elapsed_s": 0.11792050000076415,
             "accepted_so_far": 3
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_very_strong",
-            "elapsed_s": 0.1042961000057403,
+            "elapsed_s": 0.13928129999840166,
             "accepted_so_far": 4
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_balanced_strong",
-            "elapsed_s": 0.08979949999775272,
+            "elapsed_s": 0.11741349999647355,
             "accepted_so_far": 4
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_low_length_pressure",
-            "elapsed_s": 0.0907904999985476,
+            "elapsed_s": 0.11723460000212071,
             "accepted_so_far": 5
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_medium_length_pressure",
-            "elapsed_s": 0.09595880000415491,
+            "elapsed_s": 0.13085470000078203,
             "accepted_so_far": 5
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_mild",
-            "elapsed_s": 0.12335010000242619,
+            "elapsed_s": 0.16172779999760678,
             "accepted_so_far": 6
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_strong",
-            "elapsed_s": 0.11327769999479642,
+            "elapsed_s": 0.14896320000116248,
             "accepted_so_far": 7
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_mild",
-            "elapsed_s": 0.09528539999882923,
+            "elapsed_s": 0.12570419999974547,
             "accepted_so_far": 8
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_strong",
-            "elapsed_s": 0.08557220000511734,
+            "elapsed_s": 0.11639109999669017,
             "accepted_so_far": 9
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_mild",
-            "elapsed_s": 0.11828589999640826,
+            "elapsed_s": 0.15630899999814574,
             "accepted_so_far": 10
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_strong",
-            "elapsed_s": 0.11923109999770531,
+            "elapsed_s": 0.15880720000131987,
             "accepted_so_far": 10
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_with_width_pop",
-            "elapsed_s": 0.10201349999988452,
+            "elapsed_s": 0.134943299999577,
             "accepted_so_far": 11
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width",
-            "elapsed_s": 0.110481499999878,
+            "elapsed_s": 0.1437731999976677,
             "accepted_so_far": 12
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_pop",
-            "elapsed_s": 0.1204751999975997,
+            "elapsed_s": 0.1623764999967534,
             "accepted_so_far": 13
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width_pop",
-            "elapsed_s": 0.10552499999903375,
+            "elapsed_s": 0.13901710000209277,
             "accepted_so_far": 14
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_5",
-            "elapsed_s": 0.12339939999947092,
+            "elapsed_s": 0.1598535000011907,
             "accepted_so_far": 14
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_12_width_pop",
-            "elapsed_s": 0.10214760000235401,
+            "elapsed_s": 0.13565859999653185,
             "accepted_so_far": 15
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_250_width_pop_light",
-            "elapsed_s": 0.10787040000286652,
+            "elapsed_s": 0.14335589999973308,
             "accepted_so_far": 16
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_8",
-            "elapsed_s": 0.12140229999931762,
+            "elapsed_s": 0.16034160000708653,
             "accepted_so_far": 17
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_400_width_light",
-            "elapsed_s": 0.10767430000123568,
+            "elapsed_s": 0.14400670000031823,
             "accepted_so_far": 18
           },
           {
             "pair_id": "paris_bures",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_16_width_pop",
-            "elapsed_s": 0.10250829999858979,
+            "elapsed_s": 0.1342055999994045,
             "accepted_so_far": 18
           },
           {
@@ -343,7 +340,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.5060867000065628,
+            "elapsed_s": 0.6595065000001341,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -362,7 +359,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5018847000028472,
+            "elapsed_s": 0.660490000002028,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -381,7 +378,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.49335969999810914,
+            "elapsed_s": 0.6604943000056664,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -400,7 +397,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 5,
-            "elapsed_s": 0.5031256000002031,
+            "elapsed_s": 0.6633224000033806,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -419,7 +416,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 0,
-            "elapsed_s": 0.5081529000017326,
+            "elapsed_s": 0.6879404999999679,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -438,7 +435,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5036714000016218,
+            "elapsed_s": 0.6631551000027684,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -457,7 +454,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5061761999968439,
+            "elapsed_s": 0.6521596999955364,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -476,7 +473,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.5348407000055886,
+            "elapsed_s": 0.6893664000017452,
             "equal_cost_relaxations": 29,
             "equal_cost_resource_distinct_relaxations": 11,
             "parent_changes_due_to_road_tiebreak": 6,
@@ -495,7 +492,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 37,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.5215415999991819,
+            "elapsed_s": 0.6882474000012735,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -603,161 +600,161 @@
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_strong",
-            "elapsed_s": 0.11259499999869149,
+            "elapsed_s": 0.1473799000013969,
             "accepted_so_far": 1
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_very_strong",
-            "elapsed_s": 0.11572120000346331,
+            "elapsed_s": 0.1523531999991974,
             "accepted_so_far": 2
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_strong",
-            "elapsed_s": 0.11556980000023032,
+            "elapsed_s": 0.15322960000048624,
             "accepted_so_far": 3
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_very_strong",
-            "elapsed_s": 0.11580569999932777,
+            "elapsed_s": 0.1531020000038552,
             "accepted_so_far": 4
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_balanced_strong",
-            "elapsed_s": 0.11213379999389872,
+            "elapsed_s": 0.15005679999740096,
             "accepted_so_far": 5
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_low_length_pressure",
-            "elapsed_s": 0.11084649999975227,
+            "elapsed_s": 0.15744740000081947,
             "accepted_so_far": 5
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_medium_length_pressure",
-            "elapsed_s": 0.11463809999986552,
+            "elapsed_s": 0.15045660000032512,
             "accepted_so_far": 6
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_mild",
-            "elapsed_s": 0.13171629999851575,
+            "elapsed_s": 0.17171349999989616,
             "accepted_so_far": 7
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_strong",
-            "elapsed_s": 0.12895779999962542,
+            "elapsed_s": 0.16885950000141747,
             "accepted_so_far": 8
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_mild",
-            "elapsed_s": 0.09261690000130329,
+            "elapsed_s": 0.12210649999906309,
             "accepted_so_far": 9
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_strong",
-            "elapsed_s": 0.09765000000334112,
+            "elapsed_s": 0.12859979999484494,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_mild",
-            "elapsed_s": 0.11560230000031879,
+            "elapsed_s": 0.15456429999903776,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_strong",
-            "elapsed_s": 0.11544759999378584,
+            "elapsed_s": 0.15547979999973904,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_with_width_pop",
-            "elapsed_s": 0.11750190000020666,
+            "elapsed_s": 0.15792720000172267,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width",
-            "elapsed_s": 0.12650769999891054,
+            "elapsed_s": 0.16560909999680007,
             "accepted_so_far": 12
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_pop",
-            "elapsed_s": 0.11711970000033034,
+            "elapsed_s": 0.15369629999622703,
             "accepted_so_far": 13
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width_pop",
-            "elapsed_s": 0.12318450000020675,
+            "elapsed_s": 0.16017480000300566,
             "accepted_so_far": 14
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_5",
-            "elapsed_s": 0.12015560000145342,
+            "elapsed_s": 0.15467720000015106,
             "accepted_so_far": 15
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_12_width_pop",
-            "elapsed_s": 0.11982829999760725,
+            "elapsed_s": 0.1558565999948769,
             "accepted_so_far": 16
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_250_width_pop_light",
-            "elapsed_s": 0.1277912000005017,
+            "elapsed_s": 0.16641009999875678,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_8",
-            "elapsed_s": 0.12362999999459134,
+            "elapsed_s": 0.15432660000078613,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_400_width_light",
-            "elapsed_s": 0.12348800000472693,
+            "elapsed_s": 0.15827880000142613,
             "accepted_so_far": 18
           },
           {
             "pair_id": "anchor_west_east",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_16_width_pop",
-            "elapsed_s": 0.12251869999454357,
+            "elapsed_s": 0.16267299999890383,
             "accepted_so_far": 18
           },
           {
@@ -768,7 +765,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.5036689999978989,
+            "elapsed_s": 0.648686300002737,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -787,7 +784,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.49398399999336107,
+            "elapsed_s": 0.6401280000063707,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -806,7 +803,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5010353999969084,
+            "elapsed_s": 0.6452532000039355,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -825,7 +822,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.4965509999965434,
+            "elapsed_s": 0.653465800001868,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -844,7 +841,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 4,
-            "elapsed_s": 0.5059474000008777,
+            "elapsed_s": 0.6668907999992371,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -863,7 +860,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 0,
-            "elapsed_s": 0.49136749999888707,
+            "elapsed_s": 0.6500010000017937,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -882,7 +879,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.4998861999993096,
+            "elapsed_s": 0.6498055000047316,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -901,7 +898,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 24,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.5150283000039053,
+            "elapsed_s": 0.6666827000008198,
             "equal_cost_relaxations": 25,
             "equal_cost_resource_distinct_relaxations": 7,
             "parent_changes_due_to_road_tiebreak": 2,
@@ -1015,161 +1012,161 @@
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_strong",
-            "elapsed_s": 0.1237120000005234,
+            "elapsed_s": 0.1637741000013193,
             "accepted_so_far": 1
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_very_strong",
-            "elapsed_s": 0.1253439000065555,
+            "elapsed_s": 0.16221470000164118,
             "accepted_so_far": 2
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_strong",
-            "elapsed_s": 0.12913839999964694,
+            "elapsed_s": 0.16716949999681674,
             "accepted_so_far": 3
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_very_strong",
-            "elapsed_s": 0.1289723000008962,
+            "elapsed_s": 0.16720119999808958,
             "accepted_so_far": 4
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_balanced_strong",
-            "elapsed_s": 0.12636279999424005,
+            "elapsed_s": 0.1671301999958814,
             "accepted_so_far": 5
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_low_length_pressure",
-            "elapsed_s": 0.12782859999424545,
+            "elapsed_s": 0.16659079999953974,
             "accepted_so_far": 6
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_medium_length_pressure",
-            "elapsed_s": 0.12664290000248002,
+            "elapsed_s": 0.1672547999987728,
             "accepted_so_far": 7
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_mild",
-            "elapsed_s": 0.1425290000042878,
+            "elapsed_s": 0.18456480000168085,
             "accepted_so_far": 8
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_strong",
-            "elapsed_s": 0.14299909999681404,
+            "elapsed_s": 0.19078309999895282,
             "accepted_so_far": 9
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_mild",
-            "elapsed_s": 0.10124700000596931,
+            "elapsed_s": 0.13540300000022398,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_strong",
-            "elapsed_s": 0.10531519999494776,
+            "elapsed_s": 0.1366453999944497,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_mild",
-            "elapsed_s": 0.12489930000447202,
+            "elapsed_s": 0.1635041000045021,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_strong",
-            "elapsed_s": 0.125174100001459,
+            "elapsed_s": 0.1650895999991917,
             "accepted_so_far": 12
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_with_width_pop",
-            "elapsed_s": 0.12850910000270233,
+            "elapsed_s": 0.16859919999842532,
             "accepted_so_far": 13
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width",
-            "elapsed_s": 0.13408309999795165,
+            "elapsed_s": 0.1737825999953202,
             "accepted_so_far": 14
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_pop",
-            "elapsed_s": 0.1337820000044303,
+            "elapsed_s": 0.1753041999982088,
             "accepted_so_far": 15
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width_pop",
-            "elapsed_s": 0.13421109999762848,
+            "elapsed_s": 0.17693019999569515,
             "accepted_so_far": 16
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_5",
-            "elapsed_s": 0.12825519999751123,
+            "elapsed_s": 0.16730850000021746,
             "accepted_so_far": 16
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_12_width_pop",
-            "elapsed_s": 0.1342155999955139,
+            "elapsed_s": 0.17497320000256877,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_250_width_pop_light",
-            "elapsed_s": 0.14271330000337912,
+            "elapsed_s": 0.18170909999753349,
             "accepted_so_far": 18
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_8",
-            "elapsed_s": 0.12787240000034217,
+            "elapsed_s": 0.16875689999869792,
             "accepted_so_far": 19
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_400_width_light",
-            "elapsed_s": 0.1339695999995456,
+            "elapsed_s": 0.18047829999704845,
             "accepted_so_far": 20
           },
           {
             "pair_id": "anchor_east_west",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_16_width_pop",
-            "elapsed_s": 0.14127170000574552,
+            "elapsed_s": 0.1771831000005477,
             "accepted_so_far": 21
           },
           {
@@ -1180,7 +1177,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 4,
-            "elapsed_s": 0.5043424000032246,
+            "elapsed_s": 0.6547128000020166,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1199,7 +1196,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.49492779999854974,
+            "elapsed_s": 0.6449333999989904,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1218,7 +1215,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.4964875000005122,
+            "elapsed_s": 0.6576721999954316,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1237,7 +1234,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.4976239000025089,
+            "elapsed_s": 0.6539294000031077,
             "equal_cost_relaxations": 21,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1256,7 +1253,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.49494720000075176,
+            "elapsed_s": 0.7584965999994893,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1275,7 +1272,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.5053734999964945,
+            "elapsed_s": 0.6921368000039365,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1389,161 +1386,161 @@
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_strong",
-            "elapsed_s": 0.12689319999481086,
+            "elapsed_s": 0.16465239999524783,
             "accepted_so_far": 1
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_very_strong",
-            "elapsed_s": 0.12484690000565024,
+            "elapsed_s": 0.15201469999738038,
             "accepted_so_far": 2
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_strong",
-            "elapsed_s": 0.12669989999994868,
+            "elapsed_s": 0.15187689999584109,
             "accepted_so_far": 3
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_very_strong",
-            "elapsed_s": 0.12638090000109514,
+            "elapsed_s": 0.1522700999994413,
             "accepted_so_far": 4
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_balanced_strong",
-            "elapsed_s": 0.1261196999985259,
+            "elapsed_s": 0.16449439999996684,
             "accepted_so_far": 5
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_low_length_pressure",
-            "elapsed_s": 0.12482720000116387,
+            "elapsed_s": 0.16065830000297865,
             "accepted_so_far": 6
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_medium_length_pressure",
-            "elapsed_s": 0.12762189999921247,
+            "elapsed_s": 0.19828640000196174,
             "accepted_so_far": 7
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_mild",
-            "elapsed_s": 0.1350460999965435,
+            "elapsed_s": 0.20646190000115894,
             "accepted_so_far": 8
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_strong",
-            "elapsed_s": 0.13673149999522138,
+            "elapsed_s": 0.21262409999326337,
             "accepted_so_far": 9
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_mild",
-            "elapsed_s": 0.10161210000660503,
+            "elapsed_s": 0.13561449999542674,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_strong",
-            "elapsed_s": 0.10390249999909429,
+            "elapsed_s": 0.15183309999702033,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_mild",
-            "elapsed_s": 0.12683950000064215,
+            "elapsed_s": 0.1666112000020803,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_strong",
-            "elapsed_s": 0.12603230000240728,
+            "elapsed_s": 0.16600520000065444,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_with_width_pop",
-            "elapsed_s": 0.1286930999995093,
+            "elapsed_s": 0.1705216999980621,
             "accepted_so_far": 12
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width",
-            "elapsed_s": 0.12922809999872698,
+            "elapsed_s": 0.16687029999593506,
             "accepted_so_far": 13
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_pop",
-            "elapsed_s": 0.12862110000423854,
+            "elapsed_s": 0.16402730000118027,
             "accepted_so_far": 14
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width_pop",
-            "elapsed_s": 0.1320387999949162,
+            "elapsed_s": 0.16077260000020033,
             "accepted_so_far": 15
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_5",
-            "elapsed_s": 0.13161140000011073,
+            "elapsed_s": 0.15865520000079414,
             "accepted_so_far": 15
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_12_width_pop",
-            "elapsed_s": 0.1323398999957135,
+            "elapsed_s": 0.15483140000287676,
             "accepted_so_far": 16
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_250_width_pop_light",
-            "elapsed_s": 0.1379337000034866,
+            "elapsed_s": 0.16724000000249362,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_8",
-            "elapsed_s": 0.13227460000052815,
+            "elapsed_s": 0.16008359999977984,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_400_width_light",
-            "elapsed_s": 0.13825660000293283,
+            "elapsed_s": 0.1660392999983742,
             "accepted_so_far": 18
           },
           {
             "pair_id": "anchor_south_north",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_16_width_pop",
-            "elapsed_s": 0.13486030000058236,
+            "elapsed_s": 0.17849910000222735,
             "accepted_so_far": 18
           },
           {
@@ -1554,7 +1551,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 3,
-            "elapsed_s": 0.5005206999994698,
+            "elapsed_s": 0.6422309000045061,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1573,7 +1570,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.4952004999940982,
+            "elapsed_s": 0.6548931000070297,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1592,7 +1589,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.4929037000038079,
+            "elapsed_s": 0.6487029000054463,
             "equal_cost_relaxations": 21,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1611,7 +1608,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 0,
-            "elapsed_s": 0.4933547000036924,
+            "elapsed_s": 0.6411968000029447,
             "equal_cost_relaxations": 21,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1630,7 +1627,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 4,
-            "elapsed_s": 0.511394699999073,
+            "elapsed_s": 0.668412699997134,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1649,7 +1646,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 5,
-            "elapsed_s": 0.4956311999994796,
+            "elapsed_s": 0.6500564000016311,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1668,7 +1665,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.4941850000031991,
+            "elapsed_s": 0.6446670000004815,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1687,7 +1684,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.521669199995813,
+            "elapsed_s": 0.6797739999965415,
             "equal_cost_relaxations": 28,
             "equal_cost_resource_distinct_relaxations": 8,
             "parent_changes_due_to_road_tiebreak": 2,
@@ -1813,161 +1810,161 @@
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_strong",
-            "elapsed_s": 0.13021460000163643,
+            "elapsed_s": 0.17360339999868302,
             "accepted_so_far": 1
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_width_very_strong",
-            "elapsed_s": 0.12868760000128532,
+            "elapsed_s": 0.16874709999683546,
             "accepted_so_far": 2
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_strong",
-            "elapsed_s": 0.12638210000295658,
+            "elapsed_s": 0.16866559999471065,
             "accepted_so_far": 3
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_pop_very_strong",
-            "elapsed_s": 0.12566530000185594,
+            "elapsed_s": 0.18222110000351677,
             "accepted_so_far": 4
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_balanced_strong",
-            "elapsed_s": 0.1274178999956348,
+            "elapsed_s": 0.16764279999915743,
             "accepted_so_far": 5
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_low_length_pressure",
-            "elapsed_s": 0.12952970000333153,
+            "elapsed_s": 0.1668878000054974,
             "accepted_so_far": 6
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "hinge_medium_length_pressure",
-            "elapsed_s": 0.12934880000102567,
+            "elapsed_s": 0.17028510000091046,
             "accepted_so_far": 7
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_mild",
-            "elapsed_s": 0.14519280000240542,
+            "elapsed_s": 0.20525420000194572,
             "accepted_so_far": 8
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "width_linear_strong",
-            "elapsed_s": 0.15090959999361075,
+            "elapsed_s": 0.18883959999948274,
             "accepted_so_far": 9
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_mild",
-            "elapsed_s": 0.10645499999372987,
+            "elapsed_s": 0.12632760000269627,
             "accepted_so_far": 9
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "pop_complement_strong",
-            "elapsed_s": 0.1070627999943099,
+            "elapsed_s": 0.12882079999690177,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_mild",
-            "elapsed_s": 0.13305989999935264,
+            "elapsed_s": 0.16101619999972172,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_strong",
-            "elapsed_s": 0.1323028999977396,
+            "elapsed_s": 0.16236290000233566,
             "accepted_so_far": 10
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "low_elevation_with_width_pop",
-            "elapsed_s": 0.13414039999770466,
+            "elapsed_s": 0.16245770000386983,
             "accepted_so_far": 11
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width",
-            "elapsed_s": 0.13732210000307532,
+            "elapsed_s": 0.1647296000010101,
             "accepted_so_far": 12
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_pop",
-            "elapsed_s": 0.13707309999881545,
+            "elapsed_s": 0.1711626999967848,
             "accepted_so_far": 13
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "high_elevation_width_pop",
-            "elapsed_s": 0.13706200000160607,
+            "elapsed_s": 0.17870620000030613,
             "accepted_so_far": 14
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_5",
-            "elapsed_s": 0.13915860000270186,
+            "elapsed_s": 0.18060269999841694,
             "accepted_so_far": 15
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_inverse_beta_12_width_pop",
-            "elapsed_s": 0.13987650000490248,
+            "elapsed_s": 0.18053930000314722,
             "accepted_so_far": 16
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_250_width_pop_light",
-            "elapsed_s": 0.14030059999640798,
+            "elapsed_s": 0.1808556000032695,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_8",
-            "elapsed_s": 0.1414678000001004,
+            "elapsed_s": 0.18825160000415053,
             "accepted_so_far": 17
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_400_width_light",
-            "elapsed_s": 0.14459489999717334,
+            "elapsed_s": 0.18266859999857843,
             "accepted_so_far": 18
           },
           {
             "pair_id": "anchor_southwest_northeast",
             "source": "non_frozen_scalar_direct",
             "scalar_name": "slope_exp_beta_16_width_pop",
-            "elapsed_s": 0.14308449999953154,
+            "elapsed_s": 0.18345440000121016,
             "accepted_so_far": 18
           },
           {
@@ -1978,7 +1975,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 6,
-            "elapsed_s": 0.5347379000013461,
+            "elapsed_s": 0.6700961999958963,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -1997,7 +1994,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 4,
-            "elapsed_s": 0.49662610000086715,
+            "elapsed_s": 0.6537153000026592,
             "equal_cost_relaxations": 19,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2016,7 +2013,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 0,
-            "elapsed_s": 0.4448562999968999,
+            "elapsed_s": 0.6487062000014703,
             "equal_cost_relaxations": 21,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2035,7 +2032,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.4475525000016205,
+            "elapsed_s": 0.6706723000024795,
             "equal_cost_relaxations": 21,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2054,7 +2051,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 2,
-            "elapsed_s": 0.5025123999948846,
+            "elapsed_s": 0.6784009999973932,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2073,7 +2070,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 0,
-            "elapsed_s": 0.5014991000061855,
+            "elapsed_s": 0.6563683999993373,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2092,7 +2089,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.49925989999610465,
+            "elapsed_s": 0.6708399999988615,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -2111,7 +2108,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 42,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5315533999964828,
+            "elapsed_s": 0.7001280000040424,
             "equal_cost_relaxations": 28,
             "equal_cost_resource_distinct_relaxations": 8,
             "parent_changes_due_to_road_tiebreak": 3,
@@ -2130,7 +2127,7 @@
             "profiles_selected_for_reconstruction": 42,
             "profiles_reconstructed": 2,
             "witnesses_accepted": 1,
-            "elapsed_s": 0.5033304000025964,
+            "elapsed_s": 0.6586785000035889,
             "equal_cost_relaxations": 20,
             "equal_cost_resource_distinct_relaxations": 1,
             "parent_changes_due_to_road_tiebreak": 0,
@@ -3203,7 +3200,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -3733,7 +3730,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "L_LOW_AND_H_LOW"
@@ -4718,7 +4715,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -5308,7 +5305,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "MULTI_TIGHT"
@@ -6193,7 +6190,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -6822,7 +6819,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "POP_ACTIVE"
@@ -7975,7 +7972,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -8821,31 +8818,31 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "WIDTH_ACTIVE"
     },
     {
       "query": {
-        "name": "holdout_paris_bures_12_h_high_active",
+        "name": "holdout_paris_bures_12_l_high_active",
         "source": 127,
         "target": 4433,
-        "Lmin": 43691.25,
-        "Lmax": 54435.0,
-        "Hmin": 336.71000119410456,
-        "Hmax": 626.8928022232055,
+        "Lmin": 42497.5,
+        "Lmax": 48609.5,
+        "Hmin": 459.1500016283244,
+        "Hmax": 826.4700029309839,
         "Pmin": 163.09114136125655,
         "Wmax": 16.744712041884817,
         "corridor_slack_m": 1500,
         "max_hops_from_boundary": 1
       },
-      "query_id": "holdout_paris_bures_12_h_high_active",
+      "query_id": "holdout_paris_bures_12_l_high_active",
       "pair_id": "paris_bures",
-      "category": "H_HIGH_ACTIVE",
+      "category": "L_HIGH_ACTIVE",
       "tightness": "tight",
       "tags": [
-        "H_HIGH_ACTIVE",
+        "L_HIGH_ACTIVE",
         "tight"
       ],
       "witness": {
@@ -9712,7 +9709,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -10305,50 +10302,49 @@
           9232
         ]
       },
-      "shortest_violation_score": 1.7422454915648633,
+      "shortest_violation_score": 2.867228403141361,
       "shortest_violations": {
-        "length_low": 18718.25,
+        "length_low": 17524.5,
         "length_high": 0.0,
-        "elevation_low": 0.0,
+        "elevation_low": 121.45000108890235,
         "elevation_high": 0.0,
         "popularity_low": 0.0,
         "width_high": 0.0
       },
       "shortest_violated_constraints": [
-        "length_low"
+        "length_low",
+        "elevation_low"
       ],
       "adversarial": true,
       "deliberate_adversarial": false,
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
-      "box_template": "H_HIGH_ACTIVE"
+      "box_template": "L_HIGH_ACTIVE"
     },
     {
       "query": {
-        "name": "holdout_anchor_west_east_13_quality_conflict",
+        "name": "holdout_anchor_west_east_13_h_high_active",
         "source": 5495,
         "target": 9171,
-        "Lmin": 48576.69,
-        "Lmax": 58500.96,
-        "Hmin": 305.5999999821186,
-        "Hmax": 511.99999997764826,
-        "Pmin": 199.69933758352,
-        "Wmax": 16.784437041716924,
+        "Lmin": 47793.195,
+        "Lmax": 59545.62,
+        "Hmin": 210.09999998770652,
+        "Hmax": 391.16799997711183,
+        "Pmin": 179.19933758352,
+        "Wmax": 18.484437041716923,
         "corridor_slack_m": 1500,
         "max_hops_from_boundary": 1
       },
-      "query_id": "holdout_anchor_west_east_13_quality_conflict",
+      "query_id": "holdout_anchor_west_east_13_h_high_active",
       "pair_id": "anchor_west_east",
-      "category": "QUALITY_CONFLICT",
+      "category": "H_HIGH_ACTIVE",
       "tightness": "tight",
       "tags": [
-        "QUALITY_CONFLICT",
-        "POP_ACTIVE",
-        "WIDTH_ACTIVE",
+        "H_HIGH_ACTIVE",
         "tight"
       ],
       "witness": {
@@ -11289,7 +11285,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -11800,14 +11796,14 @@
           19642
         ]
       },
-      "shortest_violation_score": 2.208090872174982,
+      "shortest_violation_score": 1.7979434031699837,
       "shortest_violations": {
-        "length_low": 21913.690000000002,
+        "length_low": 21130.195,
         "length_high": 0.0,
-        "elevation_low": 157.8999990180135,
+        "elevation_low": 62.399999023601396,
         "elevation_high": 0.0,
         "popularity_low": 0.0,
-        "width_high": 2.35388197714817
+        "width_high": 0.6538819771481705
       },
       "shortest_violated_constraints": [
         "length_low",
@@ -11819,31 +11815,34 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
-      "box_template": "QUALITY_CONFLICT"
+      "box_template": "H_HIGH_ACTIVE"
     },
     {
       "query": {
-        "name": "holdout_anchor_south_north_28_loose_control",
+        "name": "holdout_anchor_south_north_28_quality_conflict",
         "source": 796,
         "target": 7935,
-        "Lmin": 45488.96,
-        "Lmax": 59962.72,
-        "Hmin": 325.7800005055964,
-        "Hmax": 691.65600107342,
-        "Pmin": 168.69946993732106,
-        "Wmax": 16.330805540509168,
+        "Lmin": 48073.56,
+        "Lmax": 57895.04,
+        "Hmin": 400.9600006222725,
+        "Hmax": 651.5600010111928,
+        "Pmin": 200.19946993732106,
+        "Wmax": 13.33080554050917,
         "corridor_slack_m": 1500,
         "max_hops_from_boundary": 1
       },
-      "query_id": "holdout_anchor_south_north_28_loose_control",
+      "query_id": "holdout_anchor_south_north_28_quality_conflict",
       "pair_id": "anchor_south_north",
-      "category": "LOOSE_CONTROL",
-      "tightness": "loose",
+      "category": "QUALITY_CONFLICT",
+      "tightness": "tight",
       "tags": [
-        "loose"
+        "QUALITY_CONFLICT",
+        "POP_ACTIVE",
+        "WIDTH_ACTIVE",
+        "tight"
       ],
       "witness": {
         "route_id": "anchor_south_north:holdout_non_frozen_via:hinge_width_strong:via19075",
@@ -12699,7 +12698,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -13308,18 +13307,19 @@
           16723
         ]
       },
-      "shortest_violation_score": 1.1500784868617413,
+      "shortest_violation_score": 1.9580104016909867,
       "shortest_violations": {
-        "length_low": 16645.96,
+        "length_low": 19230.559999999998,
         "length_high": 0.0,
-        "elevation_low": 36.07999910935757,
+        "elevation_low": 111.2599992260337,
         "elevation_high": 0.0,
-        "popularity_low": 0.0,
-        "width_high": 2.364025094306907
+        "popularity_low": 10.202798301222174,
+        "width_high": 5.364025094306905
       },
       "shortest_violated_constraints": [
         "length_low",
         "elevation_low",
+        "popularity_low",
         "width_high"
       ],
       "adversarial": true,
@@ -13327,10 +13327,10 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
-      "box_template": "LOOSE_CONTROL"
+      "box_template": "QUALITY_CONFLICT"
     },
     {
       "query": {
@@ -14338,7 +14338,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -15184,7 +15184,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "L_LOW_AND_H_LOW"
@@ -16103,7 +16103,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -16693,7 +16693,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_width_strong",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "MULTI_TIGHT"
@@ -17504,7 +17504,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_medium_length_pressure",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -18116,7 +18116,7 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_medium_length_pressure",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "POP_ACTIVE"
@@ -19079,7 +19079,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -19609,31 +19609,34 @@
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:width_linear_mild",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
       "box_template": "WIDTH_ACTIVE"
     },
     {
       "query": {
-        "name": "holdout_anchor_south_north_14_loose_control",
+        "name": "holdout_anchor_south_north_09_multi_tight",
         "source": 796,
         "target": 7935,
-        "Lmin": 45195.04,
-        "Lmax": 59575.28,
-        "Hmin": 338.25999924838544,
-        "Hmax": 718.1519984042644,
-        "Pmin": 167.5435375209315,
-        "Wmax": 16.064352194400094,
+        "Lmin": 49560.47,
+        "Lmax": 53515.036,
+        "Hmin": 483.971998924613,
+        "Hmax": 562.0319987511634,
+        "Pmin": 197.5435375209315,
+        "Wmax": 13.214352194400094,
         "corridor_slack_m": 1500,
         "max_hops_from_boundary": 1
       },
-      "query_id": "holdout_anchor_south_north_14_loose_control",
+      "query_id": "holdout_anchor_south_north_09_multi_tight",
       "pair_id": "anchor_south_north",
-      "category": "LOOSE_CONTROL",
-      "tightness": "loose",
+      "category": "MULTI_TIGHT",
+      "tightness": "tight",
       "tags": [
-        "loose"
+        "MULTI_TIGHT",
+        "POP_ACTIVE",
+        "WIDTH_ACTIVE",
+        "tight"
       ],
       "witness": {
         "route_id": "anchor_south_north:holdout_non_frozen_via:hinge_low_length_pressure:via17418",
@@ -20573,7 +20576,7 @@
         ],
         "witness_source": "non_frozen_scalar_portfolio",
         "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_low_length_pressure",
-        "witness_creation_time": "2026-08-29T18:20:41+00:00",
+        "witness_creation_time": "2026-08-29T21:38:30+00:00",
         "witness_historical_file": null,
         "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode."
       },
@@ -21182,29 +21185,30 @@
           16723
         ]
       },
-      "shortest_violation_score": 1.1371187129004803,
+      "shortest_violation_score": 5.238873241716034,
       "shortest_violations": {
-        "length_low": 16352.04,
+        "length_low": 20717.47,
         "length_high": 0.0,
-        "elevation_low": 48.55999785214664,
+        "elevation_low": 194.2719975283742,
         "elevation_high": 0.0,
-        "popularity_low": 0.0,
-        "width_high": 2.630478440415981
+        "popularity_low": 7.546865884832613,
+        "width_high": 5.480478440415981
       },
       "shortest_violated_constraints": [
         "length_low",
         "elevation_low",
+        "popularity_low",
         "width_high"
       ],
       "adversarial": true,
-      "deliberate_adversarial": false,
+      "deliberate_adversarial": true,
       "benchmark_label": "independent_holdout",
       "witness_source": "non_frozen_scalar_portfolio",
       "witness_method": "non_frozen_portfolio:non_frozen_same_scalar_via:hinge_low_length_pressure",
-      "witness_creation_time": "2026-08-29T18:20:41+00:00",
+      "witness_creation_time": "2026-08-29T21:38:30+00:00",
       "witness_historical_file": null,
       "independence_note": "Witness route was generated or recovered without using physical_length, pop_width_reference, or slope_exp_beta_150_width in direct or same-scalar via mode.",
-      "box_template": "LOOSE_CONTROL"
+      "box_template": "MULTI_TIGHT"
     }
   ]
 }

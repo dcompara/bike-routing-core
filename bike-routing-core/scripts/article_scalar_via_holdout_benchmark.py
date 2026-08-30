@@ -71,6 +71,7 @@ TARGET_CATEGORY_SEQUENCE = (
     "MULTI_TIGHT",
     "POP_ACTIVE",
     "WIDTH_ACTIVE",
+    "L_HIGH_ACTIVE",
     "H_HIGH_ACTIVE",
     "QUALITY_CONFLICT",
     "LOOSE_CONTROL",
@@ -599,6 +600,19 @@ def _holdout_query_from_template(
         category = "WIDTH_ACTIVE"
         tightness = "tight"
         tags = ("WIDTH_ACTIVE", "tight")
+    elif template == "L_HIGH_ACTIVE":
+        values = _clamped_box(
+            m,
+            Lmin=m.length - max(1800.0, 0.11 * m.length),
+            Lmax=m.length + max(80.0, 0.018 * m.length),
+            Hmin=m.elevation - max(95.0, 0.25 * max(m.elevation, 1.0)),
+            Hmax=m.elevation + max(150.0, 0.35 * max(m.elevation, 1.0)),
+            Pmin=m.avg_popularity - 24.0,
+            Wmax=m.avg_width + 2.2,
+        )
+        category = "L_HIGH_ACTIVE"
+        tightness = "tight"
+        tags = ("L_HIGH_ACTIVE", "tight")
     elif template == "H_HIGH_ACTIVE":
         values = _clamped_box(
             m,
@@ -850,14 +864,20 @@ def _load_development_comparison(path: str) -> dict[str, Any] | None:
 
 
 def _category_distribution(candidates: Sequence[HoldoutCandidate]) -> dict[str, Any]:
-    out: dict[str, dict[str, int]] = {}
+    by_category: dict[str, int] = {}
+    by_tightness: dict[str, int] = {}
+    by_tag: dict[str, int] = {}
     for candidate in candidates:
         item = candidate.item
+        by_category[item.category] = by_category.get(item.category, 0) + 1
+        by_tightness[item.tightness] = by_tightness.get(item.tightness, 0) + 1
         for tag in item.tags:
-            out.setdefault(tag, {"count": 0})["count"] += 1
-        out.setdefault(item.category, {"count": 0})["count"] += 1
-        out.setdefault(item.tightness, {"count": 0})["count"] += 1
-    return out
+            by_tag[tag] = by_tag.get(tag, 0) + 1
+    return {
+        "by_category": dict(sorted(by_category.items())),
+        "by_tightness": dict(sorted(by_tightness.items())),
+        "by_tag": dict(sorted(by_tag.items())),
+    }
 
 
 def _generate_holdout_boxes(

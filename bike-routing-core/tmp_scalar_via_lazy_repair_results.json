@@ -1,0 +1,4471 @@
+{
+  "metadata": {
+    "script": "article_scalar_via_lazy_repair_experiment.py",
+    "elapsed_s": 47.54721609999251,
+    "graph_mode": "full",
+    "holdout_boxes_json": "tmp_scalar_via_holdout_boxes.json",
+    "development_boxes_json": "tmp_scalar_via_benchmark_boxes.json",
+    "frozen_boxes_policy": "boxes are loaded from existing JSON files; thresholds and witnesses are not modified",
+    "evaluated_scalars": {
+      "P": "pop_width_reference",
+      "S": "slope_exp_beta_150_width"
+    },
+    "normal_fast_path": "VIA-UNION-2",
+    "fallback": "only failed normal VIA-UNION-2 boxes receive mixed profile scan and exhaustive branch-overlap repair",
+    "rho_H_global": {
+      "definition": "np.nextafter(max full-graph positive-edge gain/length, +inf)",
+      "rho_H_global": 0.40000000596046453,
+      "max_slope_full": 0.4000000059604645,
+      "max_slope_edge_id": 33488,
+      "max_slope_edge_source": 16107,
+      "max_slope_edge_target": 21335,
+      "max_slope_edge_length": 2.0,
+      "max_slope_edge_gain": 0.800000011920929,
+      "p_star_full": 255.0,
+      "zero_length_positive_gain_edges_full": 0
+    }
+  },
+  "rows": [
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_east_west_09_multi_tight",
+      "source": 9171,
+      "target": 5495,
+      "normal_union2_feasible": false,
+      "lazy_repair_feasible": false,
+      "profile_feasible_P_P": 0,
+      "profile_feasible_S_S": 0,
+      "normal_union2_cost_s": 0.7942081999935908,
+      "normal_time_to_first_feasible_s": null,
+      "tree_computation_s": 0.6805885000067065,
+      "same_scalar_profile_scan_s": 0.11361889999534469,
+      "same_scalar_exhaustive_reconstruction_s": 7.999915396794677e-07,
+      "profile_feasible_P_S": 0,
+      "profile_feasible_S_P": 0,
+      "non_elementary_candidates": 0,
+      "overlap_repairable_candidates": 0,
+      "repair_A_dijkstra_calls": 0,
+      "repair_B_dijkstra_calls": 0,
+      "repaired_exact_feasible_count": 0,
+      "time_to_first_repaired_feasible_s": null,
+      "total_repair_time_s": 0.11516790000314359,
+      "marginal_mixed_profile_scan_s": 0.11513610000838526,
+      "marginal_repair_dijkstra_s": 0.0,
+      "total_fallback_cost_s": 0.11516790000314359,
+      "solved_original_pair_type": null,
+      "solved_via_vertex": null,
+      "solved_repair_direction": null,
+      "solved_L": null,
+      "solved_H": null,
+      "solved_avg_pop": null,
+      "solved_avg_width": null,
+      "solved_road_changes": null,
+      "solved_repeated_vertices": null,
+      "solved_validation_passed": null,
+      "nearest_profile": {
+        "pair_type": "S,P",
+        "via_vertex": 5305,
+        "normalized_violation_score": 0.008893793899674547,
+        "violations": {
+          "length_low": 0.0,
+          "length_high": 0.0,
+          "elevation_low": 0.0,
+          "elevation_high": 0.0,
+          "popularity_low": 1.2861298295834445,
+          "width_high": 0.1059207585088533
+        },
+        "metrics": {
+          "length": 42465.0,
+          "elevation": 551.0000022128224,
+          "popularity_length": 6086240.0,
+          "width_length": 534195.0,
+          "avg_pop": 143.32367832332508,
+          "avg_width": 12.579653832567997,
+          "road_changes": 165
+        }
+      }
+    },
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_south_north_09_multi_tight",
+      "source": 796,
+      "target": 7935,
+      "normal_union2_feasible": false,
+      "lazy_repair_feasible": false,
+      "profile_feasible_P_P": 0,
+      "profile_feasible_S_S": 0,
+      "normal_union2_cost_s": 0.7930540000088513,
+      "normal_time_to_first_feasible_s": null,
+      "tree_computation_s": 0.6797248000075342,
+      "same_scalar_profile_scan_s": 0.11332869999750983,
+      "same_scalar_exhaustive_reconstruction_s": 5.00003807246685e-07,
+      "profile_feasible_P_S": 0,
+      "profile_feasible_S_P": 2,
+      "non_elementary_candidates": 2,
+      "overlap_repairable_candidates": 2,
+      "repair_A_dijkstra_calls": 2,
+      "repair_B_dijkstra_calls": 2,
+      "repaired_exact_feasible_count": 0,
+      "time_to_first_repaired_feasible_s": null,
+      "total_repair_time_s": 0.3659581999963848,
+      "marginal_mixed_profile_scan_s": 0.11587120000331197,
+      "marginal_repair_dijkstra_s": 0.2459862000105204,
+      "total_fallback_cost_s": 0.3659581999963848,
+      "solved_original_pair_type": null,
+      "solved_via_vertex": null,
+      "solved_repair_direction": null,
+      "solved_L": null,
+      "solved_H": null,
+      "solved_avg_pop": null,
+      "solved_avg_width": null,
+      "solved_road_changes": null,
+      "solved_repeated_vertices": null,
+      "solved_validation_passed": null,
+      "nearest_profile": {
+        "pair_type": "S,P",
+        "via_vertex": 17618,
+        "normalized_violation_score": 0.0,
+        "violations": {
+          "length_low": 0.0,
+          "length_high": 0.0,
+          "elevation_low": 0.0,
+          "elevation_high": 0.0,
+          "popularity_low": 0.0,
+          "width_high": 0.0
+        },
+        "metrics": {
+          "length": 51278.0,
+          "elevation": 508.09999660402536,
+          "popularity_length": 10382287.0,
+          "width_length": 677525.0,
+          "avg_pop": 202.47059167674246,
+          "avg_width": 13.212781309723468,
+          "road_changes": 147
+        }
+      }
+    },
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_south_north_28_quality_conflict",
+      "source": 796,
+      "target": 7935,
+      "normal_union2_feasible": false,
+      "lazy_repair_feasible": false,
+      "profile_feasible_P_P": 0,
+      "profile_feasible_S_S": 42,
+      "normal_union2_cost_s": 0.8357920999842463,
+      "normal_time_to_first_feasible_s": null,
+      "tree_computation_s": 0.6747579999937443,
+      "same_scalar_profile_scan_s": 0.12785180000355467,
+      "same_scalar_exhaustive_reconstruction_s": 0.03318229998694733,
+      "profile_feasible_P_S": 3,
+      "profile_feasible_S_P": 69,
+      "non_elementary_candidates": 114,
+      "overlap_repairable_candidates": 114,
+      "repair_A_dijkstra_calls": 114,
+      "repair_B_dijkstra_calls": 114,
+      "repaired_exact_feasible_count": 0,
+      "time_to_first_repaired_feasible_s": null,
+      "total_repair_time_s": 17.805094600000302,
+      "marginal_mixed_profile_scan_s": 0.12818020000122488,
+      "marginal_repair_dijkstra_s": 17.27423500001896,
+      "total_fallback_cost_s": 17.805094600000302,
+      "solved_original_pair_type": null,
+      "solved_via_vertex": null,
+      "solved_repair_direction": null,
+      "solved_L": null,
+      "solved_H": null,
+      "solved_avg_pop": null,
+      "solved_avg_width": null,
+      "solved_road_changes": null,
+      "solved_repeated_vertices": null,
+      "solved_validation_passed": null,
+      "nearest_profile": {
+        "pair_type": "S,S",
+        "via_vertex": 1875,
+        "normalized_violation_score": 0.0,
+        "violations": {
+          "length_low": 0.0,
+          "length_high": 0.0,
+          "elevation_low": 0.0,
+          "elevation_high": 0.0,
+          "popularity_low": 0.0,
+          "width_high": 0.0
+        },
+        "metrics": {
+          "length": 50705.0,
+          "elevation": 510.099996432662,
+          "popularity_length": 10276893.0,
+          "width_length": 674585.0,
+          "avg_pop": 202.68007099891528,
+          "avg_width": 13.304112020510798,
+          "road_changes": 145
+        }
+      }
+    },
+    {
+      "benchmark": "development",
+      "query_id": "paris_bures_02_multi_tight",
+      "source": 127,
+      "target": 4433,
+      "normal_union2_feasible": false,
+      "lazy_repair_feasible": false,
+      "profile_feasible_P_P": 31,
+      "profile_feasible_S_S": 11,
+      "normal_union2_cost_s": 0.9189909999986412,
+      "normal_time_to_first_feasible_s": null,
+      "tree_computation_s": 0.7619350999884773,
+      "same_scalar_profile_scan_s": 0.12593760000891052,
+      "same_scalar_exhaustive_reconstruction_s": 0.031118300001253374,
+      "profile_feasible_P_S": 69,
+      "profile_feasible_S_P": 49,
+      "non_elementary_candidates": 160,
+      "overlap_repairable_candidates": 160,
+      "repair_A_dijkstra_calls": 160,
+      "repair_B_dijkstra_calls": 160,
+      "repaired_exact_feasible_count": 0,
+      "time_to_first_repaired_feasible_s": null,
+      "total_repair_time_s": 24.823306599995703,
+      "marginal_mixed_profile_scan_s": 0.12691799997992348,
+      "marginal_repair_dijkstra_s": 24.133797299989965,
+      "total_fallback_cost_s": 24.823306599995703,
+      "solved_original_pair_type": null,
+      "solved_via_vertex": null,
+      "solved_repair_direction": null,
+      "solved_L": null,
+      "solved_H": null,
+      "solved_avg_pop": null,
+      "solved_avg_width": null,
+      "solved_road_changes": null,
+      "solved_repeated_vertices": null,
+      "solved_validation_passed": null,
+      "nearest_profile": {
+        "pair_type": "P,S",
+        "via_vertex": 1475,
+        "normalized_violation_score": 0.0,
+        "violations": {
+          "length_low": 0.0,
+          "length_high": 0.0,
+          "elevation_low": 0.0,
+          "elevation_high": 0.0,
+          "popularity_low": 0.0,
+          "width_high": 0.0
+        },
+        "metrics": {
+          "length": 42750.0,
+          "elevation": 676.2000020295382,
+          "popularity_length": 9070927.0,
+          "width_length": 648140.0,
+          "avg_pop": 212.1854269005848,
+          "avg_width": 15.161169590643276,
+          "road_changes": 123
+        }
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_east_west_09_multi_tight",
+      "query": {
+        "name": "holdout_anchor_east_west_09_multi_tight",
+        "source": 9171,
+        "target": 5495,
+        "Lmin": 40693.085,
+        "Lmax": 43940.098,
+        "Hmin": 543.0270026385784,
+        "Hmax": 630.6120030641556,
+        "Pmin": 144.60980815290853,
+        "Wmax": 12.473733074059144,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "normal": {
+        "feasible": false,
+        "first_hit": null,
+        "timing": {
+          "tree_computation_s": 0.6805885000067065,
+          "same_scalar_profile_scan_s": 0.11361889999534469,
+          "same_scalar_exhaustive_reconstruction_s": 7.999915396794677e-07,
+          "first_hit_reconstruction_s": 1.0200004908256233e-05,
+          "normal_time_to_first_feasible_s": null,
+          "normal_exhaustive_total_s": 0.7942081999935908,
+          "first_hit_reconstructed": 0,
+          "first_hit_non_elementary_rejections": 0,
+          "first_hit_validation_rejections": 0,
+          "first_hit_exact_box_rejections": 0
+        },
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "S,S": 0
+        },
+        "non_elementary_by_pair": {
+          "P,P": 0,
+          "S,S": 0
+        }
+      },
+      "repair": {
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "P,S": 0,
+          "S,P": 0,
+          "S,S": 0
+        },
+        "nearest_profile": {
+          "pair_type": "S,P",
+          "via_vertex": 5305,
+          "normalized_violation_score": 0.008893793899674547,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 1.2861298295834445,
+            "width_high": 0.1059207585088533
+          },
+          "metrics": {
+            "length": 42465.0,
+            "elevation": 551.0000022128224,
+            "popularity_length": 6086240.0,
+            "width_length": 534195.0,
+            "avg_pop": 143.32367832332508,
+            "avg_width": 12.579653832567997,
+            "road_changes": 165
+          }
+        },
+        "non_elementary_candidates": 0,
+        "overlap_repairable_candidates": 0,
+        "branch_validation_failures": 0,
+        "reconstructed_for_repair": 0,
+        "repair_A_dijkstra_calls": 0,
+        "repair_B_dijkstra_calls": 0,
+        "repair_dijkstra_s": 0.0,
+        "mixed_profile_scan_s": 0.11513610000838526,
+        "same_profile_scan_s_reused": 0.11361889999534469,
+        "identify_non_elementary_s": 1.09999964479357e-05,
+        "fallback_total_s": 0.11516790000314359,
+        "time_to_first_repaired_feasible_s": null,
+        "validated_repair_count": 0,
+        "repaired_exact_feasible_count": 0,
+        "repaired_non_elementary_count": 0,
+        "repair_validation_failure_count": 0,
+        "repaired_exact_box_rejected_count": 0,
+        "solved_by_repair": false,
+        "first_repaired_feasible": null,
+        "best_repaired_feasible": null,
+        "non_elementary_records_sample": []
+      }
+    },
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_south_north_09_multi_tight",
+      "query": {
+        "name": "holdout_anchor_south_north_09_multi_tight",
+        "source": 796,
+        "target": 7935,
+        "Lmin": 49560.47,
+        "Lmax": 53515.036,
+        "Hmin": 483.971998924613,
+        "Hmax": 562.0319987511634,
+        "Pmin": 197.5435375209315,
+        "Wmax": 13.214352194400094,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "normal": {
+        "feasible": false,
+        "first_hit": null,
+        "timing": {
+          "tree_computation_s": 0.6797248000075342,
+          "same_scalar_profile_scan_s": 0.11332869999750983,
+          "same_scalar_exhaustive_reconstruction_s": 5.00003807246685e-07,
+          "first_hit_reconstruction_s": 6.400005077011883e-06,
+          "normal_time_to_first_feasible_s": null,
+          "normal_exhaustive_total_s": 0.7930540000088513,
+          "first_hit_reconstructed": 0,
+          "first_hit_non_elementary_rejections": 0,
+          "first_hit_validation_rejections": 0,
+          "first_hit_exact_box_rejections": 0
+        },
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "S,S": 0
+        },
+        "non_elementary_by_pair": {
+          "P,P": 0,
+          "S,S": 0
+        }
+      },
+      "repair": {
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "P,S": 0,
+          "S,P": 2,
+          "S,S": 0
+        },
+        "nearest_profile": {
+          "pair_type": "S,P",
+          "via_vertex": 17618,
+          "normalized_violation_score": 0.0,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 51278.0,
+            "elevation": 508.09999660402536,
+            "popularity_length": 10382287.0,
+            "width_length": 677525.0,
+            "avg_pop": 202.47059167674246,
+            "avg_width": 13.212781309723468,
+            "road_changes": 147
+          }
+        },
+        "non_elementary_candidates": 2,
+        "overlap_repairable_candidates": 2,
+        "branch_validation_failures": 0,
+        "reconstructed_for_repair": 2,
+        "repair_A_dijkstra_calls": 2,
+        "repair_B_dijkstra_calls": 2,
+        "repair_dijkstra_s": 0.2459862000105204,
+        "mixed_profile_scan_s": 0.11587120000331197,
+        "same_profile_scan_s_reused": 0.11332869999750983,
+        "identify_non_elementary_s": 0.2500750000035623,
+        "fallback_total_s": 0.3659581999963848,
+        "time_to_first_repaired_feasible_s": null,
+        "validated_repair_count": 0,
+        "repaired_exact_feasible_count": 0,
+        "repaired_non_elementary_count": 0,
+        "repair_validation_failure_count": 0,
+        "repaired_exact_box_rejected_count": 0,
+        "solved_by_repair": false,
+        "first_repaired_feasible": null,
+        "best_repaired_feasible": null,
+        "non_elementary_records_sample": [
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19065,
+            "profile_metrics": {
+              "length": 51304.0,
+              "elevation": 505.7999965623021,
+              "popularity_length": 10361733.0,
+              "width_length": 677655.0,
+              "avg_pop": 201.96735147356932,
+              "avg_width": 13.208619210977702,
+              "road_changes": 149
+            },
+            "original_repeated_vertex_count": 14,
+            "overlap_vertex_count": 14,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              19063,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 14,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                19063,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0004793000116478652,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.12436639999214094,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22980,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 17618,
+            "profile_metrics": {
+              "length": 51278.0,
+              "elevation": 508.09999660402536,
+              "popularity_length": 10382287.0,
+              "width_length": 677525.0,
+              "avg_pop": 202.47059167674246,
+              "avg_width": 13.212781309723468,
+              "road_changes": 147
+            },
+            "original_repeated_vertex_count": 14,
+            "overlap_vertex_count": 14,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              19063,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 14,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                19063,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00030929999775253236,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.12083120000897907,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22980,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "benchmark": "holdout",
+      "query_id": "holdout_anchor_south_north_28_quality_conflict",
+      "query": {
+        "name": "holdout_anchor_south_north_28_quality_conflict",
+        "source": 796,
+        "target": 7935,
+        "Lmin": 48073.56,
+        "Lmax": 57895.04,
+        "Hmin": 400.9600006222725,
+        "Hmax": 651.5600010111928,
+        "Pmin": 200.19946993732106,
+        "Wmax": 13.33080554050917,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "normal": {
+        "feasible": false,
+        "first_hit": null,
+        "timing": {
+          "tree_computation_s": 0.6747579999937443,
+          "same_scalar_profile_scan_s": 0.12785180000355467,
+          "same_scalar_exhaustive_reconstruction_s": 0.03318229998694733,
+          "first_hit_reconstruction_s": 0.03386480000335723,
+          "normal_time_to_first_feasible_s": null,
+          "normal_exhaustive_total_s": 0.8357920999842463,
+          "first_hit_reconstructed": 42,
+          "first_hit_non_elementary_rejections": 42,
+          "first_hit_validation_rejections": 0,
+          "first_hit_exact_box_rejections": 0
+        },
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "S,S": 42
+        },
+        "non_elementary_by_pair": {
+          "P,P": 0,
+          "S,S": 42
+        }
+      },
+      "repair": {
+        "profile_feasible_by_pair": {
+          "P,P": 0,
+          "P,S": 3,
+          "S,P": 69,
+          "S,S": 42
+        },
+        "nearest_profile": {
+          "pair_type": "S,S",
+          "via_vertex": 1875,
+          "normalized_violation_score": 0.0,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 50705.0,
+            "elevation": 510.099996432662,
+            "popularity_length": 10276893.0,
+            "width_length": 674585.0,
+            "avg_pop": 202.68007099891528,
+            "avg_width": 13.304112020510798,
+            "road_changes": 145
+          }
+        },
+        "non_elementary_candidates": 114,
+        "overlap_repairable_candidates": 114,
+        "branch_validation_failures": 0,
+        "reconstructed_for_repair": 114,
+        "repair_A_dijkstra_calls": 114,
+        "repair_B_dijkstra_calls": 114,
+        "repair_dijkstra_s": 17.27423500001896,
+        "mixed_profile_scan_s": 0.12818020000122488,
+        "same_profile_scan_s_reused": 0.12785180000355467,
+        "identify_non_elementary_s": 17.676903100000345,
+        "fallback_total_s": 17.805094600000302,
+        "time_to_first_repaired_feasible_s": null,
+        "validated_repair_count": 152,
+        "repaired_exact_feasible_count": 0,
+        "repaired_non_elementary_count": 0,
+        "repair_validation_failure_count": 0,
+        "repaired_exact_box_rejected_count": 152,
+        "solved_by_repair": false,
+        "first_repaired_feasible": null,
+        "best_repaired_feasible": null,
+        "non_elementary_records_sample": [
+          {
+            "pair_type": "S,P",
+            "via_vertex": 22242,
+            "profile_metrics": {
+              "length": 48874.0,
+              "elevation": 499.29999654740095,
+              "popularity_length": 9871878.0,
+              "width_length": 640495.0,
+              "avg_pop": 201.98629127961698,
+              "avg_width": 13.10502516675533,
+              "road_changes": 140
+            },
+            "original_repeated_vertex_count": 8,
+            "overlap_vertex_count": 8,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 8,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.06084619999455754,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10718,
+                  "expanded_nodes": 10120,
+                  "edge_scans": 20558
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.09250640000391286,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 14904,
+                  "expanded_nodes": 13889,
+                  "edge_scans": 28717
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 12162,
+            "profile_metrics": {
+              "length": 48606.0,
+              "elevation": 498.09999649971724,
+              "popularity_length": 9803538.0,
+              "width_length": 637815.0,
+              "avg_pop": 201.69398839649426,
+              "avg_width": 13.122145414146402,
+              "road_changes": 140
+            },
+            "original_repeated_vertex_count": 7,
+            "overlap_vertex_count": 7,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              13458,
+              16926,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 7,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                13458,
+                16926,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.06061409998801537,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10720,
+                  "expanded_nodes": 10122,
+                  "edge_scans": 20562
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.09133499999006744,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 15021,
+                  "expanded_nodes": 13992,
+                  "edge_scans": 28935
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 16926,
+            "profile_metrics": {
+              "length": 48418.0,
+              "elevation": 498.09999649971724,
+              "popularity_length": 9755598.0,
+              "width_length": 635935.0,
+              "avg_pop": 201.4870089636086,
+              "avg_width": 13.134268247346029,
+              "road_changes": 140
+            },
+            "original_repeated_vertex_count": 6,
+            "overlap_vertex_count": 6,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              13458,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 6,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                13458,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.05924070000764914,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10722,
+                  "expanded_nodes": 10124,
+                  "edge_scans": 20566
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.09221999999135733,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 15136,
+                  "expanded_nodes": 14102,
+                  "edge_scans": 29140
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 5647,
+            "profile_metrics": {
+              "length": 49373.0,
+              "elevation": 593.9000018164515,
+              "popularity_length": 10719327.0,
+              "width_length": 648765.0,
+              "avg_pop": 217.10908796305674,
+              "avg_width": 13.140076560063193,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 23,
+            "overlap_vertex_count": 23,
+            "overlap_vertices_sample": [
+              4748,
+              4749,
+              4750,
+              4755,
+              4756,
+              5646,
+              9248,
+              11624,
+              11958,
+              11959,
+              12318,
+              12711,
+              13060,
+              13722,
+              14752,
+              14765,
+              14767,
+              14771,
+              14787,
+              14804
+            ],
+            "repair": {
+              "overlap_vertex_count": 23,
+              "overlap_vertices_sample": [
+                4748,
+                4749,
+                4750,
+                4755,
+                4756,
+                5646,
+                9248,
+                11624,
+                11958,
+                11959,
+                12318,
+                12711,
+                13060,
+                13722,
+                14752,
+                14765,
+                14767,
+                14771,
+                14787,
+                14804
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00030759999935980886,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.12718989999848418,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22860,
+                  "expanded_nodes": 21550,
+                  "edge_scans": 43916
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 22190,
+            "profile_metrics": {
+              "length": 48834.0,
+              "elevation": 502.2999963089824,
+              "popularity_length": 9832722.0,
+              "width_length": 640095.0,
+              "avg_pop": 201.34992013760905,
+              "avg_width": 13.107568497358399,
+              "road_changes": 142
+            },
+            "original_repeated_vertex_count": 8,
+            "overlap_vertex_count": 8,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 8,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003522000042721629,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13959869999962393,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23033,
+                  "expanded_nodes": 21439,
+                  "edge_scans": 43664
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 18032,
+            "profile_metrics": {
+              "length": 48278.0,
+              "elevation": 496.9999964758754,
+              "popularity_length": 9719898.0,
+              "width_length": 634535.0,
+              "avg_pop": 201.3318281618957,
+              "avg_width": 13.143357222751565,
+              "road_changes": 138
+            },
+            "original_repeated_vertex_count": 5,
+            "overlap_vertex_count": 5,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              13458,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 5,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                13458,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.0604923999926541,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10724,
+                  "expanded_nodes": 10126,
+                  "edge_scans": 20570
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.09263769999961369,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 15146,
+                  "expanded_nodes": 14112,
+                  "edge_scans": 29162
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 22189,
+            "profile_metrics": {
+              "length": 48486.0,
+              "elevation": 499.1999965235591,
+              "popularity_length": 9761446.0,
+              "width_length": 636615.0,
+              "avg_pop": 201.32504228024584,
+              "avg_width": 13.129872540527163,
+              "road_changes": 142
+            },
+            "original_repeated_vertex_count": 7,
+            "overlap_vertex_count": 7,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              13458,
+              16926,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 7,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                13458,
+                16926,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00033039999834727496,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1384284999949159,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23035,
+                  "expanded_nodes": 21441,
+                  "edge_scans": 43668
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19065,
+            "profile_metrics": {
+              "length": 51304.0,
+              "elevation": 505.7999965623021,
+              "popularity_length": 10361733.0,
+              "width_length": 677655.0,
+              "avg_pop": 201.96735147356932,
+              "avg_width": 13.208619210977702,
+              "road_changes": 149
+            },
+            "original_repeated_vertex_count": 14,
+            "overlap_vertex_count": 14,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              19063,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 14,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                19063,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003136000013910234,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.14068280000356026,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22981,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 17618,
+            "profile_metrics": {
+              "length": 51278.0,
+              "elevation": 508.09999660402536,
+              "popularity_length": 10382287.0,
+              "width_length": 677525.0,
+              "avg_pop": 202.47059167674246,
+              "avg_width": 13.212781309723468,
+              "road_changes": 147
+            },
+            "original_repeated_vertex_count": 14,
+            "overlap_vertex_count": 14,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              19063,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 14,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                19063,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003108999953838065,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.14048320001165848,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22981,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 18031,
+            "profile_metrics": {
+              "length": 48552.0,
+              "elevation": 500.79999642819166,
+              "popularity_length": 9754970.0,
+              "width_length": 637275.0,
+              "avg_pop": 200.91798484099522,
+              "avg_width": 13.12561789421651,
+              "road_changes": 140
+            },
+            "original_repeated_vertex_count": 6,
+            "overlap_vertex_count": 6,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              13458,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 6,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                13458,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00044490001164376736,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13837539999803994,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23037,
+                  "expanded_nodes": 21443,
+                  "edge_scans": 43672
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 12817,
+            "profile_metrics": {
+              "length": 49198.0,
+              "elevation": 598.7999965250492,
+              "popularity_length": 9884471.0,
+              "width_length": 650770.0,
+              "avg_pop": 200.91204927029554,
+              "avg_width": 13.227570226431968,
+              "road_changes": 146
+            },
+            "original_repeated_vertex_count": 7,
+            "overlap_vertex_count": 7,
+            "overlap_vertices_sample": [
+              12816,
+              13189,
+              14382,
+              14383,
+              14384,
+              15100,
+              21393
+            ],
+            "repair": {
+              "overlap_vertex_count": 7,
+              "overlap_vertices_sample": [
+                12816,
+                13189,
+                14382,
+                14383,
+                14384,
+                15100,
+                21393
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00034329999471083283,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 2
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.138752700004261,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22942,
+                  "expanded_nodes": 21383,
+                  "edge_scans": 43554
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19060,
+            "profile_metrics": {
+              "length": 51184.0,
+              "elevation": 504.29999655485153,
+              "popularity_length": 10357797.0,
+              "width_length": 677055.0,
+              "avg_pop": 202.36396139418568,
+              "avg_width": 13.227864176305095,
+              "road_changes": 147
+            },
+            "original_repeated_vertex_count": 11,
+            "overlap_vertex_count": 11,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 11,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00035930000012740493,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13970610000251327,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22987,
+                  "expanded_nodes": 21421,
+                  "edge_scans": 43631
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,S",
+            "via_vertex": 22242,
+            "profile_metrics": {
+              "length": 48913.0,
+              "elevation": 505.6999964490533,
+              "popularity_length": 9820956.0,
+              "width_length": 640615.0,
+              "avg_pop": 200.78416780814916,
+              "avg_width": 13.097029419581705,
+              "road_changes": 141
+            },
+            "original_repeated_vertex_count": 8,
+            "overlap_vertex_count": 8,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              22073
+            ],
+            "repair": {
+              "overlap_vertex_count": 8,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                22073
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.07783129999006633,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 12842,
+                  "expanded_nodes": 11945,
+                  "edge_scans": 24393
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.09010860000853427,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 14904,
+                  "expanded_nodes": 13889,
+                  "edge_scans": 28717
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19064,
+            "profile_metrics": {
+              "length": 51040.0,
+              "elevation": 505.699996560812,
+              "popularity_length": 10358357.0,
+              "width_length": 676805.0,
+              "avg_pop": 202.94586598746082,
+              "avg_width": 13.26028605015674,
+              "road_changes": 149
+            },
+            "original_repeated_vertex_count": 13,
+            "overlap_vertex_count": 13,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 13,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003046000056201592,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.14414879999822006,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22981,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 12317,
+            "profile_metrics": {
+              "length": 48645.0,
+              "elevation": 590.0000021979213,
+              "popularity_length": 10530651.0,
+              "width_length": 645125.0,
+              "avg_pop": 216.47961763798952,
+              "avg_width": 13.261897420084285,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 23,
+            "overlap_vertex_count": 23,
+            "overlap_vertices_sample": [
+              4748,
+              4749,
+              4750,
+              4755,
+              4756,
+              5646,
+              9248,
+              11624,
+              11958,
+              11959,
+              12318,
+              12711,
+              13060,
+              13722,
+              14752,
+              14765,
+              14767,
+              14771,
+              14787,
+              14804
+            ],
+            "repair": {
+              "overlap_vertex_count": 23,
+              "overlap_vertices_sample": [
+                4748,
+                4749,
+                4750,
+                4755,
+                4756,
+                5646,
+                9248,
+                11624,
+                11958,
+                11959,
+                12318,
+                12711,
+                13060,
+                13722,
+                14752,
+                14765,
+                14767,
+                14771,
+                14787,
+                14804
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00036669999826699495,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1293489999952726,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22860,
+                  "expanded_nodes": 21550,
+                  "edge_scans": 43916
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19063,
+            "profile_metrics": {
+              "length": 50970.0,
+              "elevation": 505.39999655634165,
+              "popularity_length": 10356723.0,
+              "width_length": 675985.0,
+              "avg_pop": 203.19252501471453,
+              "avg_width": 13.262409260349225,
+              "road_changes": 147
+            },
+            "original_repeated_vertex_count": 13,
+            "overlap_vertex_count": 13,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              19062,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 13,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                19062,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.000352299990481697,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 3,
+                  "expanded_nodes": 3,
+                  "edge_scans": 4
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1393296000023838,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22981,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19062,
+            "profile_metrics": {
+              "length": 50946.0,
+              "elevation": 505.29999655485153,
+              "popularity_length": 10355067.0,
+              "width_length": 675865.0,
+              "avg_pop": 203.2557413732187,
+              "avg_width": 13.266301574215836,
+              "road_changes": 147
+            },
+            "original_repeated_vertex_count": 12,
+            "overlap_vertex_count": 12,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              19061,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 12,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                19061,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003419000131543726,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5,
+                  "expanded_nodes": 5,
+                  "edge_scans": 8
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13999289998901077,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22981,
+                  "expanded_nodes": 21415,
+                  "edge_scans": 43620
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,S",
+            "via_vertex": 21382,
+            "profile_metrics": {
+              "length": 51466.0,
+              "elevation": 515.5999964401126,
+              "popularity_length": 10403354.0,
+              "width_length": 683120.0,
+              "avg_pop": 202.14032565188668,
+              "avg_width": 13.273228927835852,
+              "road_changes": 151
+            },
+            "original_repeated_vertex_count": 12,
+            "overlap_vertex_count": 12,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5516,
+              8368,
+              12162,
+              13458,
+              14053,
+              16563,
+              16926,
+              18032,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 12,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5516,
+                8368,
+                12162,
+                13458,
+                14053,
+                16563,
+                16926,
+                18032,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.000348599991411902,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13890689999971073,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22983,
+                  "expanded_nodes": 21421,
+                  "edge_scans": 43631
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 16585,
+            "profile_metrics": {
+              "length": 52266.0,
+              "elevation": 510.69999647140503,
+              "popularity_length": 10485009.0,
+              "width_length": 693895.0,
+              "avg_pop": 200.6085983239582,
+              "avg_width": 13.276221635480045,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 20,
+            "overlap_vertex_count": 20,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              14053,
+              16540,
+              16563,
+              16571,
+              16572,
+              16575,
+              16577,
+              16583,
+              16926,
+              17844,
+              18032,
+              19070,
+              19932,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 20,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                14053,
+                16540,
+                16563,
+                16571,
+                16572,
+                16575,
+                16577,
+                16583,
+                16926,
+                17844,
+                18032,
+                19070,
+                19932,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.06614860000263434,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 11698,
+                  "expanded_nodes": 11070,
+                  "edge_scans": 22436
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.08810210000956431,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 13961,
+                  "expanded_nodes": 13021,
+                  "edge_scans": 26965
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19061,
+            "profile_metrics": {
+              "length": 50872.0,
+              "elevation": 504.79999655485153,
+              "popularity_length": 10350553.0,
+              "width_length": 675495.0,
+              "avg_pop": 203.46267101745556,
+              "avg_width": 13.278325994653247,
+              "road_changes": 145
+            },
+            "original_repeated_vertex_count": 11,
+            "overlap_vertex_count": 11,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5571,
+              5572,
+              8368,
+              12162,
+              13458,
+              16926,
+              18032,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 11,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5571,
+                5572,
+                8368,
+                12162,
+                13458,
+                16926,
+                18032,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003521000035107136,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 6,
+                  "expanded_nodes": 6,
+                  "edge_scans": 10
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.13840359999448992,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22976,
+                  "expanded_nodes": 21410,
+                  "edge_scans": 43612
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 16579,
+            "profile_metrics": {
+              "length": 52210.0,
+              "elevation": 510.2999964952469,
+              "popularity_length": 10484077.0,
+              "width_length": 693335.0,
+              "avg_pop": 200.80591840643555,
+              "avg_width": 13.279735682819384,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 20,
+            "overlap_vertex_count": 20,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              14053,
+              16540,
+              16563,
+              16571,
+              16572,
+              16575,
+              16577,
+              16583,
+              16926,
+              17844,
+              18032,
+              19070,
+              19932,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 20,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                14053,
+                16540,
+                16563,
+                16571,
+                16572,
+                16575,
+                16577,
+                16583,
+                16926,
+                17844,
+                18032,
+                19070,
+                19932,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003136000013910234,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1389571000036085,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22963,
+                  "expanded_nodes": 21398,
+                  "edge_scans": 43580
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 19957,
+            "profile_metrics": {
+              "length": 52192.0,
+              "elevation": 507.99999652057886,
+              "popularity_length": 10468673.0,
+              "width_length": 693155.0,
+              "avg_pop": 200.58003142244021,
+              "avg_width": 13.280866799509504,
+              "road_changes": 156
+            },
+            "original_repeated_vertex_count": 17,
+            "overlap_vertex_count": 17,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              14053,
+              16540,
+              16563,
+              16569,
+              16926,
+              17844,
+              18032,
+              19932,
+              20385,
+              21250,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 17,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                14053,
+                16540,
+                16563,
+                16569,
+                16926,
+                17844,
+                18032,
+                19932,
+                20385,
+                21250,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.06535430000803899,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 11713,
+                  "expanded_nodes": 11082,
+                  "edge_scans": 22459
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.14243129998794757,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22977,
+                  "expanded_nodes": 21411,
+                  "edge_scans": 43608
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 21382,
+            "profile_metrics": {
+              "length": 51427.0,
+              "elevation": 509.19999653846025,
+              "popularity_length": 10454276.0,
+              "width_length": 683000.0,
+              "avg_pop": 203.28380033834367,
+              "avg_width": 13.280961362708306,
+              "road_changes": 150
+            },
+            "original_repeated_vertex_count": 12,
+            "overlap_vertex_count": 12,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              5516,
+              8368,
+              12162,
+              13458,
+              14053,
+              16563,
+              16926,
+              18032,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 12,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                5516,
+                8368,
+                12162,
+                13458,
+                14053,
+                16563,
+                16926,
+                18032,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00031289999606087804,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1379604000103427,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22988,
+                  "expanded_nodes": 21421,
+                  "edge_scans": 43631
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 13461,
+            "profile_metrics": {
+              "length": 52152.0,
+              "elevation": 511.09999644756317,
+              "popularity_length": 10483921.0,
+              "width_length": 692755.0,
+              "avg_pop": 201.0262501917472,
+              "avg_width": 13.28338318760546,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 19,
+            "overlap_vertex_count": 19,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              14053,
+              16540,
+              16563,
+              16571,
+              16572,
+              16575,
+              16576,
+              16926,
+              17844,
+              18032,
+              19070,
+              19932,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 19,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                14053,
+                16540,
+                16563,
+                16571,
+                16572,
+                16575,
+                16576,
+                16926,
+                17844,
+                18032,
+                19070,
+                19932,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00035039999056607485,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 8,
+                  "expanded_nodes": 8,
+                  "edge_scans": 16
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13894859999709297,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22965,
+                  "expanded_nodes": 21400,
+                  "edge_scans": 43584
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 16583,
+            "profile_metrics": {
+              "length": 52148.0,
+              "elevation": 509.7999964952469,
+              "popularity_length": 10483829.0,
+              "width_length": 692715.0,
+              "avg_pop": 201.03990565314106,
+              "avg_width": 13.283635038735905,
+              "road_changes": 160
+            },
+            "original_repeated_vertex_count": 19,
+            "overlap_vertex_count": 19,
+            "overlap_vertices_sample": [
+              736,
+              4939,
+              8368,
+              12162,
+              13458,
+              14053,
+              16540,
+              16563,
+              16571,
+              16572,
+              16575,
+              16577,
+              16926,
+              17844,
+              18032,
+              19070,
+              19932,
+              22073,
+              22242
+            ],
+            "repair": {
+              "overlap_vertex_count": 19,
+              "overlap_vertices_sample": [
+                736,
+                4939,
+                8368,
+                12162,
+                13458,
+                14053,
+                16540,
+                16563,
+                16571,
+                16572,
+                16575,
+                16577,
+                16926,
+                17844,
+                18032,
+                19070,
+                19932,
+                22073,
+                22242
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.06594320001022425,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 11700,
+                  "expanded_nodes": 11072,
+                  "edge_scans": 22440
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.08629910000308882,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 14064,
+                  "expanded_nodes": 13116,
+                  "edge_scans": 27156
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "benchmark": "development",
+      "query_id": "paris_bures_02_multi_tight",
+      "query": {
+        "name": "paris_bures_02_multi_tight",
+        "source": 127,
+        "target": 4433,
+        "Lmin": 40848.45,
+        "Lmax": 44023.2,
+        "Hmin": 630.7575027622282,
+        "Hmax": 739.8615032400191,
+        "Pmin": 197.95561067800614,
+        "Wmax": 15.96781242617529,
+        "corridor_slack_m": 1500,
+        "max_hops_from_boundary": 1
+      },
+      "normal": {
+        "feasible": false,
+        "first_hit": null,
+        "timing": {
+          "tree_computation_s": 0.7619350999884773,
+          "same_scalar_profile_scan_s": 0.12593760000891052,
+          "same_scalar_exhaustive_reconstruction_s": 0.031118300001253374,
+          "first_hit_reconstruction_s": 0.030714399996213615,
+          "normal_time_to_first_feasible_s": null,
+          "normal_exhaustive_total_s": 0.9189909999986412,
+          "first_hit_reconstructed": 42,
+          "first_hit_non_elementary_rejections": 42,
+          "first_hit_validation_rejections": 0,
+          "first_hit_exact_box_rejections": 0
+        },
+        "profile_feasible_by_pair": {
+          "P,P": 31,
+          "S,S": 11
+        },
+        "non_elementary_by_pair": {
+          "P,P": 31,
+          "S,S": 11
+        }
+      },
+      "repair": {
+        "profile_feasible_by_pair": {
+          "P,P": 31,
+          "P,S": 69,
+          "S,P": 49,
+          "S,S": 11
+        },
+        "nearest_profile": {
+          "pair_type": "P,S",
+          "via_vertex": 1475,
+          "normalized_violation_score": 0.0,
+          "violations": {
+            "length_low": 0.0,
+            "length_high": 0.0,
+            "elevation_low": 0.0,
+            "elevation_high": 0.0,
+            "popularity_low": 0.0,
+            "width_high": 0.0
+          },
+          "metrics": {
+            "length": 42750.0,
+            "elevation": 676.2000020295382,
+            "popularity_length": 9070927.0,
+            "width_length": 648140.0,
+            "avg_pop": 212.1854269005848,
+            "avg_width": 15.161169590643276,
+            "road_changes": 123
+          }
+        },
+        "non_elementary_candidates": 160,
+        "overlap_repairable_candidates": 160,
+        "branch_validation_failures": 0,
+        "reconstructed_for_repair": 160,
+        "repair_A_dijkstra_calls": 160,
+        "repair_B_dijkstra_calls": 160,
+        "repair_dijkstra_s": 24.133797299989965,
+        "mixed_profile_scan_s": 0.12691799997992348,
+        "same_profile_scan_s_reused": 0.12593760000891052,
+        "identify_non_elementary_s": 24.69637609999336,
+        "fallback_total_s": 24.823306599995703,
+        "time_to_first_repaired_feasible_s": null,
+        "validated_repair_count": 183,
+        "repaired_exact_feasible_count": 0,
+        "repaired_non_elementary_count": 0,
+        "repair_validation_failure_count": 0,
+        "repaired_exact_box_rejected_count": 183,
+        "solved_by_repair": false,
+        "first_repaired_feasible": null,
+        "best_repaired_feasible": null,
+        "non_elementary_records_sample": [
+          {
+            "pair_type": "S,P",
+            "via_vertex": 1573,
+            "profile_metrics": {
+              "length": 42988.0,
+              "elevation": 697.9000032767653,
+              "popularity_length": 8935288.0,
+              "width_length": 604290.0,
+              "avg_pop": 207.8554015073974,
+              "avg_width": 14.057178747557458,
+              "road_changes": 128
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              12348,
+              15760,
+              15800,
+              15801,
+              16885,
+              21182,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                12348,
+                15760,
+                15800,
+                15801,
+                16885,
+                21182,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0005365999968489632,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 13,
+                  "expanded_nodes": 13,
+                  "edge_scans": 19
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13636330000008456,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 4938,
+            "profile_metrics": {
+              "length": 42504.0,
+              "elevation": 720.6000040397048,
+              "popularity_length": 8819484.0,
+              "width_length": 601870.0,
+              "avg_pop": 207.49774138904573,
+              "avg_width": 14.160314323357802,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              12348,
+              15760,
+              15800,
+              15801,
+              16885,
+              21182,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                12348,
+                15760,
+                15800,
+                15801,
+                16885,
+                21182,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00032559999090153724,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13724330000695772,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 12348,
+            "profile_metrics": {
+              "length": 42140.0,
+              "elevation": 696.9000032767653,
+              "popularity_length": 8736856.0,
+              "width_length": 600050.0,
+              "avg_pop": 207.32928334124347,
+              "avg_width": 14.239439962031325,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 17,
+            "overlap_vertex_count": 17,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21182,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 17,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21182,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003875999973388389,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 15,
+                  "expanded_nodes": 15,
+                  "edge_scans": 23
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1369732000021031,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 1572,
+            "profile_metrics": {
+              "length": 42837.0,
+              "elevation": 686.3000034913421,
+              "popularity_length": 8860176.0,
+              "width_length": 603535.0,
+              "avg_pop": 206.83465228657468,
+              "avg_width": 14.089105212783341,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.000403900005039759,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 15,
+                  "expanded_nodes": 15,
+                  "edge_scans": 23
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.14485670000431128,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 1574,
+            "profile_metrics": {
+              "length": 42837.0,
+              "elevation": 686.3000034913421,
+              "popularity_length": 8860176.0,
+              "width_length": 603535.0,
+              "avg_pop": 206.83465228657468,
+              "avg_width": 14.089105212783341,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003480000013951212,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 6,
+                  "expanded_nodes": 6,
+                  "edge_scans": 7
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13691120001021773,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 11959,
+            "profile_metrics": {
+              "length": 42837.0,
+              "elevation": 686.3000034913421,
+              "popularity_length": 8860176.0,
+              "width_length": 603535.0,
+              "avg_pop": 206.83465228657468,
+              "avg_width": 14.089105212783341,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003845000028377399,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10,
+                  "expanded_nodes": 10,
+                  "edge_scans": 14
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13616720000572968,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 17088,
+            "profile_metrics": {
+              "length": 42837.0,
+              "elevation": 686.3000034913421,
+              "popularity_length": 8860176.0,
+              "width_length": 603535.0,
+              "avg_pop": 206.83465228657468,
+              "avg_width": 14.089105212783341,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003652000013971701,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 14,
+                  "expanded_nodes": 14,
+                  "edge_scans": 21
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1392141999967862,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 17001,
+            "profile_metrics": {
+              "length": 41794.0,
+              "elevation": 685.7000034675002,
+              "popularity_length": 8661428.0,
+              "width_length": 598320.0,
+              "avg_pop": 207.24094367612577,
+              "avg_width": 14.315930516342059,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00033460000122431666,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5,
+                  "expanded_nodes": 5,
+                  "edge_scans": 6
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.1401629000029061,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 21182,
+            "profile_metrics": {
+              "length": 41794.0,
+              "elevation": 685.7000034675002,
+              "popularity_length": 8661428.0,
+              "width_length": 598320.0,
+              "avg_pop": 207.24094367612577,
+              "avg_width": 14.315930516342059,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              805,
+              1571,
+              4558,
+              4559,
+              4560,
+              4561,
+              4748,
+              4755,
+              6197,
+              11958,
+              12318,
+              15760,
+              15800,
+              15801,
+              16885,
+              21483
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                805,
+                1571,
+                4558,
+                4559,
+                4560,
+                4561,
+                4748,
+                4755,
+                6197,
+                11958,
+                12318,
+                15760,
+                15800,
+                15801,
+                16885,
+                21483
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00038830000266898423,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 16,
+                  "expanded_nodes": 16,
+                  "edge_scans": 28
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13699660000565927,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22939,
+                  "expanded_nodes": 21278,
+                  "edge_scans": 43348
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 6867,
+            "profile_metrics": {
+              "length": 43436.0,
+              "elevation": 662.5000018551946,
+              "popularity_length": 8934925.0,
+              "width_length": 626195.0,
+              "avg_pop": 205.70321852840962,
+              "avg_width": 14.416497835896491,
+              "road_changes": 128
+            },
+            "original_repeated_vertex_count": 20,
+            "overlap_vertex_count": 20,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10017,
+              10018,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 20,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10017,
+                10018,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0004554999904939905,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 26,
+                  "expanded_nodes": 24,
+                  "edge_scans": 47
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.1363296000054106,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22702,
+                  "expanded_nodes": 21038,
+                  "edge_scans": 42900
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 9952,
+            "profile_metrics": {
+              "length": 43410.0,
+              "elevation": 662.0000018551946,
+              "popularity_length": 8929205.0,
+              "width_length": 626065.0,
+              "avg_pop": 205.6946556093066,
+              "avg_width": 14.422137756277355,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 19,
+            "overlap_vertex_count": 19,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9959,
+              10017,
+              10018,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 19,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9959,
+                10017,
+                10018,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.0339382999954978,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5973,
+                  "expanded_nodes": 5699,
+                  "edge_scans": 11674
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.14070799999171868,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22703,
+                  "expanded_nodes": 21039,
+                  "edge_scans": 42903
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 10020,
+            "profile_metrics": {
+              "length": 42744.0,
+              "elevation": 653.8000014796853,
+              "popularity_length": 8796849.0,
+              "width_length": 619405.0,
+              "avg_pop": 205.8031302638967,
+              "avg_width": 14.491039678083474,
+              "road_changes": 128
+            },
+            "original_repeated_vertex_count": 19,
+            "overlap_vertex_count": 19,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9959,
+              10017,
+              10018,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 19,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9959,
+                10017,
+                10018,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0005226000066613778,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 2,
+                  "expanded_nodes": 2,
+                  "edge_scans": 4
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13652980000188109,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23139,
+                  "expanded_nodes": 21448,
+                  "edge_scans": 43744
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 10018,
+            "profile_metrics": {
+              "length": 42698.0,
+              "elevation": 653.4000014737248,
+              "popularity_length": 8791789.0,
+              "width_length": 618945.0,
+              "avg_pop": 205.90634221743406,
+              "avg_width": 14.495878027073868,
+              "road_changes": 126
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9959,
+              10017,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9959,
+                10017,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.03370400000130758,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5976,
+                  "expanded_nodes": 5702,
+                  "edge_scans": 11682
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.13517449999926612,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22707,
+                  "expanded_nodes": 21043,
+                  "edge_scans": 42913
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 10017,
+            "profile_metrics": {
+              "length": 42650.0,
+              "elevation": 653.2000014707446,
+              "popularity_length": 8781613.0,
+              "width_length": 618465.0,
+              "avg_pop": 205.89948417350527,
+              "avg_width": 14.500937866354045,
+              "road_changes": 124
+            },
+            "original_repeated_vertex_count": 17,
+            "overlap_vertex_count": 17,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 17,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.03453379998973105,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5977,
+                  "expanded_nodes": 5703,
+                  "edge_scans": 11684
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.13528000000223983,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22712,
+                  "expanded_nodes": 21048,
+                  "edge_scans": 42924
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 20814,
+            "profile_metrics": {
+              "length": 43404.0,
+              "elevation": 688.5000018179417,
+              "popularity_length": 8933862.0,
+              "width_length": 630650.0,
+              "avg_pop": 205.8303842963782,
+              "avg_width": 14.529766841765737,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003302999975858256,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 9,
+                  "expanded_nodes": 8,
+                  "edge_scans": 9
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.126403999995091,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22652,
+                  "expanded_nodes": 21361,
+                  "edge_scans": 43584
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 20815,
+            "profile_metrics": {
+              "length": 43404.0,
+              "elevation": 688.5000018179417,
+              "popularity_length": 8933862.0,
+              "width_length": 630650.0,
+              "avg_pop": 205.8303842963782,
+              "avg_width": 14.529766841765737,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0005960999988019466,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 7,
+                  "expanded_nodes": 7,
+                  "edge_scans": 6
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.1282255999976769,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22653,
+                  "expanded_nodes": 21362,
+                  "edge_scans": 43586
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 19075,
+            "profile_metrics": {
+              "length": 43327.0,
+              "elevation": 688.3000018149614,
+              "popularity_length": 8926839.0,
+              "width_length": 630265.0,
+              "avg_pop": 206.03408959771045,
+              "avg_width": 14.546702979666259,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003846000035991892,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 10,
+                  "expanded_nodes": 9,
+                  "edge_scans": 12
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.13223240000661463,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22648,
+                  "expanded_nodes": 21357,
+                  "edge_scans": 43580
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 19076,
+            "profile_metrics": {
+              "length": 43327.0,
+              "elevation": 688.3000018149614,
+              "popularity_length": 8926839.0,
+              "width_length": 630265.0,
+              "avg_pop": 206.03408959771045,
+              "avg_width": 14.546702979666259,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00033039999834727496,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 6,
+                  "expanded_nodes": 6,
+                  "edge_scans": 5
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.12561320001259446,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22651,
+                  "expanded_nodes": 21360,
+                  "edge_scans": 43584
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 10025,
+            "profile_metrics": {
+              "length": 42496.0,
+              "elevation": 653.8000014945865,
+              "popularity_length": 8743157.0,
+              "width_length": 618575.0,
+              "avg_pop": 205.74070500753012,
+              "avg_width": 14.556075865963855,
+              "road_changes": 124
+            },
+            "original_repeated_vertex_count": 17,
+            "overlap_vertex_count": 17,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 17,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00030080000578891486,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13788410001143347,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23143,
+                  "expanded_nodes": 21452,
+                  "edge_scans": 43754
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 9950,
+            "profile_metrics": {
+              "length": 43615.0,
+              "elevation": 662.8000018671155,
+              "popularity_length": 8963759.0,
+              "width_length": 627170.0,
+              "avg_pop": 205.52009629714547,
+              "avg_width": 14.379685887882609,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 20,
+            "overlap_vertex_count": 20,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10017,
+              10018,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 20,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10017,
+                10018,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.00048010000318754464,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 24,
+                  "expanded_nodes": 23,
+                  "edge_scans": 44
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.14049010000599083,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22710,
+                  "expanded_nodes": 21046,
+                  "edge_scans": 42917
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 9951,
+            "profile_metrics": {
+              "length": 43615.0,
+              "elevation": 662.8000018671155,
+              "popularity_length": 8963759.0,
+              "width_length": 627170.0,
+              "avg_pop": 205.52009629714547,
+              "avg_width": 14.379685887882609,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 20,
+            "overlap_vertex_count": 20,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10017,
+              10018,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 20,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10017,
+                10018,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003178000042680651,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.13666780000494327,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22712,
+                  "expanded_nodes": 21048,
+                  "edge_scans": 42922
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 1900,
+            "profile_metrics": {
+              "length": 43504.0,
+              "elevation": 680.100001566112,
+              "popularity_length": 9095661.0,
+              "width_length": 634070.0,
+              "avg_pop": 209.07642975358587,
+              "avg_width": 14.574981610886356,
+              "road_changes": 131
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9953,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9953,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.03977439999289345,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 6628,
+                  "expanded_nodes": 6223,
+                  "edge_scans": 12649
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.1283017999958247,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22640,
+                  "expanded_nodes": 21348,
+                  "edge_scans": 43565
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 9959,
+            "profile_metrics": {
+              "length": 42320.0,
+              "elevation": 652.6000014469028,
+              "popularity_length": 8738053.0,
+              "width_length": 616815.0,
+              "avg_pop": 206.4757325141777,
+              "avg_width": 14.575023629489603,
+              "road_changes": 122
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": true,
+                  "elapsed_s": 0.03390189999481663,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5979,
+                  "expanded_nodes": 5705,
+                  "edge_scans": 11690
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.14323839999269694,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22649,
+                  "expanded_nodes": 20988,
+                  "edge_scans": 42792
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "S,P",
+            "via_vertex": 10024,
+            "profile_metrics": {
+              "length": 42408.0,
+              "elevation": 653.5000014230609,
+              "popularity_length": 8738405.0,
+              "width_length": 618135.0,
+              "avg_pop": 206.05557913601208,
+              "avg_width": 14.575905489530276,
+              "road_changes": 124
+            },
+            "original_repeated_vertex_count": 16,
+            "overlap_vertex_count": 16,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 16,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003318999952170998,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 1,
+                  "expanded_nodes": 1,
+                  "edge_scans": 0
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": false,
+                  "elapsed_s": 0.13862240000162274,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 23146,
+                  "expanded_nodes": 21454,
+                  "edge_scans": 43760
+                }
+              ]
+            }
+          },
+          {
+            "pair_type": "P,S",
+            "via_vertex": 19787,
+            "profile_metrics": {
+              "length": 43189.0,
+              "elevation": 686.8000018149614,
+              "popularity_length": 8915803.0,
+              "width_length": 629575.0,
+              "avg_pop": 206.43689365347657,
+              "avg_width": 14.57720715923036,
+              "road_changes": 133
+            },
+            "original_repeated_vertex_count": 18,
+            "overlap_vertex_count": 18,
+            "overlap_vertices_sample": [
+              842,
+              843,
+              844,
+              849,
+              1478,
+              1488,
+              1505,
+              1506,
+              1531,
+              1532,
+              9952,
+              9959,
+              10022,
+              10023,
+              13694,
+              14635,
+              20203,
+              20338
+            ],
+            "repair": {
+              "overlap_vertex_count": 18,
+              "overlap_vertices_sample": [
+                842,
+                843,
+                844,
+                849,
+                1478,
+                1488,
+                1505,
+                1506,
+                1531,
+                1532,
+                9952,
+                9959,
+                10022,
+                10023,
+                13694,
+                14635,
+                20203,
+                20338
+              ],
+              "calls": [
+                {
+                  "repair_direction": "A",
+                  "route_found": false,
+                  "elapsed_s": 0.0003423000016482547,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 5,
+                  "expanded_nodes": 5,
+                  "edge_scans": 4
+                },
+                {
+                  "repair_direction": "B",
+                  "route_found": true,
+                  "elapsed_s": 0.12569909999729134,
+                  "endpoint_forbidden": false,
+                  "heap_pops": 22634,
+                  "expanded_nodes": 21344,
+                  "edge_scans": 43555
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "success": {
+      "holdout": {
+        "VIA-UNION-2": {
+          "solved": 9,
+          "attempted": 12,
+          "percent": 75.0
+        },
+        "LAZY-VIA-REPAIR": {
+          "solved": 9,
+          "attempted": 12,
+          "percent": 75.0,
+          "additional_solved_on_failures": 0
+        }
+      },
+      "development": {
+        "VIA-UNION-2": {
+          "solved": 23,
+          "attempted": 24,
+          "percent": 95.83333333333333
+        },
+        "LAZY-VIA-REPAIR": {
+          "solved": 23,
+          "attempted": 24,
+          "percent": 95.83333333333333,
+          "additional_solved_on_failures": 0
+        }
+      }
+    },
+    "timing": {
+      "holdout": {
+        "normal_union2_cost_s": {
+          "count": 3,
+          "median": 0.7942081999935908,
+          "p90": 0.8357920999842463,
+          "max": 0.8357920999842463
+        },
+        "marginal_mixed_profile_scan_s": {
+          "count": 3,
+          "median": 0.11587120000331197,
+          "p90": 0.12818020000122488,
+          "max": 0.12818020000122488
+        },
+        "marginal_repair_dijkstra_s": {
+          "count": 3,
+          "median": 0.2459862000105204,
+          "p90": 17.27423500001896,
+          "max": 17.27423500001896
+        },
+        "total_fallback_cost_s": {
+          "count": 3,
+          "median": 0.3659581999963848,
+          "p90": 17.805094600000302,
+          "max": 17.805094600000302
+        },
+        "time_to_first_repaired_feasible_s": {
+          "count": 0,
+          "median": null,
+          "p90": null,
+          "max": null
+        }
+      },
+      "development": {
+        "normal_union2_cost_s": {
+          "count": 1,
+          "median": 0.9189909999986412,
+          "p90": 0.9189909999986412,
+          "max": 0.9189909999986412
+        },
+        "marginal_mixed_profile_scan_s": {
+          "count": 1,
+          "median": 0.12691799997992348,
+          "p90": 0.12691799997992348,
+          "max": 0.12691799997992348
+        },
+        "marginal_repair_dijkstra_s": {
+          "count": 1,
+          "median": 24.133797299989965,
+          "p90": 24.133797299989965,
+          "max": 24.133797299989965
+        },
+        "total_fallback_cost_s": {
+          "count": 1,
+          "median": 24.823306599995703,
+          "p90": 24.823306599995703,
+          "max": 24.823306599995703
+        },
+        "time_to_first_repaired_feasible_s": {
+          "count": 0,
+          "median": null,
+          "p90": null,
+          "max": null
+        }
+      }
+    }
+  }
+}

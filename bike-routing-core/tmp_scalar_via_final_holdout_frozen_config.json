@@ -1,0 +1,110 @@
+{
+  "scientific_status": {
+    "24_original_boxes": "DEVELOPMENT SET; not independent generalization evidence",
+    "12_former_holdout_boxes": "VALIDATION / ARCHITECTURE-SELECTION SET; not independent generalization evidence",
+    "new_final_boxes": "FINAL INDEPENDENT HOLDOUT"
+  },
+  "seed": 20260830,
+  "candidate_architecture": "FROZEN-K2-SEQUENTIAL",
+  "scalar_execution_order": [
+    "hinge_width_strong",
+    "hinge_low_length_pressure"
+  ],
+  "second_scalar_policy": "hinge_low_length_pressure is evaluated if and only if hinge_width_strong has no exact elementary feasible route",
+  "strict_elementarity_rule": "path_node_ids must contain no repeated vertex",
+  "rejected_relaxed_revisit_rules": [
+    "ONE_SIMPLE_LOOP",
+    "ONE_SIMPLE_SPUR"
+  ],
+  "road_id_policy": "road_id is used only by the existing deterministic shortest-tree tie behavior; it is not an objective or post-hoc tuning signal",
+  "same_scalar_via_pipeline": [
+    "forward shortest-path tree",
+    "backward shortest-path tree",
+    "same-scalar via profile scan using exact additive L,H,P_length,W_length",
+    "profile box filtering",
+    "candidate reconstruction",
+    "directed CSR validation",
+    "strict elementary-path validation"
+  ],
+  "hinge_formula": "c(e)=alpha_L*l(e)+l(e)*(alpha_w*max(0,width(e)-Wref)/max(Wscale,EPS)+alpha_p*max(0,Pref-popularity(e))/max(Pscale,EPS))",
+  "query_dependent_references": {
+    "Wref": "query.Wmax",
+    "Pref": "query.Pmin",
+    "Wscale": "safe_scale(Wref)=max(abs(Wref),1.0) unless explicitly supplied",
+    "Pscale": "safe_scale(Pref)=max(abs(Pref),1.0) unless explicitly supplied",
+    "EPS": 1e-09
+  },
+  "scalar_1": {
+    "name": "hinge_width_strong",
+    "family": "hinge",
+    "parameters": {
+      "alpha_L": 1.0,
+      "alpha_w": 8.0,
+      "alpha_p": 2.0,
+      "Wref": 15.0,
+      "Pref": 150.0
+    },
+    "effective_references": {
+      "Wref": "query.Wmax",
+      "Pref": "query.Pmin"
+    }
+  },
+  "scalar_2": {
+    "name": "hinge_low_length_pressure",
+    "family": "hinge",
+    "parameters": {
+      "alpha_L": 0.35,
+      "alpha_w": 5.0,
+      "alpha_p": 5.0,
+      "Wref": 15.0,
+      "Pref": 150.0
+    },
+    "effective_references": {
+      "Wref": "query.Wmax",
+      "Pref": "query.Pmin"
+    }
+  },
+  "forbidden_witness_generators": {
+    "audited_fixed_portfolio_scalarizations": [
+      "shortest_length",
+      "pop_width_reference",
+      "hinge_width_strong",
+      "hinge_width_very_strong",
+      "hinge_pop_strong",
+      "hinge_pop_very_strong",
+      "hinge_balanced_strong",
+      "hinge_low_length_pressure",
+      "hinge_medium_length_pressure",
+      "hinge_high_length_pressure",
+      "width_linear_mild",
+      "width_linear_strong",
+      "pop_complement_mild",
+      "pop_complement_strong",
+      "low_elevation_mild",
+      "low_elevation_strong",
+      "low_elevation_with_width_pop",
+      "high_elevation_weak_length",
+      "high_elevation_medium_length",
+      "high_elevation_strong_length",
+      "high_elevation_width",
+      "high_elevation_pop",
+      "high_elevation_width_pop",
+      "slope_inverse_beta_5",
+      "slope_inverse_beta_12_width_pop",
+      "slope_exp_beta_150_width",
+      "slope_exp_beta_250_width_pop_light",
+      "slope_exp_beta_8",
+      "slope_exp_beta_400_width_light",
+      "slope_exp_beta_16_width_pop"
+    ],
+    "additional_explicit_forbidden": [
+      "hinge_width_strong",
+      "hinge_low_length_pressure",
+      "pop_width_reference",
+      "slope_exp_beta_150_width",
+      "physical_length same-scalar via"
+    ],
+    "witness_generation_policy": "final holdout witnesses are generated only by independent random positive edge-cost paths or independent random waypoint plus random-cost routes"
+  },
+  "frozen_configuration_sha256": "fded9a5e5ce77bf53248e154d58a01c8067eff142a11ff6527d20a3ae38b339c"
+}

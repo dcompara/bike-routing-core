@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "script": "article_scalar_via_revisit_structure_audit.py",
+    "policy": "no Dijkstra and no new search; only persisted candidate walks are inspected",
+    "target_query_ids": [
+      "holdout_anchor_south_north_09_multi_tight",
+      "holdout_anchor_south_north_28_quality_conflict",
+      "paris_bures_02_multi_tight"
+    ],
+    "candidate_sources": [
+      "tmp_scalar_via_failure_diagnostics_results.json",
+      "tmp_scalar_via_mixed_results.json",
+      "tmp_scalar_via_lazy_repair_results.json"
+    ]
+  },
+  "source_reports": [
+    {
+      "path": "tmp_scalar_via_failure_diagnostics_results.json",
+      "exists": true,
+      "candidate_walks_found": 0
+    },
+    {
+      "path": "tmp_scalar_via_mixed_results.json",
+      "exists": true,
+      "candidate_walks_found": 0
+    },
+    {
+      "path": "tmp_scalar_via_lazy_repair_results.json",
+      "exists": true,
+      "candidate_walks_found": 0
+    }
+  ],
+  "rows": [
+    {
+      "status": "blocked_missing_persisted_walk_sequences",
+      "query_id": "holdout_anchor_south_north_09_multi_tight",
+      "candidate_walks_found": 0,
+      "reason": "The available mixed/failure/repair result JSON files do not contain path_node_ids/csr_edge_ids for the profile-feasible non-elementary walks. Regenerating them would require rerunning scalar trees/reconstruction, which violates this experiment's no-new-Dijkstra constraint."
+    },
+    {
+      "status": "blocked_missing_persisted_walk_sequences",
+      "query_id": "holdout_anchor_south_north_28_quality_conflict",
+      "candidate_walks_found": 0,
+      "reason": "The available mixed/failure/repair result JSON files do not contain path_node_ids/csr_edge_ids for the profile-feasible non-elementary walks. Regenerating them would require rerunning scalar trees/reconstruction, which violates this experiment's no-new-Dijkstra constraint."
+    },
+    {
+      "status": "blocked_missing_persisted_walk_sequences",
+      "query_id": "paris_bures_02_multi_tight",
+      "candidate_walks_found": 0,
+      "reason": "The available mixed/failure/repair result JSON files do not contain path_node_ids/csr_edge_ids for the profile-feasible non-elementary walks. Regenerating them would require rerunning scalar trees/reconstruction, which violates this experiment's no-new-Dijkstra constraint."
+    }
+  ],
+  "summary": {
+    "status": "blocked_missing_persisted_walk_sequences",
+    "candidate_walks_found": 0,
+    "unique_complete_edge_sequences": 0,
+    "reason": "The available mixed/failure/repair result JSON files do not contain path_node_ids/csr_edge_ids for the profile-feasible non-elementary walks. Regenerating them would require rerunning scalar trees/reconstruction, which violates this experiment's no-new-Dijkstra constraint."
+  }
+}
